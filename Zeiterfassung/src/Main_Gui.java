@@ -1,21 +1,36 @@
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JList;
-import javax.swing.JTable;
+import java.awt.event.WindowAdapter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
+import javax.swing.JTextField;
+import javax.swing.JTextArea;
+
+import com.sun.glass.events.WindowEvent;
+import javax.swing.JLabel;
 
 public class Main_Gui extends JFrame {
 
 	private JPanel contentPane;
-	private JTable t_zeiten;
-
+	private JTextArea textArea;
+	
+	private ArrayList<Pause> pauseList;
+	private Date tagAnfang;
+	private Date tagEnde;
+	private JTextField tf_summeArbeitszeit;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -36,48 +51,131 @@ public class Main_Gui extends JFrame {
 	 * Create the frame.
 	 */
 	public Main_Gui() {
+		
+		pauseList = new ArrayList<Pause>();
+		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent arg0) {
+				Object[] options = {"OK", "Abbrechen"};
+				int n = JOptionPane.showOptionDialog(new JFrame(),
+				    "Sollen die Angaben gelöscht werden?",
+				    "Frage",
+				    JOptionPane.OK_CANCEL_OPTION,
+				    JOptionPane.WARNING_MESSAGE,
+				    null,
+				    options,
+				    options[1]);
+				
+				if(n == 0){
+					System.exit(0);
+				}
+			}			
+		});
+		
 		setTitle("Zeiterfassung");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 214);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setBounds(100, 100, 450, 261);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
+	
 		JButton btn_taganfang = new JButton("Tag beginnen");
+		JButton btn_pauseanfang = new JButton("Pause beginnen");
+		JButton btn_pauseende = new JButton("Pause beenden");
+		JButton btn_tagende = new JButton("Tag beenden");
+		
 		btn_taganfang.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent arg0) {
+				textArea.append("Tag angefangen am/um: " + zeitAktuell(new Date()) + "\n");
+//				btn_taganfang.setEnabled(false);
+//				btn_pauseanfang.setEnabled(true);
+				tagAnfang = new Date();
 			}
 		});
 		btn_taganfang.setBounds(12, 13, 146, 25);
 		contentPane.add(btn_taganfang);
+
 		
-		JButton btn_pauseanfang = new JButton("Pause beginnen");
+		btn_pauseanfang.setEnabled(true);
 		btn_pauseanfang.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				textArea.append("Pause angefangen am/um: " + zeitAktuell(new Date()) + "\n");
+//				btn_pauseanfang.setEnabled(false);
+//				btn_pauseende.setEnabled(true);
+				
+				Pause pa = new Pause();
+				pa.setPauseStartNow();
+				pauseList.add(pa);
 			}
 		});
 		btn_pauseanfang.setBounds(12, 51, 146, 25);
 		contentPane.add(btn_pauseanfang);
+
 		
-		JButton btn_pauseende = new JButton("Pause beenden");
+		btn_pauseende.setEnabled(true);
 		btn_pauseende.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				textArea.append("Pause beendet am/um: " + zeitAktuell(new Date()) + "\n");
+//				btn_pauseende.setEnabled(false);
+//				btn_tagende.setEnabled(true);
+				
+				pauseList.get(pauseList.size()-1).setPauseEndeNow();
+				System.out.println(pauseList.get(pauseList.size()-1).berechnePauseMin());
 			}
 		});
 		btn_pauseende.setBounds(12, 89, 146, 25);
 		contentPane.add(btn_pauseende);
+
 		
-		JButton btn_tagende = new JButton("Tag beenden");
+		btn_tagende.setEnabled(true);
 		btn_tagende.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				textArea.append("Tag beendet am/um: " + zeitAktuell(new Date()) + "\n");
+//				btn_tagende.setEnabled(false);
+				tagEnde = new Date();
+				
+				long arbeitszeit = berechneArbeitszeit();
+				long stunden, minuten;
+				
+				minuten = arbeitszeit % 60;
+				stunden = (arbeitszeit-minuten) / 60; 
+				
+				tf_summeArbeitszeit.setText((stunden<10?"0":"") + stunden + ":" + (minuten<10?"0":"") + minuten);
 			}
 		});
 		btn_tagende.setBounds(12, 127, 146, 25);
 		contentPane.add(btn_tagende);
+
+		textArea = new JTextArea();
+		textArea.setBounds(170, 14, 250, 135);
+		contentPane.add(textArea);
 		
-		t_zeiten = new JTable();
-		t_zeiten.setBounds(170, 18, 250, 134);
-		contentPane.add(t_zeiten);
+		tf_summeArbeitszeit = new JTextField();
+		tf_summeArbeitszeit.setBounds(170, 181, 138, 22);
+		contentPane.add(tf_summeArbeitszeit);
+		tf_summeArbeitszeit.setColumns(10);
+		
+		JLabel lbl_SummeArbeitszeit = new JLabel("Summe Arbeitszeit:");
+		lbl_SummeArbeitszeit.setBounds(12, 184, 146, 16);
+		contentPane.add(lbl_SummeArbeitszeit);
+	}
+
+	private String zeitAktuell(Date d) {
+		SimpleDateFormat df = new SimpleDateFormat("dd.MM.YY - HH:mm");
+		return df.format(d);
+
+	}
+	
+	private long berechneArbeitszeit(){
+		long arbeitstag = tagEnde.getMinutes() - tagAnfang.getMinutes();
+		long summePausen = 0;
+		for(Pause p : pauseList){
+			summePausen += p.berechnePauseMin();
+		}
+		return arbeitstag - summePausen;
 	}
 }
