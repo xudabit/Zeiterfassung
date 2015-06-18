@@ -5,6 +5,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
+import javax.swing.JTextArea;
+import javax.swing.JLabel;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -12,11 +14,6 @@ import java.awt.event.WindowAdapter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
-import javax.swing.JTextField;
-import javax.swing.JTextArea;
-
-import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 public class Main_Gui extends JFrame {
@@ -27,8 +24,11 @@ public class Main_Gui extends JFrame {
 	private ArrayList<Pause> pauseList;
 	private Date tagAnfang;
 	private Date tagEnde;
-	private JTextField tf_summeArbeitszeit;
-
+	private JLabel lbl_SummeArbeitszeitText;
+	private JLabel lbl_SummeArbeitszeitAusgabe;
+	private JLabel lbl_SummeArbeitszeitDatumRechtbuendig;
+	private JLabel lbl_Aktuellesdatum;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -69,7 +69,7 @@ public class Main_Gui extends JFrame {
 
 		setTitle("Zeiterfassung");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 450, 276);
+		setBounds(100, 100, 450, 319);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -86,7 +86,7 @@ public class Main_Gui extends JFrame {
 		btn_pauseanfang.setEnabled(false);
 		btn_pauseende.setEnabled(false);
 		btn_tagende.setEnabled(false);
-		
+
 		btn_taganfang.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				textArea.append("Tag angefangen um: \t"
@@ -108,7 +108,6 @@ public class Main_Gui extends JFrame {
 		// Pause beginnen
 		btn_pauseende.setEnabled(false);
 
-
 		btn_pauseanfang.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				textArea.append("Pause angefangen um: \t"
@@ -129,7 +128,7 @@ public class Main_Gui extends JFrame {
 
 		// Pause beenden
 		btn_pauseende.setEnabled(false);
-		
+
 		btn_pauseende.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				textArea.append("Pause beendet um: \t"
@@ -137,7 +136,7 @@ public class Main_Gui extends JFrame {
 
 				btn_taganfang.setEnabled(false);
 				btn_pauseanfang.setEnabled(true);
-				btn_pauseende.setEnabled(false);				
+				btn_pauseende.setEnabled(false);
 				btn_tagende.setEnabled(true);
 
 				pauseList.get(pauseList.size() - 1).setPauseEndeNow();
@@ -150,7 +149,7 @@ public class Main_Gui extends JFrame {
 
 		// Tag beenden
 		btn_tagende.setEnabled(false);
-		
+
 		btn_tagende.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				textArea.append("Tag beendet um: \t" + zeitAktuell(new Date())
@@ -160,7 +159,7 @@ public class Main_Gui extends JFrame {
 				btn_pauseanfang.setEnabled(false);
 				btn_pauseende.setEnabled(false);
 				btn_tagende.setEnabled(false);
-				
+
 				tagEnde = new Date();
 
 				long arbeitszeit = berechneArbeitszeit();
@@ -169,7 +168,7 @@ public class Main_Gui extends JFrame {
 				minuten = arbeitszeit % 60;
 				stunden = (arbeitszeit - minuten) / 60;
 
-				tf_summeArbeitszeit.setText((stunden < 10 ? "0" : "") + stunden
+				lbl_SummeArbeitszeitAusgabe.setText((stunden < 10 ? "0" : "") + stunden
 						+ ":" + (minuten < 10 ? "0" : "") + minuten);
 			}
 		});
@@ -179,43 +178,47 @@ public class Main_Gui extends JFrame {
 		textArea = new JTextArea();
 		textArea.setBounds(170, 46, 250, 135);
 		contentPane.add(textArea);
-
-		tf_summeArbeitszeit = new JTextField();
-		tf_summeArbeitszeit.setBounds(170, 194, 116, 22);
-		contentPane.add(tf_summeArbeitszeit);
-		tf_summeArbeitszeit.setColumns(10);
-
-		// Anzeige: Summe Arbeitszeit
-		JLabel lbl_SummeArbeitszeit = new JLabel("Summe Arbeitszeit:");
-		lbl_SummeArbeitszeit.setBounds(12, 194, 146, 16);
-		contentPane.add(lbl_SummeArbeitszeit);
 		
-		// Anzeige: Datum:
-		JLabel lbl_Datum = new JLabel("Datum:");
-		lbl_Datum.setBounds(12, 13, 56, 16);
-		contentPane.add(lbl_Datum);
-		
-		// Aktuelles Datum in Lable schreiben
-		JLabel lbl_Aktuellesdatum = new JLabel();
-		lbl_Aktuellesdatum.setText(datumAktuell(new Date()));
-		lbl_Aktuellesdatum.setBounds(73, 13, 85, 16);
-		lbl_Aktuellesdatum.setHorizontalAlignment(JLabel.RIGHT);
+		// Anzeige für berechnete Summe der Arbeitszeit
+		lbl_SummeArbeitszeitAusgabe = new JLabel();
+		lbl_SummeArbeitszeitAusgabe.setText("Wird am Ende des Tages berechnet.");
+		lbl_SummeArbeitszeitAusgabe.setToolTipText("");
+		lbl_SummeArbeitszeitAusgabe.setBounds(170,194, 250, 16);
+		contentPane.add(lbl_SummeArbeitszeitAusgabe);
+
+		// Text Datum ausgeben
+		lbl_Aktuellesdatum = new JLabel();
+		lbl_Aktuellesdatum.setHorizontalAlignment(SwingConstants.LEFT);
+		lbl_Aktuellesdatum.setText("Datum: ");
+		lbl_Aktuellesdatum.setBounds(12, 13, 46, 16);
 		contentPane.add(lbl_Aktuellesdatum);
+		
+		// Aktuelles Datum rechtbuendig ausgeben
+		lbl_SummeArbeitszeitDatumRechtbuendig = new JLabel();
+		lbl_SummeArbeitszeitDatumRechtbuendig.setBounds(63, 16, 95, 16);
+//		lbl_SummeArbeitszeitDatumRechtbuendig.setSize(56, 16);
+//		lbl_SummeArbeitszeitDatumRechtbuendig.setLocation(216, 13);
+		lbl_SummeArbeitszeitDatumRechtbuendig.setHorizontalAlignment(SwingConstants.RIGHT);
+		lbl_SummeArbeitszeitDatumRechtbuendig.setText(datumAktuell(new Date()));
+		contentPane.add(lbl_SummeArbeitszeitDatumRechtbuendig);
+		
+
+		// Anzeige Text: Summe Arbeitszeit
+		lbl_SummeArbeitszeitText = new JLabel("Summe Arbeitszeit:");
+		lbl_SummeArbeitszeitText.setBounds(12, 194, 146, 16);
+		contentPane.add(lbl_SummeArbeitszeitText);
 	}
 
 	// Aktuelle Zeit abfragen
 	private String zeitAktuell(Date d) {
 		SimpleDateFormat df = new SimpleDateFormat("HH:mm");
 		return df.format(d);
-
 	}
-	
+
 	// Aktuelles/Heutiges Datum abfragen
 	private String datumAktuell(Date d) {
 		SimpleDateFormat da = new SimpleDateFormat("dd.MM.YYYY");
-		System.out.println("heute:" + da);
 		return da.format(d);
-
 	}
 
 	private long berechneArbeitszeit() {
