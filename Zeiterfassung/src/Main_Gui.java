@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.JTextArea;
 
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 public class Main_Gui extends JFrame {
 
@@ -68,7 +69,7 @@ public class Main_Gui extends JFrame {
 
 		setTitle("Zeiterfassung");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 450, 261);
+		setBounds(100, 100, 450, 276);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -88,7 +89,7 @@ public class Main_Gui extends JFrame {
 		
 		btn_taganfang.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				textArea.append("Tag angefangen am/um: "
+				textArea.append("Tag angefangen um: \t"
 						+ zeitAktuell(new Date()) + "\n");
 
 				// Button aktivieren/deaktivieren
@@ -101,7 +102,7 @@ public class Main_Gui extends JFrame {
 
 			}
 		});
-		btn_taganfang.setBounds(12, 13, 146, 25);
+		btn_taganfang.setBounds(12, 45, 146, 25);
 		contentPane.add(btn_taganfang);
 
 		// Pause beginnen
@@ -110,7 +111,7 @@ public class Main_Gui extends JFrame {
 
 		btn_pauseanfang.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				textArea.append("Pause angefangen am/um: "
+				textArea.append("Pause angefangen um: \t"
 						+ zeitAktuell(new Date()) + "\n");
 
 				btn_taganfang.setEnabled(false);
@@ -123,7 +124,7 @@ public class Main_Gui extends JFrame {
 				pauseList.add(pa);
 			}
 		});
-		btn_pauseanfang.setBounds(12, 51, 146, 25);
+		btn_pauseanfang.setBounds(12, 83, 146, 25);
 		contentPane.add(btn_pauseanfang);
 
 		// Pause beenden
@@ -131,7 +132,7 @@ public class Main_Gui extends JFrame {
 		
 		btn_pauseende.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				textArea.append("Pause beendet am/um: "
+				textArea.append("Pause beendet um: \t"
 						+ zeitAktuell(new Date()) + "\n");
 
 				btn_taganfang.setEnabled(false);
@@ -144,7 +145,7 @@ public class Main_Gui extends JFrame {
 						.berechnePauseMin());
 			}
 		});
-		btn_pauseende.setBounds(12, 89, 146, 25);
+		btn_pauseende.setBounds(12, 121, 146, 25);
 		contentPane.add(btn_pauseende);
 
 		// Tag beenden
@@ -152,7 +153,7 @@ public class Main_Gui extends JFrame {
 		
 		btn_tagende.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				textArea.append("Tag beendet am/um: " + zeitAktuell(new Date())
+				textArea.append("Tag beendet um: \t" + zeitAktuell(new Date())
 						+ "\n");
 
 				btn_taganfang.setEnabled(false);
@@ -172,26 +173,48 @@ public class Main_Gui extends JFrame {
 						+ ":" + (minuten < 10 ? "0" : "") + minuten);
 			}
 		});
-		btn_tagende.setBounds(12, 127, 146, 25);
+		btn_tagende.setBounds(12, 156, 146, 25);
 		contentPane.add(btn_tagende);
 
 		textArea = new JTextArea();
-		textArea.setBounds(170, 14, 250, 135);
+		textArea.setBounds(170, 46, 250, 135);
 		contentPane.add(textArea);
 
 		tf_summeArbeitszeit = new JTextField();
-		tf_summeArbeitszeit.setBounds(170, 181, 85, 22);
+		tf_summeArbeitszeit.setBounds(170, 194, 116, 22);
 		contentPane.add(tf_summeArbeitszeit);
 		tf_summeArbeitszeit.setColumns(10);
 
+		// Anzeige: Summe Arbeitszeit
 		JLabel lbl_SummeArbeitszeit = new JLabel("Summe Arbeitszeit:");
-		lbl_SummeArbeitszeit.setBounds(12, 184, 146, 16);
+		lbl_SummeArbeitszeit.setBounds(12, 194, 146, 16);
 		contentPane.add(lbl_SummeArbeitszeit);
+		
+		// Anzeige: Datum:
+		JLabel lbl_Datum = new JLabel("Datum:");
+		lbl_Datum.setBounds(12, 13, 56, 16);
+		contentPane.add(lbl_Datum);
+		
+		// Aktuelles Datum in Lable schreiben
+		JLabel lbl_Aktuellesdatum = new JLabel();
+		lbl_Aktuellesdatum.setText(datumAktuell(new Date()));
+		lbl_Aktuellesdatum.setBounds(73, 13, 85, 16);
+		lbl_Aktuellesdatum.setHorizontalAlignment(JLabel.RIGHT);
+		contentPane.add(lbl_Aktuellesdatum);
 	}
 
+	// Aktuelle Zeit abfragen
 	private String zeitAktuell(Date d) {
-		SimpleDateFormat df = new SimpleDateFormat("dd.MM.YY - HH:mm");
+		SimpleDateFormat df = new SimpleDateFormat("HH:mm");
 		return df.format(d);
+
+	}
+	
+	// Aktuelles/Heutiges Datum abfragen
+	private String datumAktuell(Date d) {
+		SimpleDateFormat da = new SimpleDateFormat("dd.MM.YYYY");
+		System.out.println("heute:" + da);
+		return da.format(d);
 
 	}
 
