@@ -11,20 +11,27 @@ import javax.swing.JLabel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
 import javax.swing.SwingConstants;
 
 public class Main_Gui extends JFrame {
 
+	private final String DATEINAME = "Zeiterfassung.ze";
+	
 	private JPanel contentPane;
 	private JTextArea textArea;
 
 	private ArrayList<Pause> pauseList;
 	private Date tagAnfang;
 	private Date tagEnde;
-	private JLabel lbl_SummeArbeitszeitDatumRechtbuendig;
+	private JLabel lbl_AktuellesDatumRechtsbuendig;
 	private JLabel lbl_Aktuellesdatum;
 	private JLabel lbl_TextSAZnP;
 	private JLabel lbl_AusgabeSAZnP;
@@ -177,6 +184,8 @@ public class Main_Gui extends JFrame {
 
 				lbl_AusgabeSAZnP.setText((stunden < 10 ? "0" : "") + stunden
 						+ ":" + (minuten < 10 ? "0" : "") + minuten);
+				
+				schreibeInDatei();
 			}
 		});
 		btn_tagende.setBounds(12, 156, 146, 25);
@@ -194,11 +203,11 @@ public class Main_Gui extends JFrame {
 		contentPane.add(lbl_Aktuellesdatum);
 		
 		// Aktuelles Datum rechtbuendig ausgeben
-		lbl_SummeArbeitszeitDatumRechtbuendig = new JLabel();
-		lbl_SummeArbeitszeitDatumRechtbuendig.setBounds(63, 16, 95, 16);
-		lbl_SummeArbeitszeitDatumRechtbuendig.setHorizontalAlignment(SwingConstants.RIGHT);
-		lbl_SummeArbeitszeitDatumRechtbuendig.setText(datumAktuell(new Date()));
-		contentPane.add(lbl_SummeArbeitszeitDatumRechtbuendig);
+		lbl_AktuellesDatumRechtsbuendig = new JLabel();
+		lbl_AktuellesDatumRechtsbuendig.setBounds(63, 16, 95, 16);
+		lbl_AktuellesDatumRechtsbuendig.setHorizontalAlignment(SwingConstants.RIGHT);
+		lbl_AktuellesDatumRechtsbuendig.setText(datumAktuell(new Date()));
+		contentPane.add(lbl_AktuellesDatumRechtsbuendig);
 		
 		// Anzeige Text: Summe Arbeitszeit nach Pause
 		lbl_TextSAZnP = new JLabel("Summe Arbeitszeit nach Pause:");
@@ -232,5 +241,35 @@ public class Main_Gui extends JFrame {
 			summePausen += p.berechnePauseMin();
 		}
 		return arbeitstag - summePausen;
+	}
+	
+	private boolean schreibeInDatei(){
+		SimpleDateFormat df = new SimpleDateFormat("HH;mm");
+		
+		try{
+		File file = new File(DATEINAME);
+		BufferedWriter writer = new BufferedWriter(
+				new FileWriter(file, true));
+		
+		writer.write(datumAktuell(tagAnfang).replace(".", "_") + "\n");
+		
+		writer.write("TA;" + df.format(tagAnfang) + "\n");
+		
+		for(Pause p : pauseList){
+			writer.write("PA;" + df.format(p.getPauseStart()) + "\n");
+			writer.write("PE;" + df.format(p.getPauseEnde()) + "\n");
+		}
+		
+		writer.write("TE;" + df.format(tagEnde) + "\n");
+		
+		writer.flush();
+		writer.close();
+		
+		} catch(IOException ex){
+			System.err.println(ex.getMessage());
+		}
+		
+		
+		return false;
 	}
 }
