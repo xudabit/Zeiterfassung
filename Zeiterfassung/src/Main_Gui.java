@@ -252,8 +252,8 @@ public class Main_Gui extends JFrame {
 
 	// Berechnet Summe der Arbeitszeit nach der Pause oder am Ende des Tages
 	private long berechneArbeitszeit() {
-		long arbeitstag = (tagEnde == null ? (new Date()).getMinutes()
-				: tagEnde.getMinutes()) - tagAnfang.getMinutes();
+		long arbeitstag = (tagEnde == null ? (new Date()).getTime()
+				: tagEnde.getTime()) - tagAnfang.getTime();
 		long summePausen = 0;
 
 		for (Pause p : pauseList) {
@@ -305,6 +305,8 @@ public class Main_Gui extends JFrame {
 			
 			String[] datum = {};
 
+			Date summeArbeitstage = new Date(0);
+			
 			while (reader.ready()) {
 
 				String zeile = reader.readLine();
@@ -334,7 +336,7 @@ public class Main_Gui extends JFrame {
 						int minuten = Integer.parseInt(zeit[2]);
 						
 						Zeitpunkt zp = new Zeitpunkt();
-						zp.setDatum(datumAusgelesen);
+						zp.setDatum((Date)datumAusgelesen.clone());
 						zp.getDatum().setHours(stunden);
 						zp.getDatum().setMinutes(minuten);
 						zp.setPrefix(zeit[0]);
@@ -345,14 +347,45 @@ public class Main_Gui extends JFrame {
 
 			}
 			
-//			for(String s : dateMap.keySet()){
-//				for(Zeitpunkt zp : dateMap.get(s)){
-//					System.out.println(zp.getPrefix() + " " + zp.getDatum());
-//				}		
-//			}
+			for(String s : dateMap.keySet()){
+				Date ta = null;
+				Date te = null;
+				
+				ArrayList<Date[]> pausen = new ArrayList<Date[]>();
+				
+				for(Zeitpunkt zp : dateMap.get(s)){
+					if(zp.getPrefix().equals("TA")){
+						ta = zp.getDatum();
+					}
+					if(zp.getPrefix().equals("TE")){
+						te = zp.getDatum();
+					}
+					
+					if(zp.getPrefix().equals("PA")){
+						pausen.add(new Date[2]);
+						pausen.get(pausen.size()-1)[0] = zp.getDatum();
+						
+					}
+					
+					if(zp.getPrefix().equals("PE")){
+						pausen.get(pausen.size()-1)[1] = zp.getDatum();
+					}
+				}
+				
+				long summePausen = 0;
+				for (Date[] d : pausen){
+					summePausen += (d[1].getTime() - d[0].getTime()); 
+				}
+				summeArbeitstage = new Date(summeArbeitstage.getTime() + (new Date(te.getTime() - ta.getTime() - summePausen).getTime()));
+				
+			}
 			
 			reader.close();
+			int m = (int)(summeArbeitstage.getTime()/60000)%60;
+			int s = (int)((summeArbeitstage.getTime()/60000)-m)/60;
 
+			System.out.println(s + ":" + m);
+			
 		} catch (IOException ex) {
 			System.err.println(ex.getMessage());
 		}
