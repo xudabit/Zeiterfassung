@@ -24,10 +24,10 @@ public class Main_Gui extends JFrame {
 	private ArrayList<Pause> pauseList;
 	private Date tagAnfang;
 	private Date tagEnde;
-	private JLabel lbl_SummeArbeitszeitText;
-	private JLabel lbl_SummeArbeitszeitAusgabe;
 	private JLabel lbl_SummeArbeitszeitDatumRechtbuendig;
 	private JLabel lbl_Aktuellesdatum;
+	private JLabel lbl_TextSAZnP;
+	private JLabel lbl_AusgabeSAZnP;
 	
 	/**
 	 * Launch the application.
@@ -69,7 +69,7 @@ public class Main_Gui extends JFrame {
 
 		setTitle("Zeiterfassung");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 450, 319);
+		setBounds(100, 100, 513, 270);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -128,7 +128,7 @@ public class Main_Gui extends JFrame {
 
 		// Pause beenden
 		btn_pauseende.setEnabled(false);
-
+		
 		btn_pauseende.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				textArea.append("Pause beendet um: \t"
@@ -142,6 +142,15 @@ public class Main_Gui extends JFrame {
 				pauseList.get(pauseList.size() - 1).setPauseEndeNow();
 				System.out.println(pauseList.get(pauseList.size() - 1)
 						.berechnePauseMin());
+				
+				long arbeitszeitAktuell = berechneArbeitszeit();
+				long stunden, minuten;
+
+				minuten = arbeitszeitAktuell % 60;
+				stunden = (arbeitszeitAktuell - minuten) / 60;
+
+				lbl_AusgabeSAZnP.setText((stunden < 10 ? "0" : "") + stunden
+						+ ":" + (minuten < 10 ? "0" : "") + minuten);
 			}
 		});
 		btn_pauseende.setBounds(12, 121, 146, 25);
@@ -168,7 +177,7 @@ public class Main_Gui extends JFrame {
 				minuten = arbeitszeit % 60;
 				stunden = (arbeitszeit - minuten) / 60;
 
-				lbl_SummeArbeitszeitAusgabe.setText((stunden < 10 ? "0" : "") + stunden
+				lbl_AusgabeSAZnP.setText((stunden < 10 ? "0" : "") + stunden
 						+ ":" + (minuten < 10 ? "0" : "") + minuten);
 			}
 		});
@@ -176,15 +185,8 @@ public class Main_Gui extends JFrame {
 		contentPane.add(btn_tagende);
 
 		textArea = new JTextArea();
-		textArea.setBounds(170, 46, 250, 135);
+		textArea.setBounds(204, 46, 279, 135);
 		contentPane.add(textArea);
-		
-		// Anzeige für berechnete Summe der Arbeitszeit
-		lbl_SummeArbeitszeitAusgabe = new JLabel();
-		lbl_SummeArbeitszeitAusgabe.setText("Wird am Ende des Tages berechnet.");
-		lbl_SummeArbeitszeitAusgabe.setToolTipText("");
-		lbl_SummeArbeitszeitAusgabe.setBounds(170,194, 250, 16);
-		contentPane.add(lbl_SummeArbeitszeitAusgabe);
 
 		// Text Datum ausgeben
 		lbl_Aktuellesdatum = new JLabel();
@@ -196,17 +198,19 @@ public class Main_Gui extends JFrame {
 		// Aktuelles Datum rechtbuendig ausgeben
 		lbl_SummeArbeitszeitDatumRechtbuendig = new JLabel();
 		lbl_SummeArbeitszeitDatumRechtbuendig.setBounds(63, 16, 95, 16);
-//		lbl_SummeArbeitszeitDatumRechtbuendig.setSize(56, 16);
-//		lbl_SummeArbeitszeitDatumRechtbuendig.setLocation(216, 13);
 		lbl_SummeArbeitszeitDatumRechtbuendig.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_SummeArbeitszeitDatumRechtbuendig.setText(datumAktuell(new Date()));
 		contentPane.add(lbl_SummeArbeitszeitDatumRechtbuendig);
 		
-
-		// Anzeige Text: Summe Arbeitszeit
-		lbl_SummeArbeitszeitText = new JLabel("Summe Arbeitszeit:");
-		lbl_SummeArbeitszeitText.setBounds(12, 194, 146, 16);
-		contentPane.add(lbl_SummeArbeitszeitText);
+		// Anzeige Text: Summe Arbeitszeit nach Pause
+		lbl_TextSAZnP = new JLabel("Summe Arbeitszeit nach Pause:");
+		lbl_TextSAZnP.setBounds(12, 199, 192, 16);
+		contentPane.add(lbl_TextSAZnP);
+		
+		// Anzeige Summe Arbeitszeit nach Pause
+		lbl_AusgabeSAZnP = new JLabel();
+		lbl_AusgabeSAZnP.setBounds(204, 199, 279, 16);
+		contentPane.add(lbl_AusgabeSAZnP);
 	}
 
 	// Aktuelle Zeit abfragen
@@ -220,10 +224,12 @@ public class Main_Gui extends JFrame {
 		SimpleDateFormat da = new SimpleDateFormat("dd.MM.YYYY");
 		return da.format(d);
 	}
-
+	
+	// Berechnet Summe der Arbeitszeit nach der Pause oder am Ende des Tages
 	private long berechneArbeitszeit() {
-		long arbeitstag = tagEnde.getMinutes() - tagAnfang.getMinutes();
+		long arbeitstag = (tagEnde == null ? (new Date()).getMinutes() : tagEnde.getMinutes()) - tagAnfang.getMinutes();
 		long summePausen = 0;
+		
 		for (Pause p : pauseList) {
 			summePausen += p.berechnePauseMin();
 		}
