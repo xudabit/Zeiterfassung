@@ -140,8 +140,6 @@ public class Main_Gui extends JFrame {
 				btn_tagende.setEnabled(true);
 
 				pauseList.get(pauseList.size() - 1).setPauseEndeNow();
-				System.out.println(pauseList.get(pauseList.size() - 1)
-						.berechnePauseMin());
 				
 				long arbeitszeitAktuell = berechneArbeitszeit();
 				long stunden, minuten;
