@@ -9,28 +9,25 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
 
-import com.sun.glass.events.WindowEvent;
 import javax.swing.JLabel;
 
 public class Main_Gui extends JFrame {
 
 	private JPanel contentPane;
 	private JTextArea textArea;
-	
+
 	private ArrayList<Pause> pauseList;
 	private Date tagAnfang;
 	private Date tagEnde;
 	private JTextField tf_summeArbeitszeit;
-	
+
 	/**
 	 * Launch the application.
 	 */
@@ -51,28 +48,24 @@ public class Main_Gui extends JFrame {
 	 * Create the frame.
 	 */
 	public Main_Gui() {
-		
+
 		pauseList = new ArrayList<Pause>();
-		
+
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent arg0) {
-				Object[] options = {"OK", "Abbrechen"};
+				Object[] options = { "OK", "Abbrechen" };
 				int n = JOptionPane.showOptionDialog(new JFrame(),
-				    "Sollen die Angaben gelöscht werden?",
-				    "Frage",
-				    JOptionPane.OK_CANCEL_OPTION,
-				    JOptionPane.WARNING_MESSAGE,
-				    null,
-				    options,
-				    options[1]);
-				
-				if(n == 0){
+						"Sollen die Angaben gelöscht werden?", "Frage",
+						JOptionPane.OK_CANCEL_OPTION,
+						JOptionPane.WARNING_MESSAGE, null, options, options[1]);
+
+				if (n == 0) {
 					System.exit(0);
 				}
-			}			
+			}
 		});
-		
+
 		setTitle("Zeiterfassung");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 450, 261);
@@ -81,32 +74,50 @@ public class Main_Gui extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-	
+		// Button
 		JButton btn_taganfang = new JButton("Tag beginnen");
 		JButton btn_pauseanfang = new JButton("Pause beginnen");
 		JButton btn_pauseende = new JButton("Pause beenden");
 		JButton btn_tagende = new JButton("Tag beenden");
+
+		// Tag beginnen
+		btn_taganfang.setEnabled(true);
+		btn_pauseanfang.setEnabled(false);
+		btn_pauseende.setEnabled(false);
+		btn_tagende.setEnabled(false);
 		
 		btn_taganfang.addActionListener(new ActionListener() {
-			
 			public void actionPerformed(ActionEvent arg0) {
-				textArea.append("Tag angefangen am/um: " + zeitAktuell(new Date()) + "\n");
-//				btn_taganfang.setEnabled(false);
-//				btn_pauseanfang.setEnabled(true);
+				textArea.append("Tag angefangen am/um: "
+						+ zeitAktuell(new Date()) + "\n");
+
+				// Button aktivieren/deaktivieren
+				btn_taganfang.setEnabled(false);
+				btn_pauseanfang.setEnabled(true);
+				btn_pauseende.setEnabled(false);
+				btn_tagende.setEnabled(false);
+
 				tagAnfang = new Date();
+
 			}
 		});
 		btn_taganfang.setBounds(12, 13, 146, 25);
 		contentPane.add(btn_taganfang);
 
-		
-		btn_pauseanfang.setEnabled(true);
+		// Pause beginnen
+		btn_pauseende.setEnabled(false);
+
+
 		btn_pauseanfang.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				textArea.append("Pause angefangen am/um: " + zeitAktuell(new Date()) + "\n");
-//				btn_pauseanfang.setEnabled(false);
-//				btn_pauseende.setEnabled(true);
-				
+				textArea.append("Pause angefangen am/um: "
+						+ zeitAktuell(new Date()) + "\n");
+
+				btn_taganfang.setEnabled(false);
+				btn_pauseanfang.setEnabled(false);
+				btn_pauseende.setEnabled(true);
+				btn_tagende.setEnabled(false);
+
 				Pause pa = new Pause();
 				pa.setPauseStartNow();
 				pauseList.add(pa);
@@ -115,36 +126,50 @@ public class Main_Gui extends JFrame {
 		btn_pauseanfang.setBounds(12, 51, 146, 25);
 		contentPane.add(btn_pauseanfang);
 
+		// Pause beenden
+		btn_pauseende.setEnabled(false);
 		
-		btn_pauseende.setEnabled(true);
 		btn_pauseende.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				textArea.append("Pause beendet am/um: " + zeitAktuell(new Date()) + "\n");
-//				btn_pauseende.setEnabled(false);
-//				btn_tagende.setEnabled(true);
-				
-				pauseList.get(pauseList.size()-1).setPauseEndeNow();
-				System.out.println(pauseList.get(pauseList.size()-1).berechnePauseMin());
+				textArea.append("Pause beendet am/um: "
+						+ zeitAktuell(new Date()) + "\n");
+
+				btn_taganfang.setEnabled(false);
+				btn_pauseanfang.setEnabled(true);
+				btn_pauseende.setEnabled(false);				
+				btn_tagende.setEnabled(true);
+
+				pauseList.get(pauseList.size() - 1).setPauseEndeNow();
+				System.out.println(pauseList.get(pauseList.size() - 1)
+						.berechnePauseMin());
 			}
 		});
 		btn_pauseende.setBounds(12, 89, 146, 25);
 		contentPane.add(btn_pauseende);
 
+		// Tag beenden
+		btn_tagende.setEnabled(false);
 		
-		btn_tagende.setEnabled(true);
 		btn_tagende.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				textArea.append("Tag beendet am/um: " + zeitAktuell(new Date()) + "\n");
-//				btn_tagende.setEnabled(false);
-				tagEnde = new Date();
+				textArea.append("Tag beendet am/um: " + zeitAktuell(new Date())
+						+ "\n");
+
+				btn_taganfang.setEnabled(false);
+				btn_pauseanfang.setEnabled(false);
+				btn_pauseende.setEnabled(false);
+				btn_tagende.setEnabled(false);
 				
+				tagEnde = new Date();
+
 				long arbeitszeit = berechneArbeitszeit();
 				long stunden, minuten;
-				
+
 				minuten = arbeitszeit % 60;
-				stunden = (arbeitszeit-minuten) / 60; 
-				
-				tf_summeArbeitszeit.setText((stunden<10?"0":"") + stunden + ":" + (minuten<10?"0":"") + minuten);
+				stunden = (arbeitszeit - minuten) / 60;
+
+				tf_summeArbeitszeit.setText((stunden < 10 ? "0" : "") + stunden
+						+ ":" + (minuten < 10 ? "0" : "") + minuten);
 			}
 		});
 		btn_tagende.setBounds(12, 127, 146, 25);
@@ -153,12 +178,12 @@ public class Main_Gui extends JFrame {
 		textArea = new JTextArea();
 		textArea.setBounds(170, 14, 250, 135);
 		contentPane.add(textArea);
-		
+
 		tf_summeArbeitszeit = new JTextField();
-		tf_summeArbeitszeit.setBounds(170, 181, 138, 22);
+		tf_summeArbeitszeit.setBounds(170, 181, 85, 22);
 		contentPane.add(tf_summeArbeitszeit);
 		tf_summeArbeitszeit.setColumns(10);
-		
+
 		JLabel lbl_SummeArbeitszeit = new JLabel("Summe Arbeitszeit:");
 		lbl_SummeArbeitszeit.setBounds(12, 184, 146, 16);
 		contentPane.add(lbl_SummeArbeitszeit);
@@ -169,11 +194,11 @@ public class Main_Gui extends JFrame {
 		return df.format(d);
 
 	}
-	
-	private long berechneArbeitszeit(){
+
+	private long berechneArbeitszeit() {
 		long arbeitstag = tagEnde.getMinutes() - tagAnfang.getMinutes();
 		long summePausen = 0;
-		for(Pause p : pauseList){
+		for (Pause p : pauseList) {
 			summePausen += p.berechnePauseMin();
 		}
 		return arbeitstag - summePausen;
