@@ -1,4 +1,7 @@
 import java.awt.EventQueue;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -7,24 +10,20 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-
-import javax.swing.SwingConstants;
-
-import sun.util.resources.CalendarData;
 
 public class Main_Gui extends JFrame {
 
@@ -66,6 +65,7 @@ public class Main_Gui extends JFrame {
 	 * Create the frame.
 	 */
 	public Main_Gui() {
+		setResizable(false);
 		pauseList = new ArrayList<Pause>();
 
 		prefixMap = new HashMap<String, String>();
@@ -376,8 +376,7 @@ public class Main_Gui extends JFrame {
 		return false;
 	}
 
-	private long berechne() {
-		// ab hier in neue Methode; abfragen ob Hashmap gefüllt
+	private long gesamtAZ() {
 		long summeArbeitstage = 0;
 		long summeHeute = 0;
 
@@ -418,13 +417,20 @@ public class Main_Gui extends JFrame {
 		return summeArbeitstage;
 	}
 
-	private void setArbeitsZeitLabel(boolean gesamt) {
+	private long ueberstunden(){
+		// us = Ueberstunden
+		long us = 0;
+		
+		return us;
+	}
+	
+ 	private void setArbeitsZeitLabel(boolean gesamt) {
 		long arbeitszeit = 0;
 		// if(gesamt)
 		// arbeitszeit = berechne();
 		// else
 		// arbeitszeit = berechneArbeitszeitInMillis();
-		arbeitszeit = (gesamt ? berechne() : berechneArbeitszeitInMillis());
+		arbeitszeit = (gesamt ? gesamtAZ() : berechneArbeitszeitInMillis());
 
 		long stunden, minuten;
 
