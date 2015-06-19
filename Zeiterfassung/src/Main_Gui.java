@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
 import javax.swing.SwingConstants;
@@ -35,8 +34,8 @@ public class Main_Gui extends JFrame {
 	private JTextArea textArea;
 
 	private ArrayList<Pause> pauseList;
-	private Date tagAnfang;
-	private Date tagEnde;
+	private Calendar tagAnfang;
+	private Calendar tagEnde;
 	private JLabel lbl_AktuellesDatumRechtsbuendig;
 	private JLabel lbl_Aktuellesdatum;
 	private JLabel lbl_TextSAZnP;
@@ -53,9 +52,6 @@ public class Main_Gui extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Calendar cal = Calendar.getInstance();
-					System.out.println(cal.getTime());
-					
 					Main_Gui frame = new Main_Gui();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -110,7 +106,7 @@ public class Main_Gui extends JFrame {
 		btn_taganfang.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				textArea.append("Tag angefangen um: \t"
-						+ zeitAktuell(new Date()) + "\n");
+						+ zeitAktuell(Calendar.getInstance()) + "\n");
 
 				// Button aktivieren/deaktivieren
 				btn_taganfang.setEnabled(false);
@@ -118,7 +114,7 @@ public class Main_Gui extends JFrame {
 				btn_pauseende.setEnabled(false);
 				btn_tagende.setEnabled(false);
 
-				tagAnfang = new Date();
+				tagAnfang = Calendar.getInstance();
 
 			}
 		});
@@ -131,7 +127,7 @@ public class Main_Gui extends JFrame {
 		btn_pauseanfang.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				textArea.append("Pause angefangen um: \t"
-						+ zeitAktuell(new Date()) + "\n");
+						+ zeitAktuell(Calendar.getInstance()) + "\n");
 
 				btn_taganfang.setEnabled(false);
 				btn_pauseanfang.setEnabled(false);
@@ -152,7 +148,7 @@ public class Main_Gui extends JFrame {
 		btn_pauseende.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				textArea.append("Pause beendet um: \t"
-						+ zeitAktuell(new Date()) + "\n");
+						+ zeitAktuell(Calendar.getInstance()) + "\n");
 
 				btn_taganfang.setEnabled(false);
 				btn_pauseanfang.setEnabled(true);
@@ -161,7 +157,7 @@ public class Main_Gui extends JFrame {
 
 				pauseList.get(pauseList.size() - 1).setPauseEndeNow();
 
-				long arbeitszeitAktuell = berechneArbeitszeit();
+				long arbeitszeitAktuell = berechneArbeitszeitInMillis();
 				long stunden, minuten;
 
 				minuten = arbeitszeitAktuell % 60;
@@ -179,7 +175,8 @@ public class Main_Gui extends JFrame {
 
 		btn_tagende.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				textArea.append("Tag beendet um: \t" + zeitAktuell(new Date())
+				tagEnde = Calendar.getInstance();
+				textArea.append("Tag beendet um: \t" + zeitAktuell(tagEnde)
 						+ "\n");
 
 				btn_taganfang.setEnabled(false);
@@ -187,9 +184,7 @@ public class Main_Gui extends JFrame {
 				btn_pauseende.setEnabled(false);
 				btn_tagende.setEnabled(false);
 
-				tagEnde = new Date();
-
-				long arbeitszeit = berechneArbeitszeit();
+				long arbeitszeit = berechneArbeitszeitInMillis();
 				long stunden, minuten;
 
 				minuten = arbeitszeit % 60;
@@ -221,7 +216,7 @@ public class Main_Gui extends JFrame {
 		lbl_AktuellesDatumRechtsbuendig.setBounds(63, 16, 95, 16);
 		lbl_AktuellesDatumRechtsbuendig
 				.setHorizontalAlignment(SwingConstants.RIGHT);
-		lbl_AktuellesDatumRechtsbuendig.setText(datumAktuell(new Date()));
+		lbl_AktuellesDatumRechtsbuendig.setText(datumAktuell(Calendar.getInstance()));
 		contentPane.add(lbl_AktuellesDatumRechtsbuendig);
 
 		// Anzeige Text: Summe Arbeitszeit nach Pause
@@ -245,25 +240,25 @@ public class Main_Gui extends JFrame {
 	}
 
 	// Aktuelle Zeit abfragen
-	private String zeitAktuell(Date d) {
+	private String zeitAktuell(Calendar d) {
 		SimpleDateFormat df = new SimpleDateFormat("HH:mm");
-		return df.format(d);
+		return df.format(d.getTime());
 	}
 
 	// Aktuelles/Heutiges Datum abfragen
-	private String datumAktuell(Date d) {
+	private String datumAktuell(Calendar d) {
 		SimpleDateFormat da = new SimpleDateFormat("dd.MM.YYYY");
-		return da.format(d);
+		return da.format(d.getTime());
 	}
 
 	// Berechnet Summe der Arbeitszeit nach der Pause oder am Ende des Tages
-	private long berechneArbeitszeit() {
-		long arbeitstag = (tagEnde == null ? (new Date()).getTime()
-				: tagEnde.getTime()) - tagAnfang.getTime();
+	private long berechneArbeitszeitInMillis() {
+		long arbeitstag = (tagEnde == null ? Calendar.getInstance().getTimeInMillis()
+				: tagEnde.getTimeInMillis()) - tagAnfang.getTimeInMillis();
 		long summePausen = 0;
 
 		for (Pause p : pauseList) {
-			summePausen += p.berechnePauseMin();
+			summePausen += p.berechnePauseInMillis();
 		}
 		return arbeitstag - summePausen;
 	}
@@ -279,14 +274,14 @@ public class Main_Gui extends JFrame {
 			writer.write("DA_" + datumAktuell(tagAnfang).replace(".", "_")
 					+ "\n");
 
-			writer.write("TA;" + df.format(tagAnfang) + "\n");
+			writer.write("TA;" + df.format(tagAnfang.getTime()) + "\n");
 
 			for (Pause p : pauseList) {
-				writer.write("PA;" + df.format(p.getPauseStart()) + "\n");
-				writer.write("PE;" + df.format(p.getPauseEnde()) + "\n");
+				writer.write("PA;" + df.format(p.getPauseStart().getTime()) + "\n");
+				writer.write("PE;" + df.format(p.getPauseEnde().getTime()) + "\n");
 			}
 
-			writer.write("TE;" + df.format(tagEnde) + "\n");
+			writer.write("TE;" + df.format(tagEnde.getTime()) + "\n");
 
 			writer.flush();
 			writer.close();
