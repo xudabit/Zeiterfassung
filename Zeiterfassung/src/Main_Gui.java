@@ -360,8 +360,6 @@ public class Main_Gui extends JFrame {
 			reader.close();
 			int m = (int)(summeArbeitstage/60000)%60;
 			int s = (int)((summeArbeitstage/60000)-m)/60;
-
-			System.out.println(s + ":" + m);
 			
 		} catch (IOException ex) {
 			System.err.println(ex.getMessage());
