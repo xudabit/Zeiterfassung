@@ -12,15 +12,15 @@ import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import sun.text.normalizer.UBiDiProps;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -236,16 +236,16 @@ public class Main_Gui extends JFrame {
 		lbl_GesamtAZAusgabe = new JLabel("00:00");
 		lbl_GesamtAZAusgabe.setBounds(244, 13, 251, 16);
 		contentPane.add(lbl_GesamtAZAusgabe);
-		
+
 		JLabel lbl_ueberstundenText = new JLabel("\u00DCberstunden:");
 		lbl_ueberstundenText.setBounds(12, 42, 95, 16);
 		contentPane.add(lbl_ueberstundenText);
-		
+
 		JLabel lbl_ueberstundenSumme = new JLabel("Summe");
 		lbl_ueberstundenSumme.setBounds(244, 42, 56, 16);
 		contentPane.add(lbl_ueberstundenSumme);
 		setZeitLabel(lbl_ueberstundenSumme, ueberstunden());
-		
+
 		setZeitLabel(lbl_GesamtAZAusgabe, gesamtAZ());
 
 		// Button aktivieren/deaktivieren wenn Datum in Datei
@@ -255,10 +255,17 @@ public class Main_Gui extends JFrame {
 			btn_pauseende.setEnabled(false);
 			btn_tagende.setEnabled(false);
 		}
-		
+
 		setZeitLabel(lbl_AusgabeSAZnP, berechneArbeitszeitInMillis());
-		
+
 		JButton btnStatistik = new JButton("Statistik");
+		btnStatistik.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Statistik_GUI s_gui = new Statistik_GUI();
+				s_gui.setVisible(true);
+				s_gui.setLabel(findefAZ());
+			}
+		});
 		btnStatistik.setBounds(12, 282, 97, 25);
 		contentPane.add(btnStatistik);
 
@@ -385,19 +392,21 @@ public class Main_Gui extends JFrame {
 				if (prefixMap.containsKey(zp.getPrefix())) {
 					textArea.append(prefixMap.get(zp.getPrefix())
 							+ zeitAktuell(zp.getDatum()) + "\n");
-					
-					if(zp.getPrefix().equals("TA")){
+
+					if (zp.getPrefix().equals("TA")) {
 						tagAnfang = zp.getDatum();
 					}
-					if(zp.getPrefix().equals("TE")){
+					if (zp.getPrefix().equals("TE")) {
 						tagEnde = zp.getDatum();
 					}
-					if(zp.getPrefix().equals("PA")){
+					if (zp.getPrefix().equals("PA")) {
 						pauseList.add(new Pause());
-						pauseList.get(pauseList.size()-1).setPauseStart(zp.getDatum());
+						pauseList.get(pauseList.size() - 1).setPauseStart(
+								zp.getDatum());
 					}
-					if(zp.getPrefix().equals("PE")){
-						pauseList.get(pauseList.size()-1).setPauseEnde(zp.getDatum());
+					if (zp.getPrefix().equals("PE")) {
+						pauseList.get(pauseList.size() - 1).setPauseEnde(
+								zp.getDatum());
 					}
 				}
 			}
@@ -449,26 +458,44 @@ public class Main_Gui extends JFrame {
 		return summeArbeitstage;
 	}
 
-	private long ueberstunden(){
-//		long anzahlSchluessel = dateMap.keySet().size();
-//		long umrechnen = (anzahlSchluessel * 8) * 3600000;
-//		long gesamtAZ = gesamtAZ();
-//		long summe = gesamtAZ - umrechnen;
-//		
-//		return summe;
-		
+	private long ueberstunden() {
 		return (gesamtAZ() - ((dateMap.keySet().size() * 8) * 3600000));
 	}
-	
- 	private void setZeitLabel(JLabel label, long ms) {
+
+	private void setZeitLabel(JLabel label, long ms) {
 		long stunden, minuten;
-		boolean neg = (ms<0);
-		ms = (neg?ms*-1:ms);
+		boolean neg = (ms < 0);
+		ms = (neg ? ms * -1 : ms);
 
 		minuten = (ms / 60000) % 60;
 		stunden = ((ms / 60000) - minuten) / 60;
 
-		label.setText((neg?"-":"") + (stunden < 10 ? "0" : "") + stunden + ":"
-						+ (minuten < 10 ? "0" : "") + minuten);
+		label.setText((neg ? "-" : "") + (stunden < 10 ? "0" : "") + stunden
+				+ ":" + (minuten < 10 ? "0" : "") + minuten);
+	}
+
+	private String findefAZ() {
+
+		Calendar zp1 = null;
+
+		for (String s : dateMap.keySet()) {
+			for (Zeitpunkt zp : dateMap.get(s)) {
+				if (zp.getPrefix().equals("TA")) {
+					if (zp1 == null) {
+						zp1 = zp.getDatum();
+						zp1.set(1, 1, 2000);
+					} else {
+						Calendar zp2 = zp.getDatum();
+						zp2.set(1, 1, 2000);
+						if (zp1.getTimeInMillis() > zp2.getTimeInMillis()) {
+							zp1 = zp2;
+						}
+					}
+				}
+
+			}
+		}
+
+		return zeitAktuell(zp1);
 	}
 }
