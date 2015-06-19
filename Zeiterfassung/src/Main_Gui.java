@@ -160,8 +160,8 @@ public class Main_Gui extends JFrame {
 				long arbeitszeitAktuell = berechneArbeitszeit();
 				long stunden, minuten;
 
-				minuten = (arbeitszeitAktuell / 60000) % 60;
-				stunden = ((arbeitszeitAktuell / 60000) - minuten) / 60;
+				minuten = arbeitszeitAktuell % 60;
+				stunden = (arbeitszeitAktuell - minuten) / 60;
 
 				lbl_AusgabeSAZnP.setText((stunden < 10 ? "0" : "") + stunden
 						+ ":" + (minuten < 10 ? "0" : "") + minuten);
@@ -187,9 +187,9 @@ public class Main_Gui extends JFrame {
 
 				long arbeitszeit = berechneArbeitszeit();
 				long stunden, minuten;
-				
-				minuten = (arbeitszeit / 60000) % 60;
-				stunden = ((arbeitszeit / 60000) - minuten) / 60;
+
+				minuten = arbeitszeit % 60;
+				stunden = (arbeitszeit - minuten) / 60;
 
 				lbl_AusgabeSAZnP.setText((stunden < 10 ? "0" : "") + stunden
 						+ ":" + (minuten < 10 ? "0" : "") + minuten);
