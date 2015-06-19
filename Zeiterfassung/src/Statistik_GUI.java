@@ -25,7 +25,7 @@ public class Statistik_GUI extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lbl_fABText = new JLabel("Fr\u00FChester Arbeitsbegin");
+		JLabel lbl_fABText = new JLabel("Fr\u00FChester Arbeitsbeginn:");
 		lbl_fABText.setBounds(12, 13, 150, 16);
 		contentPane.add(lbl_fABText);
 		
