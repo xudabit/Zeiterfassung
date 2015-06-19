@@ -38,7 +38,7 @@ public class Main_Gui extends JFrame {
 	private JLabel lbl_Aktuellesdatum;
 	private JLabel lbl_TextSAZnP;
 	private JLabel lbl_AusgabeSAZnP;
-	
+
 	private HashMap<String, ArrayList<Zeitpunkt>> dateMap;
 	private JLabel lbl_GesamtAZText;
 	private JLabel lbl_GesamtAZAusgabe;
@@ -65,6 +65,8 @@ public class Main_Gui extends JFrame {
 	public Main_Gui() {
 
 		pauseList = new ArrayList<Pause>();
+		
+		leseAusDatei();
 
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -83,7 +85,7 @@ public class Main_Gui extends JFrame {
 
 		setTitle("Zeiterfassung");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 513, 361);
+		setBounds(100, 100, 513, 308);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -110,13 +112,13 @@ public class Main_Gui extends JFrame {
 				btn_taganfang.setEnabled(false);
 				btn_pauseanfang.setEnabled(true);
 				btn_pauseende.setEnabled(false);
-				btn_tagende.setEnabled(false);
+				btn_tagende.setEnabled(true);
 
 				tagAnfang = new Date();
 
 			}
 		});
-		btn_taganfang.setBounds(12, 45, 146, 25);
+		btn_taganfang.setBounds(12, 85, 146, 25);
 		contentPane.add(btn_taganfang);
 
 		// Pause beginnen
@@ -137,7 +139,7 @@ public class Main_Gui extends JFrame {
 				pauseList.add(pa);
 			}
 		});
-		btn_pauseanfang.setBounds(12, 83, 146, 25);
+		btn_pauseanfang.setBounds(12, 123, 146, 25);
 		contentPane.add(btn_pauseanfang);
 
 		// Pause beenden
@@ -165,7 +167,7 @@ public class Main_Gui extends JFrame {
 						+ ":" + (minuten < 10 ? "0" : "") + minuten);
 			}
 		});
-		btn_pauseende.setBounds(12, 121, 146, 25);
+		btn_pauseende.setBounds(12, 161, 146, 25);
 		contentPane.add(btn_pauseende);
 
 		// Tag beenden
@@ -196,23 +198,23 @@ public class Main_Gui extends JFrame {
 				leseAusDatei();
 			}
 		});
-		btn_tagende.setBounds(12, 156, 146, 25);
+		btn_tagende.setBounds(12, 196, 146, 25);
 		contentPane.add(btn_tagende);
 
 		textArea = new JTextArea();
-		textArea.setBounds(170, 46, 279, 135);
+		textArea.setBounds(170, 86, 279, 135);
 		contentPane.add(textArea);
 
 		// Text Datum ausgeben
 		lbl_Aktuellesdatum = new JLabel();
 		lbl_Aktuellesdatum.setHorizontalAlignment(SwingConstants.LEFT);
 		lbl_Aktuellesdatum.setText("Datum: ");
-		lbl_Aktuellesdatum.setBounds(12, 13, 46, 16);
+		lbl_Aktuellesdatum.setBounds(12, 56, 46, 16);
 		contentPane.add(lbl_Aktuellesdatum);
 
 		// Aktuelles Datum rechtbuendig ausgeben
 		lbl_AktuellesDatumRechtsbuendig = new JLabel();
-		lbl_AktuellesDatumRechtsbuendig.setBounds(63, 16, 95, 16);
+		lbl_AktuellesDatumRechtsbuendig.setBounds(63, 56, 95, 16);
 		lbl_AktuellesDatumRechtsbuendig
 				.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_AktuellesDatumRechtsbuendig.setText(datumAktuell(new Date()));
@@ -220,21 +222,21 @@ public class Main_Gui extends JFrame {
 
 		// Anzeige Text: Summe Arbeitszeit nach Pause
 		lbl_TextSAZnP = new JLabel("Summe Arbeitszeit:");
-		lbl_TextSAZnP.setBounds(12, 199, 192, 16);
+		lbl_TextSAZnP.setBounds(12, 239, 192, 16);
 		contentPane.add(lbl_TextSAZnP);
 
 		// Anzeige Summe Arbeitszeit nach Pause
 		lbl_AusgabeSAZnP = new JLabel();
 		lbl_AusgabeSAZnP.setText("nach der ersten Pause und nach Feierabend.");
-		lbl_AusgabeSAZnP.setBounds(170, 199, 279, 16);
+		lbl_AusgabeSAZnP.setBounds(170, 239, 279, 16);
 		contentPane.add(lbl_AusgabeSAZnP);
-		
-		lbl_GesamtAZText = new JLabel("Gesamtarbeitszeit:");
-		lbl_GesamtAZText.setBounds(12, 247, 146, 16);
+
+		lbl_GesamtAZText = new JLabel("Gesamtarbeitszeit der letzten Tage:");
+		lbl_GesamtAZText.setBounds(12, 13, 220, 16);
 		contentPane.add(lbl_GesamtAZText);
-		
-		lbl_GesamtAZAusgabe = new JLabel("Ausgabe GAZ");
-		lbl_GesamtAZAusgabe.setBounds(170, 247, 279, 16);
+
+		lbl_GesamtAZAusgabe = new JLabel(ausgabe(berechne()));
+		lbl_GesamtAZAusgabe.setBounds(244, 13, 251, 16);
 		contentPane.add(lbl_GesamtAZAusgabe);
 	}
 
@@ -252,8 +254,8 @@ public class Main_Gui extends JFrame {
 
 	// Berechnet Summe der Arbeitszeit nach der Pause oder am Ende des Tages
 	private long berechneArbeitszeit() {
-		long arbeitstag = (tagEnde == null ? (new Date()).getTime()
-				: tagEnde.getTime()) - tagAnfang.getTime();
+		long arbeitstag = (tagEnde == null ? (new Date()).getTime() : tagEnde
+				.getTime()) - tagAnfang.getTime();
 		long summePausen = 0;
 
 		for (Pause p : pauseList) {
@@ -294,24 +296,21 @@ public class Main_Gui extends JFrame {
 
 	private boolean leseAusDatei() {
 
+		// Überprüfen, ob die Datei existiert
 		try {
-			File file = new File(DATEINAME);
+			BufferedReader reader = new BufferedReader(new FileReader(new File(
+					DATEINAME)));
 
-			BufferedReader reader = new BufferedReader(new FileReader(file));
-			
 			dateMap = new HashMap<String, ArrayList<Zeitpunkt>>();
-			
+
 			Date datumAusgelesen = new Date();
-			
+
 			String[] datum = {};
 
-			Date summeArbeitstage = new Date(0);
-			
 			while (reader.ready()) {
 
 				String zeile = reader.readLine();
 				String[] zeit;
-				
 
 				if (zeile.startsWith("DA")) {
 
@@ -324,73 +323,82 @@ public class Main_Gui extends JFrame {
 					jahr = Integer.parseInt(datum[3]);
 
 					datumAusgelesen = new Date(jahr, monat, tag);
-					
-					dateMap.put(datum[1] + "." + datum[2] + "." + datum[3], new ArrayList<Zeitpunkt>());
-					
+
+					dateMap.put(datum[1] + "." + datum[2] + "." + datum[3],
+							new ArrayList<Zeitpunkt>());
+
 				} else {
 					zeit = zeile.split(";");
 					String pf = "TA#TE#PA#PE";
-					if (pf.contains(zeit[0])) {						
-						
+					if (pf.contains(zeit[0])) {
+
 						int stunden = Integer.parseInt(zeit[1]);
 						int minuten = Integer.parseInt(zeit[2]);
-						
+
 						Zeitpunkt zp = new Zeitpunkt();
-						zp.setDatum((Date)datumAusgelesen.clone());
+						zp.setDatum((Date) datumAusgelesen.clone());
 						zp.getDatum().setHours(stunden);
 						zp.getDatum().setMinutes(minuten);
 						zp.setPrefix(zeit[0]);
-						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3]).add(zp);
+						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3])
+								.add(zp);
 					}
-
 				}
-
 			}
-			
-			for(String s : dateMap.keySet()){
-				Date ta = null;
-				Date te = null;
-				
-				ArrayList<Date[]> pausen = new ArrayList<Date[]>();
-				
-				for(Zeitpunkt zp : dateMap.get(s)){
-					if(zp.getPrefix().equals("TA")){
-						ta = zp.getDatum();
-					}
-					if(zp.getPrefix().equals("TE")){
-						te = zp.getDatum();
-					}
-					
-					if(zp.getPrefix().equals("PA")){
-						pausen.add(new Date[2]);
-						pausen.get(pausen.size()-1)[0] = zp.getDatum();
-						
-					}
-					
-					if(zp.getPrefix().equals("PE")){
-						pausen.get(pausen.size()-1)[1] = zp.getDatum();
-					}
-				}
-				
-				long summePausen = 0;
-				for (Date[] d : pausen){
-					summePausen += (d[1].getTime() - d[0].getTime()); 
-				}
-				summeArbeitstage = new Date(summeArbeitstage.getTime() + (new Date(te.getTime() - ta.getTime() - summePausen).getTime()));
-				
-			}
-			
 			reader.close();
-			int m = (int)(summeArbeitstage.getTime()/60000)%60;
-			int s = (int)((summeArbeitstage.getTime()/60000)-m)/60;
 
-			System.out.println(s + ":" + m);
-			
 		} catch (IOException ex) {
 			System.err.println(ex.getMessage());
 		}
-
 		return false;
 	}
 
+	private long berechne() {
+		Date summeArbeitstage = new Date(0);
+		// ab hier in neue Methode; abfragen ob Hashmap gefüllt
+		for (String s : dateMap.keySet()) {
+			Date ta = null;
+			Date te = null;
+
+			ArrayList<Date[]> pausen = new ArrayList<Date[]>();
+
+			for (Zeitpunkt zp : dateMap.get(s)) {
+				if (zp.getPrefix().equals("TA")) {
+					ta = zp.getDatum();
+				}
+				if (zp.getPrefix().equals("TE")) {
+					te = zp.getDatum();
+				}
+
+				if (zp.getPrefix().equals("PA")) {
+					pausen.add(new Date[2]);
+					pausen.get(pausen.size() - 1)[0] = zp.getDatum();
+				}
+
+				if (zp.getPrefix().equals("PE")) {
+					pausen.get(pausen.size() - 1)[1] = zp.getDatum();
+				}
+			}
+
+			long summePausen = 0;
+			for (Date[] d : pausen) {
+				summePausen += (d[1].getTime() - d[0].getTime());
+			}
+			summeArbeitstage = new Date(
+					summeArbeitstage.getTime()
+							+ (new Date(te.getTime() - ta.getTime()
+									- summePausen).getTime()));
+
+		}
+		return summeArbeitstage.getTime();
+	}
+
+	private String ausgabe(long summeArbeitstage) {
+
+		int m = (int) (summeArbeitstage / 60000) % 60;
+		int s = (int) ((summeArbeitstage / 60000) - m) / 60;
+
+		return (s + ":" + m);
+
+	}
 }
