@@ -42,6 +42,7 @@ public class Main_Gui extends JFrame {
 	private JLabel lbl_AusgabeSAZnP;
 
 	private HashMap<String, ArrayList<Zeitpunkt>> dateMap;
+	private HashMap<String, String> prefixMap;
 	private JLabel lbl_GesamtAZText;
 	private JLabel lbl_GesamtAZAusgabe;
 
@@ -65,9 +66,14 @@ public class Main_Gui extends JFrame {
 	 * Create the frame.
 	 */
 	public Main_Gui() {
-
 		pauseList = new ArrayList<Pause>();
-		
+
+		prefixMap = new HashMap<String, String>();
+		prefixMap.put("TA", "Tag angefangen um:\t");
+		prefixMap.put("TE", "Tag beendet um:\t");
+		prefixMap.put("PA", "Pause angefangen um:\t");
+		prefixMap.put("PE", "Pause beendet um:\t");
+
 		leseAusDatei();
 
 		addWindowListener(new WindowAdapter() {
@@ -117,7 +123,6 @@ public class Main_Gui extends JFrame {
 				btn_pauseende.setEnabled(false);
 				btn_tagende.setEnabled(true);
 
-				
 			}
 		});
 		btn_taganfang.setBounds(12, 85, 146, 25);
@@ -159,7 +164,7 @@ public class Main_Gui extends JFrame {
 
 				pauseList.get(pauseList.size() - 1).setPauseEndeNow();
 
-				setArbeitsZeitLabel();
+				setArbeitsZeitLabel(false);
 			}
 		});
 		btn_pauseende.setBounds(12, 161, 146, 25);
@@ -179,11 +184,12 @@ public class Main_Gui extends JFrame {
 				btn_pauseende.setEnabled(false);
 				btn_tagende.setEnabled(false);
 
-				setArbeitsZeitLabel();
+				setArbeitsZeitLabel(false);
 
 				// Butten AusgabeSAZnP = Summe Arbeitszeit nach Pause
 				schreibeInDatei();
 				leseAusDatei();
+				setArbeitsZeitLabel(true);
 			}
 		});
 		btn_tagende.setBounds(12, 196, 146, 25);
@@ -205,7 +211,8 @@ public class Main_Gui extends JFrame {
 		lbl_AktuellesDatumRechtsbuendig.setBounds(63, 56, 95, 16);
 		lbl_AktuellesDatumRechtsbuendig
 				.setHorizontalAlignment(SwingConstants.RIGHT);
-		lbl_AktuellesDatumRechtsbuendig.setText(datumAktuell(Calendar.getInstance()));
+		lbl_AktuellesDatumRechtsbuendig.setText(datumAktuell(Calendar
+				.getInstance()));
 		contentPane.add(lbl_AktuellesDatumRechtsbuendig);
 
 		// Anzeige Text: SAZnP = Summe Arbeitszeit nach Pause
@@ -218,15 +225,25 @@ public class Main_Gui extends JFrame {
 		lbl_AusgabeSAZnP.setText("nach der ersten Pause und nach Feierabend.");
 		lbl_AusgabeSAZnP.setBounds(170, 239, 279, 16);
 		contentPane.add(lbl_AusgabeSAZnP);
+		setArbeitsZeitLabel(false);
 
 		lbl_GesamtAZText = new JLabel("Gesamtarbeitszeit der letzten Tage:");
 		lbl_GesamtAZText.setBounds(12, 13, 220, 16);
 		contentPane.add(lbl_GesamtAZText);
 
-		lbl_GesamtAZAusgabe = new JLabel("");
-		setArbeitsZeitLabel();
+		lbl_GesamtAZAusgabe = new JLabel("00:00");
 		lbl_GesamtAZAusgabe.setBounds(244, 13, 251, 16);
 		contentPane.add(lbl_GesamtAZAusgabe);
+		setArbeitsZeitLabel(true);
+
+		// Button aktivieren/deaktivieren wenn Datum in Datei
+		if (checkDatum()) {
+			btn_taganfang.setEnabled(false);
+			btn_pauseanfang.setEnabled(false);
+			btn_pauseende.setEnabled(false);
+			btn_tagende.setEnabled(false);
+		}
+
 	}
 
 	// Aktuelle Zeit abfragen
@@ -243,8 +260,12 @@ public class Main_Gui extends JFrame {
 
 	// Berechnet Summe der Arbeitszeit nach der Pause oder am Ende des Tages
 	private long berechneArbeitszeitInMillis() {
-		long arbeitstag = (tagEnde == null ? Calendar.getInstance().getTimeInMillis()
-				: tagEnde.getTimeInMillis()) - tagAnfang.getTimeInMillis();
+		if (tagAnfang == null)
+			return 0;
+
+		long arbeitstag = (tagEnde == null ? Calendar.getInstance()
+				.getTimeInMillis() : tagEnde.getTimeInMillis())
+				- tagAnfang.getTimeInMillis();
 		long summePausen = 0;
 
 		for (Pause p : pauseList) {
@@ -266,8 +287,10 @@ public class Main_Gui extends JFrame {
 			writer.write("TA;" + df.format(tagAnfang.getTime()) + "\n");
 
 			for (Pause p : pauseList) {
-				writer.write("PA;" + df.format(p.getPauseStart().getTime()) + "\n");
-				writer.write("PE;" + df.format(p.getPauseEnde().getTime()) + "\n");
+				writer.write("PA;" + df.format(p.getPauseStart().getTime())
+						+ "\n");
+				writer.write("PE;" + df.format(p.getPauseEnde().getTime())
+						+ "\n");
 			}
 
 			writer.write("TE;" + df.format(tagEnde.getTime()) + "\n");
@@ -283,18 +306,22 @@ public class Main_Gui extends JFrame {
 	}
 
 	private boolean leseAusDatei() {
-
+		dateMap = new HashMap<String, ArrayList<Zeitpunkt>>();
 		// Überprüfen, ob die Datei existiert
 		try {
-			BufferedReader reader = new BufferedReader(
-					new FileReader(
-							new File(DATEINAME)));
+			File file = new File(DATEINAME);
+
+			if (!file.exists())
+				return false;
+
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+
 			dateMap = new HashMap<String, ArrayList<Zeitpunkt>>();
 
 			int tag = 0, monat = 0, jahr = 0;
 			String[] zeit = new String[0], datum = new String[0];
 			String zeile;
-			
+
 			while ((zeile = reader.readLine()) != null) {
 				if (zeile.startsWith("DA")) {
 
@@ -303,13 +330,13 @@ public class Main_Gui extends JFrame {
 					tag = Integer.parseInt(datum[1]);
 					monat = Integer.parseInt(datum[2]);
 					jahr = Integer.parseInt(datum[3]);
-					
+
 					dateMap.put(datum[1] + "." + datum[2] + "." + datum[3],
 							new ArrayList<Zeitpunkt>());
 
 				} else {
 					zeit = zeile.split(";");
-					if (PREFIXE.contains(zeit[0])) {						
+					if (PREFIXE.contains(zeit[0])) {
 						int stunden = Integer.parseInt(zeit[1]);
 						int minuten = Integer.parseInt(zeit[2]);
 
@@ -331,16 +358,34 @@ public class Main_Gui extends JFrame {
 		return false;
 	}
 
+	private boolean checkDatum() {
+		Calendar aktuellesDatum = Calendar.getInstance();
+		String dA = datumAktuell(aktuellesDatum);
+
+		if (dateMap.containsKey(dA)) {
+			for (Zeitpunkt zp : dateMap.get(dA)) {
+				if (prefixMap.containsKey(zp.getPrefix())) {
+					textArea.append(prefixMap.get(zp.getPrefix())
+							+ zeitAktuell(zp.getDatum()) + "\n");
+				}
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
 	private long berechne() {
 		// ab hier in neue Methode; abfragen ob Hashmap gefüllt
 		long summeArbeitstage = 0;
 		long summeHeute = 0;
-			
-		for (String s : dateMap.keySet()) {
-				Calendar ta = null;
-				Calendar te = null;
 
-				ArrayList<Calendar[]> pausen = new ArrayList<Calendar[]>();
+		for (String s : dateMap.keySet()) {
+			Calendar ta = null;
+			Calendar te = null;
+
+			ArrayList<Calendar[]> pausen = new ArrayList<Calendar[]>();
 
 			for (Zeitpunkt zp : dateMap.get(s)) {
 				if (zp.getPrefix().equals("TA")) {
@@ -351,7 +396,7 @@ public class Main_Gui extends JFrame {
 				}
 
 				if (zp.getPrefix().equals("PA")) {
-						pausen.add(new Calendar[2]);
+					pausen.add(new Calendar[2]);
 					pausen.get(pausen.size() - 1)[0] = zp.getDatum();
 				}
 
@@ -361,26 +406,33 @@ public class Main_Gui extends JFrame {
 			}
 
 			long summePausen = 0;
-				for (Calendar[] d : pausen){
-					summePausen += (d[1].getTimeInMillis() - d[0].getTimeInMillis()); 
+			for (Calendar[] d : pausen) {
+				summePausen += (d[1].getTimeInMillis() - d[0].getTimeInMillis());
 			}
-				
-				summeHeute = (te.getTimeInMillis() - ta.getTimeInMillis());
-				summeHeute -= summePausen;
-				summeArbeitstage += summeHeute;
+
+			summeHeute = (te.getTimeInMillis() - ta.getTimeInMillis());
+			summeHeute -= summePausen;
+			summeArbeitstage += summeHeute;
 
 		}
 		return summeArbeitstage;
 	}
-	
-	private void setArbeitsZeitLabel() {
-		long arbeitszeit = berechneArbeitszeitInMillis();
+
+	private void setArbeitsZeitLabel(boolean gesamt) {
+		long arbeitszeit = 0;
+		// if(gesamt)
+		// arbeitszeit = berechne();
+		// else
+		// arbeitszeit = berechneArbeitszeitInMillis();
+		arbeitszeit = (gesamt ? berechne() : berechneArbeitszeitInMillis());
+
 		long stunden, minuten;
 
-		minuten = (arbeitszeit /60000)%60;
-		stunden = ((arbeitszeit/60000)-minuten)/60;
+		minuten = (arbeitszeit / 60000) % 60;
+		stunden = ((arbeitszeit / 60000) - minuten) / 60;
 
-		lbl_AusgabeSAZnP.setText((stunden < 10 ? "0" : "") + stunden
-				+ ":" + (minuten < 10 ? "0" : "") + minuten);
+		(gesamt ? lbl_GesamtAZAusgabe : lbl_AusgabeSAZnP)
+				.setText((stunden < 10 ? "0" : "") + stunden + ":"
+						+ (minuten < 10 ? "0" : "") + minuten);
 	}
 }
