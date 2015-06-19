@@ -28,4 +28,13 @@ public class Pause {
 	public long berechnePauseInMillis(){
 		return pauseEnde.getTimeInMillis() - pauseStart.getTimeInMillis();
 	}	
+	
+	public void setPauseStart(Calendar pS) {
+		this.pauseStart = pS;
+	}
+	
+	public void setPauseEnde(Calendar pE) {
+		this.pauseEnde = pE;
+	}
+	
 }
