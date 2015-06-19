@@ -1,6 +1,7 @@
 ToDo:
 
 Gesamtarbeitszeit berechnen
+Summe Arbeitszeit der letzten Tage "schön" darstellen wenn Datei leer
 
 
 Manuelle Eingaben erlauben (neues Fenster - Tag beginnen usw. Zeit eintragen möglich)
@@ -10,3 +11,5 @@ Tag beenden nicht ohne Pause möglich
 Überprüfen, ob Datum bereits in Zeiterfassung.ze vorhanden
 
 Statistiken erstellen
+
+Überprüfen, ob Datei existiert
