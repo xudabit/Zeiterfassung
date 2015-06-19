@@ -227,10 +227,12 @@ public class Main_Gui extends JFrame {
 		contentPane.add(lbl_AusgabeSAZnP);
 		setZeitLabel(lbl_AusgabeSAZnP, berechneArbeitszeitInMillis());
 
+		// Gesamtarbeitszeit seit Datei erzeugt wurde
 		lbl_GesamtAZText = new JLabel("Gesamtarbeitszeit der letzten Tage:");
 		lbl_GesamtAZText.setBounds(12, 13, 220, 16);
 		contentPane.add(lbl_GesamtAZText);
 
+		// Ausgabe Gesamtarbeitszeit seit Datei erzeugt wurde
 		lbl_GesamtAZAusgabe = new JLabel("00:00");
 		lbl_GesamtAZAusgabe.setBounds(244, 13, 251, 16);
 		contentPane.add(lbl_GesamtAZAusgabe);
@@ -253,6 +255,8 @@ public class Main_Gui extends JFrame {
 			btn_pauseende.setEnabled(false);
 			btn_tagende.setEnabled(false);
 		}
+		
+		setZeitLabel(lbl_AusgabeSAZnP, berechneArbeitszeitInMillis());
 
 	}
 
@@ -377,6 +381,20 @@ public class Main_Gui extends JFrame {
 				if (prefixMap.containsKey(zp.getPrefix())) {
 					textArea.append(prefixMap.get(zp.getPrefix())
 							+ zeitAktuell(zp.getDatum()) + "\n");
+					
+					if(zp.getPrefix().equals("TA")){
+						tagAnfang = zp.getDatum();
+					}
+					if(zp.getPrefix().equals("TE")){
+						tagEnde = zp.getDatum();
+					}
+					if(zp.getPrefix().equals("PA")){
+						pauseList.add(new Pause());
+						pauseList.get(pauseList.size()-1).setPauseStart(zp.getDatum());
+					}
+					if(zp.getPrefix().equals("PE")){
+						pauseList.get(pauseList.size()-1).setPauseEnde(zp.getDatum());
+					}
 				}
 			}
 
