@@ -12,15 +12,15 @@ import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import sun.text.normalizer.UBiDiProps;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -93,7 +93,7 @@ public class Main_Gui extends JFrame {
 
 		setTitle("Zeiterfassung");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 513, 421);
+		setBounds(100, 100, 513, 351);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -125,7 +125,7 @@ public class Main_Gui extends JFrame {
 
 			}
 		});
-		btn_taganfang.setBounds(12, 188, 146, 25);
+		btn_taganfang.setBounds(12, 99, 146, 25);
 		contentPane.add(btn_taganfang);
 
 		// Pause beginnen
@@ -146,7 +146,7 @@ public class Main_Gui extends JFrame {
 				pauseList.add(pa);
 			}
 		});
-		btn_pauseanfang.setBounds(12, 226, 146, 25);
+		btn_pauseanfang.setBounds(12, 137, 146, 25);
 		contentPane.add(btn_pauseanfang);
 
 		// Pause beenden
@@ -167,7 +167,7 @@ public class Main_Gui extends JFrame {
 				setZeitLabel(lbl_AusgabeSAZnP, berechneArbeitszeitInMillis());
 			}
 		});
-		btn_pauseende.setBounds(12, 264, 146, 25);
+		btn_pauseende.setBounds(12, 175, 146, 25);
 		contentPane.add(btn_pauseende);
 
 		// Tag beenden
@@ -192,23 +192,23 @@ public class Main_Gui extends JFrame {
 				setZeitLabel(lbl_GesamtAZAusgabe, gesamtAZ());
 			}
 		});
-		btn_tagende.setBounds(12, 299, 146, 25);
+		btn_tagende.setBounds(12, 210, 146, 25);
 		contentPane.add(btn_tagende);
 
 		textArea = new JTextArea();
-		textArea.setBounds(170, 189, 279, 135);
+		textArea.setBounds(170, 100, 279, 135);
 		contentPane.add(textArea);
 
 		// Text Datum ausgeben
 		lbl_Aktuellesdatum = new JLabel();
 		lbl_Aktuellesdatum.setHorizontalAlignment(SwingConstants.LEFT);
 		lbl_Aktuellesdatum.setText("Datum: ");
-		lbl_Aktuellesdatum.setBounds(12, 159, 46, 16);
+		lbl_Aktuellesdatum.setBounds(12, 70, 46, 16);
 		contentPane.add(lbl_Aktuellesdatum);
 
 		// Aktuelles Datum rechtbuendig ausgeben
 		lbl_AktuellesDatumRechtsbuendig = new JLabel();
-		lbl_AktuellesDatumRechtsbuendig.setBounds(63, 159, 95, 16);
+		lbl_AktuellesDatumRechtsbuendig.setBounds(63, 70, 95, 16);
 		lbl_AktuellesDatumRechtsbuendig
 				.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_AktuellesDatumRechtsbuendig.setText(datumAktuell(Calendar
@@ -217,13 +217,13 @@ public class Main_Gui extends JFrame {
 
 		// Anzeige Text: SAZnP = Summe Arbeitszeit nach Pause
 		lbl_TextSAZnP = new JLabel("Summe Arbeitszeit:");
-		lbl_TextSAZnP.setBounds(12, 342, 192, 16);
+		lbl_TextSAZnP.setBounds(12, 253, 192, 16);
 		contentPane.add(lbl_TextSAZnP);
 
 		// Anzeige SAZnP = Summe Arbeitszeit nach Pause
 		lbl_AusgabeSAZnP = new JLabel();
 		lbl_AusgabeSAZnP.setText("nach der ersten Pause und nach Feierabend.");
-		lbl_AusgabeSAZnP.setBounds(170, 342, 279, 16);
+		lbl_AusgabeSAZnP.setBounds(170, 253, 279, 16);
 		contentPane.add(lbl_AusgabeSAZnP);
 		setZeitLabel(lbl_AusgabeSAZnP, berechneArbeitszeitInMillis());
 
@@ -236,16 +236,16 @@ public class Main_Gui extends JFrame {
 		lbl_GesamtAZAusgabe = new JLabel("00:00");
 		lbl_GesamtAZAusgabe.setBounds(244, 13, 251, 16);
 		contentPane.add(lbl_GesamtAZAusgabe);
-		
+
 		JLabel lbl_ueberstundenText = new JLabel("\u00DCberstunden:");
-		lbl_ueberstundenText.setBounds(12, 41, 146, 16);
+		lbl_ueberstundenText.setBounds(12, 42, 95, 16);
 		contentPane.add(lbl_ueberstundenText);
-		
+
 		JLabel lbl_ueberstundenSumme = new JLabel("Summe");
-		lbl_ueberstundenSumme.setBounds(170, 42, 56, 16);
+		lbl_ueberstundenSumme.setBounds(244, 42, 56, 16);
 		contentPane.add(lbl_ueberstundenSumme);
 		setZeitLabel(lbl_ueberstundenSumme, ueberstunden());
-		
+
 		setZeitLabel(lbl_GesamtAZAusgabe, gesamtAZ());
 
 		// Button aktivieren/deaktivieren wenn Datum in Datei
@@ -255,8 +255,19 @@ public class Main_Gui extends JFrame {
 			btn_pauseende.setEnabled(false);
 			btn_tagende.setEnabled(false);
 		}
-		
+
 		setZeitLabel(lbl_AusgabeSAZnP, berechneArbeitszeitInMillis());
+
+		JButton btnStatistik = new JButton("Statistik");
+		btnStatistik.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Statistik_GUI s_gui = new Statistik_GUI();
+				s_gui.setVisible(true);
+				s_gui.setLabel(findefAZ());
+			}
+		});
+		btnStatistik.setBounds(12, 282, 97, 25);
+		contentPane.add(btnStatistik);
 
 	}
 
@@ -381,19 +392,21 @@ public class Main_Gui extends JFrame {
 				if (prefixMap.containsKey(zp.getPrefix())) {
 					textArea.append(prefixMap.get(zp.getPrefix())
 							+ zeitAktuell(zp.getDatum()) + "\n");
-					
-					if(zp.getPrefix().equals("TA")){
+
+					if (zp.getPrefix().equals("TA")) {
 						tagAnfang = zp.getDatum();
 					}
-					if(zp.getPrefix().equals("TE")){
+					if (zp.getPrefix().equals("TE")) {
 						tagEnde = zp.getDatum();
 					}
-					if(zp.getPrefix().equals("PA")){
+					if (zp.getPrefix().equals("PA")) {
 						pauseList.add(new Pause());
-						pauseList.get(pauseList.size()-1).setPauseStart(zp.getDatum());
+						pauseList.get(pauseList.size() - 1).setPauseStart(
+								zp.getDatum());
 					}
-					if(zp.getPrefix().equals("PE")){
-						pauseList.get(pauseList.size()-1).setPauseEnde(zp.getDatum());
+					if (zp.getPrefix().equals("PE")) {
+						pauseList.get(pauseList.size() - 1).setPauseEnde(
+								zp.getDatum());
 					}
 				}
 			}
@@ -445,26 +458,44 @@ public class Main_Gui extends JFrame {
 		return summeArbeitstage;
 	}
 
-	private long ueberstunden(){
-//		long anzahlSchluessel = dateMap.keySet().size();
-//		long umrechnen = (anzahlSchluessel * 8) * 3600000;
-//		long gesamtAZ = gesamtAZ();
-//		long summe = gesamtAZ - umrechnen;
-//		
-//		return summe;
-		
+	private long ueberstunden() {
 		return (gesamtAZ() - ((dateMap.keySet().size() * 8) * 3600000));
 	}
-	
- 	private void setZeitLabel(JLabel label, long ms) {
+
+	private void setZeitLabel(JLabel label, long ms) {
 		long stunden, minuten;
-		boolean neg = (ms<0);
-		ms = (neg?ms*-1:ms);
+		boolean neg = (ms < 0);
+		ms = (neg ? ms * -1 : ms);
 
 		minuten = (ms / 60000) % 60;
 		stunden = ((ms / 60000) - minuten) / 60;
 
-		label.setText((neg?"-":"") + (stunden < 10 ? "0" : "") + stunden + ":"
-						+ (minuten < 10 ? "0" : "") + minuten);
+		label.setText((neg ? "-" : "") + (stunden < 10 ? "0" : "") + stunden
+				+ ":" + (minuten < 10 ? "0" : "") + minuten);
+	}
+
+	private String findefAZ() {
+
+		Calendar zp1 = null;
+
+		for (String s : dateMap.keySet()) {
+			for (Zeitpunkt zp : dateMap.get(s)) {
+				if (zp.getPrefix().equals("TA")) {
+					if (zp1 == null) {
+						zp1 = zp.getDatum();
+						zp1.set(1, 1, 2000);
+					} else {
+						Calendar zp2 = zp.getDatum();
+						zp2.set(1, 1, 2000);
+						if (zp1.getTimeInMillis() > zp2.getTimeInMillis()) {
+							zp1 = zp2;
+						}
+					}
+				}
+
+			}
+		}
+
+		return zeitAktuell(zp1);
 	}
 }
