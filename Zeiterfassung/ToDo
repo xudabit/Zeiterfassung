@@ -1,6 +1,5 @@
 ToDo:
 
-Gesamtarbeitszeit berechnen
 Summe Arbeitszeit der letzten Tage "schön" darstellen wenn Datei leer
 
 
@@ -13,3 +12,5 @@ Tag beenden nicht ohne Pause möglich
 Statistiken erstellen
 
 Überprüfen, ob Datei existiert
+
+Quellcode aufräumen?! - Minuten, Stunden berechnen immer gleich
