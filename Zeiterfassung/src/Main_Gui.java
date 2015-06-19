@@ -191,6 +191,7 @@ public class Main_Gui extends JFrame {
 				minuten = arbeitszeit % 60;
 				stunden = (arbeitszeit - minuten) / 60;
 
+				// Butten AusgabeSAZnP = Summe Arbeitszeit nach Pause
 				lbl_AusgabeSAZnP.setText((stunden < 10 ? "0" : "") + stunden
 						+ ":" + (minuten < 10 ? "0" : "") + minuten);
 
@@ -220,12 +221,12 @@ public class Main_Gui extends JFrame {
 		lbl_AktuellesDatumRechtsbuendig.setText(datumAktuell(new Date()));
 		contentPane.add(lbl_AktuellesDatumRechtsbuendig);
 
-		// Anzeige Text: Summe Arbeitszeit nach Pause
+		// Anzeige Text: SAZnP = Summe Arbeitszeit nach Pause
 		lbl_TextSAZnP = new JLabel("Summe Arbeitszeit:");
 		lbl_TextSAZnP.setBounds(12, 239, 192, 16);
 		contentPane.add(lbl_TextSAZnP);
 
-		// Anzeige Summe Arbeitszeit nach Pause
+		// Anzeige SAZnP = Summe Arbeitszeit nach Pause
 		lbl_AusgabeSAZnP = new JLabel();
 		lbl_AusgabeSAZnP.setText("nach der ersten Pause und nach Feierabend.");
 		lbl_AusgabeSAZnP.setBounds(170, 239, 279, 16);
@@ -398,7 +399,6 @@ public class Main_Gui extends JFrame {
 		int m = (int) (summeArbeitstage / 60000) % 60;
 		int s = (int) ((summeArbeitstage / 60000) - m) / 60;
 
-		return (s + ":" + m);
-
+		return ((s < 10 ? "0" : "") + s + ":" + (m < 10 ? "0" : "") + m);
 	}
 }
