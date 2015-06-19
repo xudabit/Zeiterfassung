@@ -42,6 +42,7 @@ public class Main_Gui extends JFrame {
 	private JLabel lbl_AusgabeSAZnP;
 
 	private HashMap<String, ArrayList<Zeitpunkt>> dateMap;
+	private HashMap<String, String> prefixMap;
 	private JLabel lbl_GesamtAZText;
 	private JLabel lbl_GesamtAZAusgabe;
 
@@ -66,6 +67,12 @@ public class Main_Gui extends JFrame {
 	 */
 	public Main_Gui() {
 		pauseList = new ArrayList<Pause>();
+
+		prefixMap = new HashMap<String, String>();
+		prefixMap.put("TA", "Tag angefangen um:\t");
+		prefixMap.put("TE", "Tag beendet um:\t");
+		prefixMap.put("PA", "Pause angefangen um:\t");
+		prefixMap.put("PE", "Pause beendet um:\t");
 
 		leseAusDatei();
 
@@ -228,6 +235,15 @@ public class Main_Gui extends JFrame {
 		lbl_GesamtAZAusgabe.setBounds(244, 13, 251, 16);
 		contentPane.add(lbl_GesamtAZAusgabe);
 		setArbeitsZeitLabel(true);
+
+		// Button aktivieren/deaktivieren wenn Datum in Datei
+		if (checkDatum()) {
+			btn_taganfang.setEnabled(false);
+			btn_pauseanfang.setEnabled(false);
+			btn_pauseende.setEnabled(false);
+			btn_tagende.setEnabled(false);
+		}
+
 	}
 
 	// Aktuelle Zeit abfragen
@@ -339,6 +355,24 @@ public class Main_Gui extends JFrame {
 		} catch (IOException ex) {
 			System.err.println(ex.getMessage());
 		}
+		return false;
+	}
+
+	private boolean checkDatum() {
+		Calendar aktuellesDatum = Calendar.getInstance();
+		String dA = datumAktuell(aktuellesDatum);
+
+		if (dateMap.containsKey(dA)) {
+			for (Zeitpunkt zp : dateMap.get(dA)) {
+				if (prefixMap.containsKey(zp.getPrefix())) {
+					textArea.append(prefixMap.get(zp.getPrefix())
+							+ zeitAktuell(zp.getDatum()) + "\n");
+				}
+			}
+
+			return true;
+		}
+
 		return false;
 	}
 
