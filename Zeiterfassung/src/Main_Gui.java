@@ -157,14 +157,7 @@ public class Main_Gui extends JFrame {
 
 				pauseList.get(pauseList.size() - 1).setPauseEndeNow();
 
-				long arbeitszeitAktuell = berechneArbeitszeitInMillis();
-				long stunden, minuten;
-
-				minuten = arbeitszeitAktuell % 60;
-				stunden = (arbeitszeitAktuell - minuten) / 60;
-
-				lbl_AusgabeSAZnP.setText((stunden < 10 ? "0" : "") + stunden
-						+ ":" + (minuten < 10 ? "0" : "") + minuten);
+				setArbeitsZeitLabel();
 			}
 		});
 		btn_pauseende.setBounds(12, 121, 146, 25);
@@ -184,14 +177,7 @@ public class Main_Gui extends JFrame {
 				btn_pauseende.setEnabled(false);
 				btn_tagende.setEnabled(false);
 
-				long arbeitszeit = berechneArbeitszeitInMillis();
-				long stunden, minuten;
-
-				minuten = arbeitszeit % 60;
-				stunden = (arbeitszeit - minuten) / 60;
-
-				lbl_AusgabeSAZnP.setText((stunden < 10 ? "0" : "") + stunden
-						+ ":" + (minuten < 10 ? "0" : "") + minuten);
+				setArbeitsZeitLabel();
 
 				schreibeInDatei();
 				leseAusDatei();
@@ -273,7 +259,6 @@ public class Main_Gui extends JFrame {
 
 			writer.write("DA_" + datumAktuell(tagAnfang).replace(".", "_")
 					+ "\n");
-
 			writer.write("TA;" + df.format(tagAnfang.getTime()) + "\n");
 
 			for (Pause p : pauseList) {
@@ -354,7 +339,6 @@ public class Main_Gui extends JFrame {
 					if(zp.getPrefix().equals("PA")){
 						pausen.add(new Calendar[2]);
 						pausen.get(pausen.size()-1)[0] = zp.getDatum();
-						
 					}
 					
 					if(zp.getPrefix().equals("PE")){
@@ -384,6 +368,17 @@ public class Main_Gui extends JFrame {
 		}
 
 		return false;
+	}
+	
+	private void setArbeitsZeitLabel() {
+		long arbeitszeit = berechneArbeitszeitInMillis();
+		long stunden, minuten;
+
+		minuten = (arbeitszeit /60000)%60;
+		stunden = ((arbeitszeit/60000)-minuten)/60;
+
+		lbl_AusgabeSAZnP.setText((stunden < 10 ? "0" : "") + stunden
+				+ ":" + (minuten < 10 ? "0" : "") + minuten);
 	}
 
 }
