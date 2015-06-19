@@ -305,7 +305,7 @@ public class Main_Gui extends JFrame {
 					new FileReader(
 							new File(DATEINAME)));
 			dateMap = new HashMap<String, ArrayList<Zeitpunkt>>();
-			Calendar datumAusgelesen = Calendar.getInstance();
+			
 			int tag = 0, monat = 0, jahr = 0;
 			String[] zeit = new String[0], datum = new String[0];
 			String zeile;
