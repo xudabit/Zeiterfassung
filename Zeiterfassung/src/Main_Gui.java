@@ -107,8 +107,9 @@ public class Main_Gui extends JFrame {
 
 		btn_taganfang.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				tagAnfang = Calendar.getInstance();
 				textArea.append("Tag angefangen um: \t"
-						+ zeitAktuell(Calendar.getInstance()) + "\n");
+						+ zeitAktuell(tagAnfang) + "\n");
 
 				// Button aktivieren/deaktivieren
 				btn_taganfang.setEnabled(false);
@@ -116,8 +117,7 @@ public class Main_Gui extends JFrame {
 				btn_pauseende.setEnabled(false);
 				btn_tagende.setEnabled(true);
 
-				tagAnfang = Calendar.getInstance();
-
+				
 			}
 		});
 		btn_taganfang.setBounds(12, 85, 146, 25);
@@ -223,7 +223,8 @@ public class Main_Gui extends JFrame {
 		lbl_GesamtAZText.setBounds(12, 13, 220, 16);
 		contentPane.add(lbl_GesamtAZText);
 
-		lbl_GesamtAZAusgabe = new JLabel(ausgabe(berechne()));
+		lbl_GesamtAZAusgabe = new JLabel("");
+		setArbeitsZeitLabel();
 		lbl_GesamtAZAusgabe.setBounds(244, 13, 251, 16);
 		contentPane.add(lbl_GesamtAZAusgabe);
 	}
@@ -369,15 +370,7 @@ public class Main_Gui extends JFrame {
 				summeArbeitstage += summeHeute;
 
 		}
-		return summeArbeitstage.getTime();
-	}
-
-	private String ausgabe(long summeArbeitstage) {
-
-		int m = (int) (summeArbeitstage / 60000) % 60;
-		int s = (int) ((summeArbeitstage / 60000) - m) / 60;
-
-		return ((s < 10 ? "0" : "") + s + ":" + (m < 10 ? "0" : "") + m);
+		return summeArbeitstage;
 	}
 	
 	private void setArbeitsZeitLabel() {
