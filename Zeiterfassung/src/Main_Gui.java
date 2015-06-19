@@ -93,7 +93,7 @@ public class Main_Gui extends JFrame {
 
 		setTitle("Zeiterfassung");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 513, 308);
+		setBounds(100, 100, 513, 421);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -125,7 +125,7 @@ public class Main_Gui extends JFrame {
 
 			}
 		});
-		btn_taganfang.setBounds(12, 85, 146, 25);
+		btn_taganfang.setBounds(12, 188, 146, 25);
 		contentPane.add(btn_taganfang);
 
 		// Pause beginnen
@@ -146,7 +146,7 @@ public class Main_Gui extends JFrame {
 				pauseList.add(pa);
 			}
 		});
-		btn_pauseanfang.setBounds(12, 123, 146, 25);
+		btn_pauseanfang.setBounds(12, 226, 146, 25);
 		contentPane.add(btn_pauseanfang);
 
 		// Pause beenden
@@ -164,10 +164,10 @@ public class Main_Gui extends JFrame {
 
 				pauseList.get(pauseList.size() - 1).setPauseEndeNow();
 
-				setArbeitsZeitLabel(false);
+				setZeitLabel(lbl_AusgabeSAZnP, berechneArbeitszeitInMillis());
 			}
 		});
-		btn_pauseende.setBounds(12, 161, 146, 25);
+		btn_pauseende.setBounds(12, 264, 146, 25);
 		contentPane.add(btn_pauseende);
 
 		// Tag beenden
@@ -184,31 +184,31 @@ public class Main_Gui extends JFrame {
 				btn_pauseende.setEnabled(false);
 				btn_tagende.setEnabled(false);
 
-				setArbeitsZeitLabel(false);
+				setZeitLabel(lbl_AusgabeSAZnP, berechneArbeitszeitInMillis());
 
 				// Butten AusgabeSAZnP = Summe Arbeitszeit nach Pause
 				schreibeInDatei();
 				leseAusDatei();
-				setArbeitsZeitLabel(true);
+				setZeitLabel(lbl_GesamtAZAusgabe, gesamtAZ());
 			}
 		});
-		btn_tagende.setBounds(12, 196, 146, 25);
+		btn_tagende.setBounds(12, 299, 146, 25);
 		contentPane.add(btn_tagende);
 
 		textArea = new JTextArea();
-		textArea.setBounds(170, 86, 279, 135);
+		textArea.setBounds(170, 189, 279, 135);
 		contentPane.add(textArea);
 
 		// Text Datum ausgeben
 		lbl_Aktuellesdatum = new JLabel();
 		lbl_Aktuellesdatum.setHorizontalAlignment(SwingConstants.LEFT);
 		lbl_Aktuellesdatum.setText("Datum: ");
-		lbl_Aktuellesdatum.setBounds(12, 56, 46, 16);
+		lbl_Aktuellesdatum.setBounds(12, 159, 46, 16);
 		contentPane.add(lbl_Aktuellesdatum);
 
 		// Aktuelles Datum rechtbuendig ausgeben
 		lbl_AktuellesDatumRechtsbuendig = new JLabel();
-		lbl_AktuellesDatumRechtsbuendig.setBounds(63, 56, 95, 16);
+		lbl_AktuellesDatumRechtsbuendig.setBounds(63, 159, 95, 16);
 		lbl_AktuellesDatumRechtsbuendig
 				.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_AktuellesDatumRechtsbuendig.setText(datumAktuell(Calendar
@@ -217,15 +217,15 @@ public class Main_Gui extends JFrame {
 
 		// Anzeige Text: SAZnP = Summe Arbeitszeit nach Pause
 		lbl_TextSAZnP = new JLabel("Summe Arbeitszeit:");
-		lbl_TextSAZnP.setBounds(12, 239, 192, 16);
+		lbl_TextSAZnP.setBounds(12, 342, 192, 16);
 		contentPane.add(lbl_TextSAZnP);
 
 		// Anzeige SAZnP = Summe Arbeitszeit nach Pause
 		lbl_AusgabeSAZnP = new JLabel();
 		lbl_AusgabeSAZnP.setText("nach der ersten Pause und nach Feierabend.");
-		lbl_AusgabeSAZnP.setBounds(170, 239, 279, 16);
+		lbl_AusgabeSAZnP.setBounds(170, 342, 279, 16);
 		contentPane.add(lbl_AusgabeSAZnP);
-		setArbeitsZeitLabel(false);
+		setZeitLabel(lbl_AusgabeSAZnP, berechneArbeitszeitInMillis());
 
 		lbl_GesamtAZText = new JLabel("Gesamtarbeitszeit der letzten Tage:");
 		lbl_GesamtAZText.setBounds(12, 13, 220, 16);
@@ -234,7 +234,17 @@ public class Main_Gui extends JFrame {
 		lbl_GesamtAZAusgabe = new JLabel("00:00");
 		lbl_GesamtAZAusgabe.setBounds(244, 13, 251, 16);
 		contentPane.add(lbl_GesamtAZAusgabe);
-		setArbeitsZeitLabel(true);
+		
+		JLabel lbl_ueberstundenText = new JLabel("\u00DCberstunden:");
+		lbl_ueberstundenText.setBounds(12, 41, 146, 16);
+		contentPane.add(lbl_ueberstundenText);
+		
+		JLabel lbl_ueberstundenSumme = new JLabel("Summe");
+		lbl_ueberstundenSumme.setBounds(170, 42, 56, 16);
+		contentPane.add(lbl_ueberstundenSumme);
+		setZeitLabel(lbl_ueberstundenSumme, ueberstunden());
+		
+		setZeitLabel(lbl_GesamtAZAusgabe, gesamtAZ());
 
 		// Button aktivieren/deaktivieren wenn Datum in Datei
 		if (checkDatum()) {
@@ -418,27 +428,25 @@ public class Main_Gui extends JFrame {
 	}
 
 	private long ueberstunden(){
-		// us = Ueberstunden
-		long us = 0;
+//		long anzahlSchluessel = dateMap.keySet().size();
+//		long umrechnen = (anzahlSchluessel * 8) * 3600000;
+//		long gesamtAZ = gesamtAZ();
+//		long summe = gesamtAZ - umrechnen;
+//		
+//		return summe;
 		
-		return us;
+		return (gesamtAZ() - ((dateMap.keySet().size() * 8) * 3600000));
 	}
 	
- 	private void setArbeitsZeitLabel(boolean gesamt) {
-		long arbeitszeit = 0;
-		// if(gesamt)
-		// arbeitszeit = berechne();
-		// else
-		// arbeitszeit = berechneArbeitszeitInMillis();
-		arbeitszeit = (gesamt ? gesamtAZ() : berechneArbeitszeitInMillis());
-
+ 	private void setZeitLabel(JLabel label, long ms) {
 		long stunden, minuten;
+		boolean neg = (ms<0);
+		ms = (neg?ms*-1:ms);
 
-		minuten = (arbeitszeit / 60000) % 60;
-		stunden = ((arbeitszeit / 60000) - minuten) / 60;
+		minuten = (ms / 60000) % 60;
+		stunden = ((ms / 60000) - minuten) / 60;
 
-		(gesamt ? lbl_GesamtAZAusgabe : lbl_AusgabeSAZnP)
-				.setText((stunden < 10 ? "0" : "") + stunden + ":"
+		label.setText((neg?"-":"") + (stunden < 10 ? "0" : "") + stunden + ":"
 						+ (minuten < 10 ? "0" : "") + minuten);
 	}
 }
