@@ -19,15 +19,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
 import javax.swing.SwingConstants;
 
+import sun.util.resources.CalendarData;
+
 public class Main_Gui extends JFrame {
 
 	private final String DATEINAME = "Zeiterfassung.ze";
-
+	private final String PREFIXE = "TE#TA#PA#PE";
 	private JPanel contentPane;
 	private JTextArea textArea;
 
@@ -50,6 +53,9 @@ public class Main_Gui extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					Calendar cal = Calendar.getInstance();
+					System.out.println(cal.getTime());
+					
 					Main_Gui frame = new Main_Gui();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -295,50 +301,36 @@ public class Main_Gui extends JFrame {
 	private boolean leseAusDatei() {
 
 		try {
-			File file = new File(DATEINAME);
-
-			BufferedReader reader = new BufferedReader(new FileReader(file));
-			
+			BufferedReader reader = new BufferedReader(
+					new FileReader(
+							new File(DATEINAME)));
 			dateMap = new HashMap<String, ArrayList<Zeitpunkt>>();
+			Calendar datumAusgelesen = Calendar.getInstance();
+			int tag = 0, monat = 0, jahr = 0;
+			String[] zeit = new String[0], datum = new String[0];
+			String zeile;
 			
-			Date datumAusgelesen = new Date();
-			
-			String[] datum = {};
-
-			Date summeArbeitstage = new Date(0);
-			
-			while (reader.ready()) {
-
-				String zeile = reader.readLine();
-				String[] zeit;
-				
-
+			while ((zeile = reader.readLine()) != null) {
 				if (zeile.startsWith("DA")) {
 
 					datum = zeile.split("_");
 
-					int tag, monat, jahr;
-
 					tag = Integer.parseInt(datum[1]);
 					monat = Integer.parseInt(datum[2]);
 					jahr = Integer.parseInt(datum[3]);
-
-					datumAusgelesen = new Date(jahr, monat, tag);
 					
 					dateMap.put(datum[1] + "." + datum[2] + "." + datum[3], new ArrayList<Zeitpunkt>());
 					
 				} else {
 					zeit = zeile.split(";");
-					String pf = "TA#TE#PA#PE";
-					if (pf.contains(zeit[0])) {						
-						
+					if (PREFIXE.contains(zeit[0])) {						
 						int stunden = Integer.parseInt(zeit[1]);
 						int minuten = Integer.parseInt(zeit[2]);
 						
 						Zeitpunkt zp = new Zeitpunkt();
-						zp.setDatum((Date)datumAusgelesen.clone());
-						zp.getDatum().setHours(stunden);
-						zp.getDatum().setMinutes(minuten);
+						Calendar dat = Calendar.getInstance();
+						dat.set(jahr, monat, tag, stunden, minuten, 0);
+						zp.setDatum(dat);
 						zp.setPrefix(zeit[0]);
 						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3]).add(zp);
 					}
@@ -347,11 +339,14 @@ public class Main_Gui extends JFrame {
 
 			}
 			
+			long summeArbeitstage = 0;
+			long summeHeute = 0;
+			
 			for(String s : dateMap.keySet()){
-				Date ta = null;
-				Date te = null;
+				Calendar ta = null;
+				Calendar te = null;
 				
-				ArrayList<Date[]> pausen = new ArrayList<Date[]>();
+				ArrayList<Calendar[]> pausen = new ArrayList<Calendar[]>();
 				
 				for(Zeitpunkt zp : dateMap.get(s)){
 					if(zp.getPrefix().equals("TA")){
@@ -362,7 +357,7 @@ public class Main_Gui extends JFrame {
 					}
 					
 					if(zp.getPrefix().equals("PA")){
-						pausen.add(new Date[2]);
+						pausen.add(new Calendar[2]);
 						pausen.get(pausen.size()-1)[0] = zp.getDatum();
 						
 					}
@@ -373,16 +368,19 @@ public class Main_Gui extends JFrame {
 				}
 				
 				long summePausen = 0;
-				for (Date[] d : pausen){
-					summePausen += (d[1].getTime() - d[0].getTime()); 
+				for (Calendar[] d : pausen){
+					summePausen += (d[1].getTimeInMillis() - d[0].getTimeInMillis()); 
 				}
-				summeArbeitstage = new Date(summeArbeitstage.getTime() + (new Date(te.getTime() - ta.getTime() - summePausen).getTime()));
+				
+				summeHeute = (te.getTimeInMillis() - ta.getTimeInMillis());
+				summeHeute -= summePausen;
+				summeArbeitstage += summeHeute;
 				
 			}
 			
 			reader.close();
-			int m = (int)(summeArbeitstage.getTime()/60000)%60;
-			int s = (int)((summeArbeitstage.getTime()/60000)-m)/60;
+			int m = (int)(summeArbeitstage/60000)%60;
+			int s = (int)((summeArbeitstage/60000)-m)/60;
 
 			System.out.println(s + ":" + m);
 			
