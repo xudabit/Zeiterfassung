@@ -1,19 +1,20 @@
+import java.util.Calendar;
 import java.util.Date;
 
 
 public class Zeitpunkt {
-	private Date datum;
+	private Calendar datum;
 	private String prefix;
 	
 	public Zeitpunkt() {
 		
 	}
 
-	public Date getDatum() {
+	public Calendar getDatum() {
 		return datum;
 	}
 
-	public void setDatum(Date datum) {
+	public void setDatum(Calendar datum) {
 		this.datum = datum;
 	}
 

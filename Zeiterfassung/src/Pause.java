@@ -1,32 +1,31 @@
+import java.util.Calendar;
 import java.util.Date;
 
 
 public class Pause {
 	
-	private Date pauseStart; // Zuweisungen im Konstruktor
-	private Date pauseEnde;
+	private Calendar pauseStart; // Zuweisungen im Konstruktor
+	private Calendar pauseEnde;
 	
 	public Pause(){}
 
-	public Date getPauseStart() {
+	public Calendar getPauseStart() {
 		return pauseStart;
 	}
 
 	public void setPauseStartNow() {
-		this.pauseStart = new Date();
+		this.pauseStart = Calendar.getInstance();
 	}
 
-	public Date getPauseEnde() {
+	public Calendar getPauseEnde() {
 		return pauseEnde;
 	}
 
 	public void setPauseEndeNow() {
-		this.pauseEnde = new Date();
+		this.pauseEnde = Calendar.getInstance();
 	}
 	
-	public long berechnePauseMin(){
-		
-		return pauseEnde.getMinutes() - pauseStart.getMinutes();
-		
+	public long berechnePauseInMillis(){
+		return pauseEnde.getTimeInMillis() - pauseStart.getTimeInMillis();
 	}	
 }
