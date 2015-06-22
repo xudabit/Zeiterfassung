@@ -39,6 +39,10 @@ public class Controller {
 		leseAusDatei();
 	}
 
+	public HashMap<String, ArrayList<Zeitpunkt>> getDateMap(){
+		return dateMap;
+	}
+	
 	public void setTagAnfang(Calendar ta) {
 		tagAnfang = ta;
 	}

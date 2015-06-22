@@ -1,3 +1,4 @@
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -12,17 +13,16 @@ import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-
 import java.text.SimpleDateFormat;
 
 public class Main_Gui extends JFrame {
@@ -260,10 +260,18 @@ public class Main_Gui extends JFrame {
 		btnStatistik.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				if(!Controller.getController().getDateMap().isEmpty()){
 				Statistik_GUI s_gui = new Statistik_GUI();
 				s_gui.setVisible(true);
 				s_gui.setLabel(Controller.getController().findefAZ());
 				s_gui.setPausen(Controller.getController().getAnzahlPausen());
+				}else{
+					Component frame = null;
+					JOptionPane.showMessageDialog(frame ,
+						    "Speichern Sie mindestens einen Arbeitstag, \n damit eine Statistik erzeugt werden kann.",
+						    "Fehlende Daten",
+						    JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
 		btnStatistik.setBounds(12, 282, 97, 25);
