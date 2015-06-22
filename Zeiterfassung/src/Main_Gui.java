@@ -346,6 +346,9 @@ public class Main_Gui extends JFrame {
 			String zeile;
 
 			while ((zeile = reader.readLine()) != null) {
+				if(zeile.equals(""))
+					continue;
+					
 				if (zeile.startsWith("DA")) {
 
 					datum = zeile.split("_");
@@ -357,20 +360,15 @@ public class Main_Gui extends JFrame {
 					dateMap.put(datum[1] + "." + datum[2] + "." + datum[3],
 							new ArrayList<Zeitpunkt>());
 
-				} else {
-					zeit = zeile.split(";");
-					if (PREFIXE.contains(zeit[0])) {
-						int stunden = Integer.parseInt(zeit[1]);
-						int minuten = Integer.parseInt(zeit[2]);
-
-						Zeitpunkt zp = new Zeitpunkt();
-						Calendar dat = Calendar.getInstance();
-						dat.set(jahr, monat, tag, stunden, minuten, 0);
-						zp.setDatum(dat);
-						zp.setPrefix(zeit[0]);
-						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3])
-								.add(zp);
-					}
+				}
+				zeit = zeile.split(";");
+				if (PREFIXE.contains(zeit[0])) {
+					Zeitpunkt zp = new Zeitpunkt();
+					Calendar dat = Calendar.getInstance();
+					dat.set(jahr, monat, tag, Integer.parseInt(zeit[1]), Integer.parseInt(zeit[2]), 0);
+					zp.setDatum(dat);
+					zp.setPrefix(zeit[0]);
+					dateMap.get(datum[1] + "." + datum[2] + "." + datum[3]).add(zp);
 				}
 			}
 			reader.close();
