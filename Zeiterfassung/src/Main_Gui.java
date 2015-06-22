@@ -285,7 +285,7 @@ public class Main_Gui extends JFrame {
 		return df.format(d.getTime());
 	}
 
-	// Aktuelles/Heutiges Datum abfragen
+	// Aktuelles/heutiges Datum abfragen
 	private String datumAktuell(Calendar d) {
 		SimpleDateFormat da = new SimpleDateFormat("dd.MM.YYYY");
 		return da.format(d.getTime());
@@ -307,6 +307,7 @@ public class Main_Gui extends JFrame {
 		return arbeitstag - summePausen;
 	}
 
+	// Daten in Datei schreiben
 	private boolean schreibeInDatei() {
 		SimpleDateFormat df = new SimpleDateFormat("HH;mm");
 
@@ -338,9 +339,10 @@ public class Main_Gui extends JFrame {
 		return false;
 	}
 
+	// Daten aus Datei lesen
 	private boolean leseAusDatei() {
 		dateMap = new HashMap<String, ArrayList<Zeitpunkt>>();
-		// Überprüfen, ob die Datei existiert
+		// Ueberpruefen, ob die Datei existiert
 		try {
 			File file = new File(DATEINAME);
 
@@ -391,6 +393,7 @@ public class Main_Gui extends JFrame {
 		return false;
 	}
 
+	// Datum speichern
 	private boolean checkDatum() {
 		Calendar aktuellesDatum = Calendar.getInstance();
 		String dA = datumAktuell(aktuellesDatum);
@@ -418,13 +421,12 @@ public class Main_Gui extends JFrame {
 					}
 				}
 			}
-
 			return true;
 		}
-
 		return false;
 	}
 
+	// Gesamte Arbeitszeit berechnen
 	private long gesamtAZ() {
 		long summeArbeitstage = 0;
 		long summeHeute = 0;
@@ -461,11 +463,11 @@ public class Main_Gui extends JFrame {
 			summeHeute = (te.getTimeInMillis() - ta.getTimeInMillis());
 			summeHeute -= summePausen;
 			summeArbeitstage += summeHeute;
-
 		}
 		return summeArbeitstage;
 	}
 
+	// Anzahl Ueberstunden berechnen
 	private long ueberstunden() {
 		return (gesamtAZ() - ((dateMap.keySet().size() * 8) * 3600000));
 	}
@@ -482,6 +484,7 @@ public class Main_Gui extends JFrame {
 				+ ":" + (minuten < 10 ? "0" : "") + minuten);
 	}
 
+	// fruehesten Arbeitsbeginn finden
 	private String findefAZ() {
 
 		Calendar zp1 = null;
@@ -500,14 +503,12 @@ public class Main_Gui extends JFrame {
 						}
 					}
 				}
-
 			}
 		}
-
 		return zeitAktuell(zp1);
 	}
 
-	// Durchschnittliche Anzahl an Pausen
+	// Tag mit den meisten Pausen bestimmen
 	public String anzahlPausen() {
 		int pausen = 0;
 		int temp = 0; // Zwischenspeicher fuer Vergleich
@@ -524,7 +525,6 @@ public class Main_Gui extends JFrame {
 			if (pausen > temp) {
 				temp = pausen;
 			}
-
 		}
 		if (temp == 1) {
 			return ("täglich 1 Pause gemacht");
