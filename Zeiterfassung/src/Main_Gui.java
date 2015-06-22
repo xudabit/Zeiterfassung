@@ -316,7 +316,7 @@ public class Main_Gui extends JFrame {
 				writer.write("\nPE;" + df.format(p.getPauseEnde().getTime()));
 			}
 
-			writer.write("TE;" + df.format(tagEnde.getTime()) + "\n");
+			writer.write("\nTE;" + df.format(tagEnde.getTime()));
 
 			writer.flush();
 			writer.close();
