@@ -379,6 +379,8 @@ public class Main_Gui extends JFrame {
 
 		} catch (IOException ex) {
 			System.err.println(ex.getMessage());
+		} catch (NumberFormatException ex) {
+			System.err.println(ex.getMessage()); //Datei auslesen fehlgeschlagen aufgrund fehlerhafter Daten
 		}
 		return false;
 	}
