@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class Controller {
 	private static Controller singleton = null;
@@ -21,15 +22,11 @@ public class Controller {
 	private final String DATEINAME = "Zeiterfassung.ze";
 	private final String PREFIXE = "TE#TA#PA#PE";
 
-	private Calendar tagAnfang, tagEnde;
-
-	private HashMap<String, ArrayList<Zeitpunkt>> dateMap;
+	private LinkedHashMap<String, Tag> dateMap;
 	private HashMap<String, String> prefixMap;
-	private ArrayList<Pause> pauseList;
 
 	private Controller() {
-		pauseList = new ArrayList<Pause>();
-
+		dateMap = new LinkedHashMap<String, Tag>();
 		prefixMap = new HashMap<String, String>();
 		prefixMap.put("TA", "Tag angefangen um:\t");
 		prefixMap.put("TE", "Tag beendet um:\t");
@@ -39,32 +36,53 @@ public class Controller {
 		leseAusDatei();
 	}
 
-	public HashMap<String, ArrayList<Zeitpunkt>> getDateMap() {
+	public HashMap<String, Tag> getDateMap() {
 		return dateMap;
 	}
 
 	public void setTagAnfang(Calendar ta) {
-		tagAnfang = ta;
+		dateMap.put(datumAktuell(ta), new Tag());
+		dateMap.get(datumAktuell(ta)).setTagAnfang(ta);
 	}
 
+	private Tag getToday() {
+		return dateMap.get(datumAktuell(Calendar.getInstance())); //null bei fehlendem Wert?
+	}
+	
 	public Calendar getTagAnfang() {
-		return tagAnfang;
+		return getToday().getTagAnfang();
 	}
 
 	public Calendar getTagEnde() {
-		return tagEnde;
+		return getToday().getTagEnde();
 	}
 
-	public void setTagEnde(Calendar tagEnde) {
-		this.tagEnde = tagEnde;
+	public void setTagEnde(Calendar te) {
+		getToday().setTagEnde(te);
 	}
 
 	public void addPause(Calendar pa, Calendar pe) {
-		pauseList.add(new Pause(pa, pe));
+		Pause p = new Pause();
+		p.setPauseStart(pa);
+		p.setPauseEnde(pe);
+		getToday().addPause(p);
 	}
 
+	public void addPauseAnfang(Calendar pa) {
+		if(getToday() != null)
+			getToday().setPausenAnfang(pa);
+	}
+	
+	public void addPauseEnde(Calendar pe) {
+		if(getToday() != null)
+			getToday().setPausenEnde(pe);
+	}
+	
 	// Aktuelle Zeit abfragen
 	public String zeitAktuell(Calendar d) {
+		if(d == null)
+			return "";
+		
 		SimpleDateFormat df = new SimpleDateFormat("HH:mm");
 		return df.format(d.getTime());
 	}
@@ -76,15 +94,15 @@ public class Controller {
 	}
 
 	public long berechneArbeitszeitInMillis() {
-		if (tagAnfang == null)
+		if (getToday() == null || getToday().getTagAnfang() == null)
 			return 0;
 
-		long arbeitstag = (tagEnde == null ? Calendar.getInstance()
-				.getTimeInMillis() : tagEnde.getTimeInMillis())
-				- tagAnfang.getTimeInMillis();
+		long arbeitstag = (getToday().getTagEnde() == null ? Calendar.getInstance()
+				.getTimeInMillis() : getToday().getTagEnde().getTimeInMillis())
+				- getToday().getTagAnfang().getTimeInMillis();
 		long summePausen = 0;
 
-		for (Pause p : pauseList) {
+		for(Pause p : getToday().getPausenListe()) {
 			summePausen += p.berechnePauseInMillis();
 		}
 		return arbeitstag - summePausen;
@@ -96,19 +114,23 @@ public class Controller {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file,
 					true));
 
-			writer.write("\nDA_" + datumAktuell(tagAnfang).replace(".", "_"));
-
-			writer.write("\nTA;" + zeitAktuell(tagAnfang).replace(":", ";"));
-
-			for (Pause p : pauseList) {
-				writer.write("\nPA;"
-						+ zeitAktuell(p.getPauseStart()).replace(":", ";"));
-				writer.write("\nPE;"
-						+ zeitAktuell(p.getPauseEnde()).replace(":", ";"));
+			
+			/*
+			 * ---
+			 * Ausgabe verbessern
+			 * ---
+			 */
+			writer.write("\nDA_" + datumAktuell(getToday().getTagAnfang()).replace(".", "_"));
+			writer.write("\nTA;" + zeitAktuell(getToday().getTagAnfang()).replace(":", ";"));
+			
+			for(Pause p : getToday().getPausenListe()) {
+				writer.write("\nPA;" + zeitAktuell(p.getPauseStart()).replace(":", ";"));
+				writer.write("\nPE;" + zeitAktuell(p.getPauseEnde()).replace(":", ";"));
 			}
-
-			writer.write("\nTE;" + zeitAktuell(tagEnde).replace(":", ";"));
-
+			
+			writer.write("\nTE;" + zeitAktuell(getToday().getTagEnde()).replace(":", ";"));
+			
+			
 			writer.flush();
 			writer.close();
 
@@ -120,7 +142,7 @@ public class Controller {
 	}
 
 	public boolean leseAusDatei() {
-		dateMap = new HashMap<String, ArrayList<Zeitpunkt>>();
+		dateMap = new LinkedHashMap<String, Tag>();
 		File file = new File(DATEINAME);
 		int tag = 0, monat = 0, jahr = 0;
 		String[] zeit = new String[0], datum = new String[0];
@@ -145,7 +167,7 @@ public class Controller {
 					jahr = Integer.parseInt(datum[3]);
 
 					dateMap.put(datum[1] + "." + datum[2] + "." + datum[3],
-							new ArrayList<Zeitpunkt>());
+							new Tag());
 
 				}
 				zeit = zeile.split(";");
@@ -153,14 +175,22 @@ public class Controller {
 					if (zeit.length != 3)
 						break;
 
-					Zeitpunkt zp = new Zeitpunkt();
 					Calendar dat = Calendar.getInstance();
 					dat.set(jahr, monat, tag, Integer.parseInt(zeit[1]),
 							Integer.parseInt(zeit[2]), 0);
-					zp.setDatum(dat);
-					zp.setPrefix(zeit[0]);
-					dateMap.get(datum[1] + "." + datum[2] + "." + datum[3])
-							.add(zp);
+					
+					if(zeit[0].equals("TA")) {
+						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3]).setTagAnfang(dat);
+					}
+					if(zeit[0].equals("PA")) {
+						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3]).setPausenAnfang(dat);
+					}
+					if(zeit[0].equals("PE")) {
+						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3]).setPausenEnde(dat);
+					}
+					if(zeit[0].equals("TE")) {
+						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3]).setTagEnde(dat);
+					}
 				}
 			}
 			reader.close();
@@ -177,40 +207,18 @@ public class Controller {
 
 	public String getTextForToday() {
 		String text = "";
-		Calendar aktuellesDatum = Calendar.getInstance();
-		String dA = datumAktuell(aktuellesDatum);
-
-		if (dateMap.containsKey(dA)) {
-			for (Zeitpunkt zp : dateMap.get(dA)) {
-				if (prefixMap.containsKey(zp.getPrefix())) {
-					text += (prefixMap.get(zp.getPrefix())
-							+ zeitAktuell(zp.getDatum()) + "\n");
-
-					if (zp.getPrefix().equals("TA")) {
-						tagAnfang = zp.getDatum();
-					}
-					if (zp.getPrefix().equals("TE")) {
-						tagEnde = zp.getDatum();
-					}
-					if (zp.getPrefix().equals("PA")) {
-						if (pauseList.size() == 0
-								|| pauseList.get(pauseList.size() - 1)
-										.getPauseStart() != null)
-							pauseList.add(new Pause());
-						pauseList.get(pauseList.size() - 1).setPauseStart(
-								zp.getDatum());
-					}
-					if (zp.getPrefix().equals("PE")) {
-						if (pauseList.size() == 0
-								|| pauseList.get(pauseList.size() - 1)
-										.getPauseEnde() != null)
-							pauseList.add(new Pause());
-						pauseList.get(pauseList.size() - 1).setPauseEnde(
-								zp.getDatum());
-					}
-				}
+		
+		if (getToday() != null) {
+			text += (prefixMap.get("TA") + zeitAktuell(getToday().getTagAnfang()) + "\n");
+			
+			for(Pause p : getToday().getPausenListe()) {
+				text += (prefixMap.get("PA") + zeitAktuell(p.getPauseStart()) + "\n");
+				text += (prefixMap.get("PE") + zeitAktuell(p.getPauseEnde()) + "\n");
 			}
+			
+			text += (prefixMap.get("TE") + zeitAktuell(getToday().getTagEnde()) + "\n");
 		}
+		
 		if (text.equals(""))
 			return null;
 		return text;
@@ -220,44 +228,15 @@ public class Controller {
 		long summeArbeitstage = 0;
 
 		for (String s : dateMap.keySet()) {
-			Calendar ta = null, te = null;
-
-			ArrayList<Calendar[]> pausen = new ArrayList<Calendar[]>();
-
-			for (Zeitpunkt zp : dateMap.get(s)) {
-				if (zp.getPrefix().equals("TA")) {
-					ta = zp.getDatum();
-				}
-				if (zp.getPrefix().equals("TE")) {
-					te = zp.getDatum();
-				}
-
-				if (zp.getPrefix().equals("PA")) {
-					// Kein Calendar-Element vorhanden || beim letzten Argument
-					// ist der Pausenanfang bereits gesetzt
-					if (pausen.size() == 0
-							|| pausen.get(pausen.size() - 1)[0] != null)
-						pausen.add(new Calendar[2]);
-					pausen.get(pausen.size() - 1)[0] = zp.getDatum();
-				}
-
-				if (zp.getPrefix().equals("PE")) {
-					// Kein Calendar-Element vorhanden || beim letzten Argument
-					// ist das Pausenende bereits gesetzt
-					if (pausen.size() == 0
-							|| pausen.get(pausen.size() - 1)[1] != null)
-						pausen.add(new Calendar[2]);
-					pausen.get(pausen.size() - 1)[1] = zp.getDatum();
-				}
-			}
-
+			if(dateMap.get(s).getTagAnfang() == null || dateMap.get(s).getTagEnde() == null)
+				continue;
+			
 			long summePausen = 0;
-			for (Calendar[] d : pausen) {
-				summePausen += (d[1].getTimeInMillis() - d[0].getTimeInMillis());
+			for (Pause p : dateMap.get(s).getPausenListe()) {
+				summePausen += p.berechnePauseInMillis();
 			}
 
-			summeArbeitstage += (te.getTimeInMillis() - ta.getTimeInMillis())
-					- summePausen;
+			summeArbeitstage += (dateMap.get(s).getTagEnde().getTimeInMillis() - dateMap.get(s).getTagAnfang().getTimeInMillis()) - summePausen;
 
 		}
 		return summeArbeitstage;
@@ -272,20 +251,15 @@ public class Controller {
 		Calendar zp1 = null;
 
 		for (String s : dateMap.keySet()) {
-			for (Zeitpunkt zp : dateMap.get(s)) {
-				if (zp.getPrefix().equals("TA")) {
-					if (zp1 == null) {
-						zp1 = zp.getDatum();
-						zp1.set(1, 1, 2000);
-					} else {
-						Calendar zp2 = zp.getDatum();
-						zp2.set(1, 1, 2000);
-						if (zp1.getTimeInMillis() > zp2.getTimeInMillis()) {
-							zp1 = zp2;
-						}
-					}
+			if (zp1 == null) {
+				zp1 = dateMap.get(s).getTagAnfang();
+				zp1.set(1, 1, 2000);
+			} else {
+				Calendar zp2 = dateMap.get(s).getTagAnfang();
+				zp2.set(1, 1, 2000);
+				if (zp1.getTimeInMillis() > zp2.getTimeInMillis()) {
+					zp1 = zp2;
 				}
-
 			}
 		}
 
@@ -306,14 +280,7 @@ public class Controller {
 	
 	// Anzahl der Pausen für ein Datum zurückgeben
 	private int getAnzahlPausen(String datum){
-
-		int pausen = 0;
-		for (Zeitpunkt zp : dateMap.get(datum)) {
-			if (zp.getPrefix().equals("PA")) {
-				pausen++;
-			}
-		}		
-		return pausen;		
+		return dateMap.get(datum).getPausenListe().size();		
 	}
 
 	// Tag mit den meisten Pausen bestimmen
@@ -338,4 +305,5 @@ public class Controller {
 		}
 		return ((double)pausen/dateMap.size());
 	}
+
 }
