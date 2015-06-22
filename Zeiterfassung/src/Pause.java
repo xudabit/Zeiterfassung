@@ -5,6 +5,11 @@ public class Pause {
 	private Calendar pauseStart = null, pauseEnde = null; // Zuweisungen im Konstruktor
 	
 	public Pause(){}
+	
+	public Pause(Calendar pa, Calendar pe) {
+		pauseStart = pa;
+		pauseEnde = pe;
+	}
 
 	public Calendar getPauseStart() {
 		return pauseStart;
