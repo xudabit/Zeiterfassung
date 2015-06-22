@@ -298,4 +298,29 @@ public class Controller {
 		return ((neg ? "-" : "") + (stunden < 10 ? "0" : "") + stunden
 				+ ":" + (minuten < 10 ? "0" : "") + minuten);
 	}
+	
+	//Tag mit den meisten Pausen bestimmen
+	public String getAnzahlPausen() {
+		int pausen = 0;
+		int temp = 0; // Zwischenspeicher fuer Vergleich
+		String datum = ""; // Datum wird zwischengespeichert
+
+		for (String s : dateMap.keySet()) {
+			datum = s;
+			pausen = 0;
+			for (Zeitpunkt zp : dateMap.get(s)) {
+				if (zp.getPrefix().equals("PA") && s.equals(datum)) {
+					pausen = pausen + 1;
+				}
+			}
+			if (pausen > temp) {
+				temp = pausen;
+			}
+		}
+		if (temp == 1) {
+			return ("täglich 1 Pause gemacht");
+		} else {
+			return (datum + "      Pausen: " + temp);
+		}
+}
 }

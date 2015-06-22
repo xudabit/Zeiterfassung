@@ -263,42 +263,11 @@ public class Main_Gui extends JFrame {
 				Statistik_GUI s_gui = new Statistik_GUI();
 				s_gui.setVisible(true);
 				s_gui.setLabel(Controller.getController().findefAZ());
-				s_gui.setPausen(anzahlPausen());
+				s_gui.setPausen(Controller.getController().getAnzahlPausen());
 			}
 		});
 		btnStatistik.setBounds(12, 282, 97, 25);
 		contentPane.add(btnStatistik);
 
 	}
-	// Daten in Datei schreiben
-	// Daten aus Datei lesen
-	// Datum speichern
-	// Gesamte Arbeitszeit berechnen
-	// Anzahl Ueberstunden berechnen
-	// fruehesten Arbeitsbeginn finden
-	}
-
-	// Tag mit den meisten Pausen bestimmen
-	public String anzahlPausen() {
-		int pausen = 0;
-		int temp = 0; // Zwischenspeicher fuer Vergleich
-		String datum = ""; // Datum wird zwischengespeichert
-
-		for (String s : dateMap.keySet()) {
-			datum = s;
-			pausen = 0;
-			for (Zeitpunkt zp : dateMap.get(s)) {
-				if (zp.getPrefix().equals("PA") && s.equals(datum)) {
-					pausen = pausen + 1;
-				}
-			}
-			if (pausen > temp) {
-				temp = pausen;
-			}
-		}
-		if (temp == 1) {
-			return ("täglich 1 Pause gemacht");
-		} else {
-			return (datum + "      Pausen: " + temp);
-		}
 }
