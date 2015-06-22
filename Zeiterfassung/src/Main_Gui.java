@@ -255,6 +255,7 @@ public class Main_Gui extends JFrame {
 				s_gui.setVisible(true);
 				s_gui.setLabel(Controller.getController().findefAZ());
 				s_gui.setPausen(Controller.getController().getAnzahlPausen());
+				s_gui.setDAPausen(Controller.getController().getDAPausen());
 				}else{
 					Component frame = null;
 					JOptionPane.showMessageDialog(frame ,

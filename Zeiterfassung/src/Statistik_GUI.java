@@ -15,6 +15,7 @@ public class Statistik_GUI extends JFrame {
 	
 	private JLabel lbl_fAB;
 	private JLabel lbl_AnzahlPausen;
+	private JLabel lbl_dAPausen;
 
 	/**
 	 * Create the frame.
@@ -38,12 +39,20 @@ public class Statistik_GUI extends JFrame {
 		contentPane.add(lbl_fAB);
 		
 		JLabel lbl_AnzahlPausenText = new JLabel("Tag mit den meisten Pausen:");
-		lbl_AnzahlPausenText.setBounds(12, 226, 218, 16);
+		lbl_AnzahlPausenText.setBounds(12, 104, 218, 16);
 		contentPane.add(lbl_AnzahlPausenText);
 		
 		lbl_AnzahlPausen = new JLabel("Pausen");
-		lbl_AnzahlPausen.setBounds(325, 226, 218, 16);
+		lbl_AnzahlPausen.setBounds(325, 104, 218, 16);
 		contentPane.add(lbl_AnzahlPausen);
+		
+		JLabel lbl_dAnzahlPausenText = new JLabel("Durchschnittliche Anzahl Pausen:");
+		lbl_dAnzahlPausenText.setBounds(12, 133, 218, 16);
+		contentPane.add(lbl_dAnzahlPausenText);
+		
+		lbl_dAPausen = new JLabel("Anzahl Pausen");
+		lbl_dAPausen.setBounds(325, 133, 218, 16);
+		contentPane.add(lbl_dAPausen);
 				
 	}	
 
@@ -53,6 +62,10 @@ public class Statistik_GUI extends JFrame {
 	
 	public void setPausen(String s){
 		lbl_AnzahlPausen.setText(s);
+	}
+	
+	public void setDAPausen(int i){
+		lbl_dAPausen.setText("" + i);
 	}
 
 }

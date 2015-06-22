@@ -27,7 +27,7 @@ public class Controller {
 	private HashMap<String, String> prefixMap;
 	private ArrayList<Pause> pauseList;
 
-	private Controller() {		
+	private Controller() {
 		pauseList = new ArrayList<Pause>();
 
 		prefixMap = new HashMap<String, String>();
@@ -35,14 +35,14 @@ public class Controller {
 		prefixMap.put("TE", "Tag beendet um:\t");
 		prefixMap.put("PA", "Pause angefangen um:\t");
 		prefixMap.put("PE", "Pause beendet um:\t");
-		
+
 		leseAusDatei();
 	}
 
-	public HashMap<String, ArrayList<Zeitpunkt>> getDateMap(){
+	public HashMap<String, ArrayList<Zeitpunkt>> getDateMap() {
 		return dateMap;
 	}
-	
+
 	public void setTagAnfang(Calendar ta) {
 		tagAnfang = ta;
 	}
@@ -183,7 +183,8 @@ public class Controller {
 		if (dateMap.containsKey(dA)) {
 			for (Zeitpunkt zp : dateMap.get(dA)) {
 				if (prefixMap.containsKey(zp.getPrefix())) {
-					text += (prefixMap.get(zp.getPrefix()) + zeitAktuell(zp.getDatum()) + "\n");
+					text += (prefixMap.get(zp.getPrefix())
+							+ zeitAktuell(zp.getDatum()) + "\n");
 
 					if (zp.getPrefix().equals("TA")) {
 						tagAnfang = zp.getDatum();
@@ -210,7 +211,7 @@ public class Controller {
 				}
 			}
 		}
-		if(text.equals(""))
+		if (text.equals(""))
 			return null;
 		return text;
 	}
@@ -298,12 +299,12 @@ public class Controller {
 
 		minuten = (ms / 60000) % 60;
 		stunden = ((ms / 60000) - minuten) / 60;
-		
-		return ((neg ? "-" : "") + (stunden < 10 ? "0" : "") + stunden
-				+ ":" + (minuten < 10 ? "0" : "") + minuten);
+
+		return ((neg ? "-" : "") + (stunden < 10 ? "0" : "") + stunden + ":"
+				+ (minuten < 10 ? "0" : "") + minuten);
 	}
-	
-	//Tag mit den meisten Pausen bestimmen
+
+	// Tag mit den meisten Pausen bestimmen
 	public String getAnzahlPausen() {
 		int pausen = 0;
 		int temp = 0; // Zwischenspeicher fuer Vergleich
@@ -326,5 +327,11 @@ public class Controller {
 		} else {
 			return (datum + "      Pausen: " + temp);
 		}
-}
+	}
+	
+	// Durchschnittliche Anzahl an Pausen
+	public int getDAPausen(){
+		
+		return 0;
+	}
 }
