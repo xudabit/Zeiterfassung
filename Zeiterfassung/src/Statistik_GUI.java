@@ -31,7 +31,7 @@ public class Statistik_GUI extends JFrame {
 		lbl_fABText.setBounds(12, 13, 150, 16);
 		contentPane.add(lbl_fABText);
 		
-		lbl_fAB = new JLabel("New label");
+		lbl_fAB = new JLabel("Keine Daten");
 		lbl_fAB.setBounds(174, 13, 56, 16);
 		contentPane.add(lbl_fAB);
 				
