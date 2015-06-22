@@ -300,23 +300,20 @@ public class Main_Gui extends JFrame {
 	}
 
 	private boolean schreibeInDatei() {
-		SimpleDateFormat df = new SimpleDateFormat("HH;mm");
-
 		try {
 			File file = new File(DATEINAME);
-			BufferedWriter writer = new BufferedWriter(new FileWriter(file,
-					true));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file,true));
 			
 			writer.write("\nDA_" + datumAktuell(tagAnfang).replace(".", "_")); 	 
 
-			writer.write("\nTA;" + df.format(tagAnfang.getTime()));
+			writer.write("\nTA;" + zeitAktuell(tagAnfang).replace(":", ";"));
 
 			for (Pause p : pauseList) {
-				writer.write("\nPA;" + df.format(p.getPauseStart().getTime()));
-				writer.write("\nPE;" + df.format(p.getPauseEnde().getTime()));
+				writer.write("\nPA;" + zeitAktuell(p.getPauseStart()).replace(":", ";"));
+				writer.write("\nPE;" + zeitAktuell(p.getPauseEnde()).replace(":", ";"));
 			}
 
-			writer.write("\nTE;" + df.format(tagEnde.getTime()));
+			writer.write("\nTE;" + zeitAktuell(tagEnde).replace(":", ";"));
 
 			writer.flush();
 			writer.close();
