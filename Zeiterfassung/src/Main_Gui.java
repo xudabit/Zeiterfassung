@@ -13,17 +13,7 @@ import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.text.SimpleDateFormat;
 
 public class Main_Gui extends JFrame {
 
