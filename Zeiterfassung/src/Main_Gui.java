@@ -306,16 +306,14 @@ public class Main_Gui extends JFrame {
 			File file = new File(DATEINAME);
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file,
 					true));
+			
+			writer.write("\nDA_" + datumAktuell(tagAnfang).replace(".", "_")); 	 
 
-			writer.write("DA_" + datumAktuell(tagAnfang).replace(".", "_")
-					+ "\n");
-			writer.write("TA;" + df.format(tagAnfang.getTime()) + "\n");
+			writer.write("\nTA;" + df.format(tagAnfang.getTime()));
 
 			for (Pause p : pauseList) {
-				writer.write("PA;" + df.format(p.getPauseStart().getTime())
-						+ "\n");
-				writer.write("PE;" + df.format(p.getPauseEnde().getTime())
-						+ "\n");
+				writer.write("\nPA;" + df.format(p.getPauseStart().getTime()));
+				writer.write("\nPE;" + df.format(p.getPauseEnde().getTime()));
 			}
 
 			writer.write("TE;" + df.format(tagEnde.getTime()) + "\n");
