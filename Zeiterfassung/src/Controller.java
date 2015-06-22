@@ -21,8 +21,7 @@ public class Controller {
 	private final String DATEINAME = "Zeiterfassung.ze";
 	private final String PREFIXE = "TE#TA#PA#PE";
 
-	private Calendar tagAnfang;
-	private Calendar tagEnde;
+	private Calendar tagAnfang, tagEnde;
 
 	private HashMap<String, ArrayList<Zeitpunkt>> dateMap;
 	private HashMap<String, String> prefixMap;
