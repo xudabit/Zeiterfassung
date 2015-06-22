@@ -14,6 +14,8 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import java.util.Calendar;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 
 public class Main_Gui extends JFrame {
 
@@ -87,6 +89,9 @@ public class Main_Gui extends JFrame {
 		JLabel lbl_GesamtAZAusgabe = new JLabel("00:00");
 		JLabel lbl_ueberstundenText = new JLabel("\u00DCberstunden:");
 		JLabel lbl_ueberstundenSumme = new JLabel("Summe");
+		
+		// Text
+		textArea = new JTextArea();
 		
 		// Tag beginnen
 		btn_taganfang.setEnabled(true);
@@ -182,10 +187,6 @@ public class Main_Gui extends JFrame {
 		btn_tagende.setBounds(12, 210, 146, 25);
 		contentPane.add(btn_tagende);
 
-		textArea = new JTextArea();
-		textArea.setBounds(170, 100, 279, 135);
-		contentPane.add(textArea);
-
 		// Text Datum ausgeben
 		
 		
@@ -267,6 +268,15 @@ public class Main_Gui extends JFrame {
 		});
 		btnStatistik.setBounds(12, 282, 97, 25);
 		contentPane.add(btnStatistik);
+		
+		
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(201, 99, 294, 141);
+		contentPane.add(scrollPane);
+		
+				
+				scrollPane.setViewportView(textArea);
 
 	}
 }
