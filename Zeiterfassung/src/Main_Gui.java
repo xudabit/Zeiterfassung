@@ -12,38 +12,45 @@ import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import java.text.SimpleDateFormat;
+
 public class Main_Gui extends JFrame {
 
+	/**
+	 * Main_Gui
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private final String DATEINAME = "Zeiterfassung.ze";
 	private final String PREFIXE = "TE#TA#PA#PE";
-	private JPanel contentPane;
-	private JTextArea textArea;
-
-	private ArrayList<Pause> pauseList;
+	
 	private Calendar tagAnfang;
 	private Calendar tagEnde;
+	
 	private JLabel lbl_AktuellesDatumRechtsbuendig;
 	private JLabel lbl_Aktuellesdatum;
 	private JLabel lbl_TextSAZnP;
 	private JLabel lbl_AusgabeSAZnP;
-
-	private HashMap<String, ArrayList<Zeitpunkt>> dateMap;
-	private HashMap<String, String> prefixMap;
 	private JLabel lbl_GesamtAZText;
 	private JLabel lbl_GesamtAZAusgabe;
 
+	private HashMap<String, ArrayList<Zeitpunkt>> dateMap;
+	private HashMap<String, String> prefixMap;
+	
+	private JPanel contentPane;
+	private JTextArea textArea;
+	private ArrayList<Pause> pauseList;
 	/**
 	 * Launch the application.
 	 */
