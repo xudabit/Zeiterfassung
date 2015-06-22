@@ -254,7 +254,7 @@ public class Main_Gui extends JFrame {
 				Statistik_GUI s_gui = new Statistik_GUI();
 				s_gui.setVisible(true);
 				s_gui.setLabel(Controller.getController().findefAZ());
-				s_gui.setPausen(Controller.getController().getAnzahlPausen());
+				s_gui.setPausen(Controller.getController().getMaxAnzahlPausen());
 				s_gui.setDAPausen(Controller.getController().getDAPausen());
 				}else{
 					Component frame = null;

@@ -305,16 +305,15 @@ public class Controller {
 	}
 
 	// Tag mit den meisten Pausen bestimmen
-	public String getAnzahlPausen() {
+	public int getMaxAnzahlPausen() {
 		int pausen = 0;
 		int temp = 0; // Zwischenspeicher fuer Vergleich
 		String datum = ""; // Datum wird zwischengespeichert
 
 		for (String s : dateMap.keySet()) {
-			datum = s;
 			pausen = 0;
 			for (Zeitpunkt zp : dateMap.get(s)) {
-				if (zp.getPrefix().equals("PA") && s.equals(datum)) {
+				if (zp.getPrefix().equals("PA")) {
 					pausen = pausen + 1;
 				}
 			}
@@ -322,16 +321,13 @@ public class Controller {
 				temp = pausen;
 			}
 		}
-		if (temp == 1) {
-			return ("täglich 1 Pause gemacht");
-		} else {
-			return (datum + "      Pausen: " + temp);
-		}
+		return temp;
+
 	}
-	
+
 	// Durchschnittliche Anzahl an Pausen
-	public int getDAPausen(){
-		
+	public int getDAPausen() {
+
 		return 0;
 	}
 }

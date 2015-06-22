@@ -60,8 +60,8 @@ public class Statistik_GUI extends JFrame {
 		lbl_fAB.setText(s);	
 	}
 	
-	public void setPausen(String s){
-		lbl_AnzahlPausen.setText(s);
+	public void setPausen(int i){
+		lbl_AnzahlPausen.setText(i + " Pause" + (i == 1 ? "" : "n"));
 	}
 	
 	public void setDAPausen(int i){
