@@ -11,8 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-
-import sun.text.normalizer.UBiDiProps;
+import javax.swing.WindowConstants;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -50,6 +49,7 @@ public class Main_Gui extends JFrame {
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					Main_Gui frame = new Main_Gui();
@@ -92,7 +92,7 @@ public class Main_Gui extends JFrame {
 		});
 
 		setTitle("Zeiterfassung");
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 513, 351);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -112,6 +112,7 @@ public class Main_Gui extends JFrame {
 		btn_tagende.setEnabled(false);
 
 		btn_taganfang.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				tagAnfang = Calendar.getInstance();
 				textArea.append("Tag angefangen um: \t"
@@ -132,6 +133,7 @@ public class Main_Gui extends JFrame {
 		btn_pauseende.setEnabled(false);
 
 		btn_pauseanfang.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				textArea.append("Pause angefangen um: \t"
 						+ zeitAktuell(Calendar.getInstance()) + "\n");
@@ -153,6 +155,7 @@ public class Main_Gui extends JFrame {
 		btn_pauseende.setEnabled(false);
 
 		btn_pauseende.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				textArea.append("Pause beendet um: \t"
 						+ zeitAktuell(Calendar.getInstance()) + "\n");
@@ -174,6 +177,7 @@ public class Main_Gui extends JFrame {
 		btn_tagende.setEnabled(false);
 
 		btn_tagende.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				tagEnde = Calendar.getInstance();
 				textArea.append("Tag beendet um: \t" + zeitAktuell(tagEnde)
@@ -260,6 +264,7 @@ public class Main_Gui extends JFrame {
 
 		JButton btnStatistik = new JButton("Statistik");
 		btnStatistik.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Statistik_GUI s_gui = new Statistik_GUI();
 				s_gui.setVisible(true);
