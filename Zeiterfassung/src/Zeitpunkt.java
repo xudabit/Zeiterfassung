@@ -1,6 +1,4 @@
 import java.util.Calendar;
-import java.util.Date;
-
 
 public class Zeitpunkt {
 	private Calendar datum;
@@ -25,6 +23,4 @@ public class Zeitpunkt {
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
 	}
-
-	
 }
