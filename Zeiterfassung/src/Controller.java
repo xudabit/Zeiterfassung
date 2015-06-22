@@ -303,31 +303,39 @@ public class Controller {
 		return ((neg ? "-" : "") + (stunden < 10 ? "0" : "") + stunden + ":"
 				+ (minuten < 10 ? "0" : "") + minuten);
 	}
+	
+	// Anzahl der Pausen für ein Datum zurückgeben
+	private int getAnzahlPausen(String datum){
+
+		int pausen = 0;
+		for (Zeitpunkt zp : dateMap.get(datum)) {
+			if (zp.getPrefix().equals("PA")) {
+				pausen++;
+			}
+		}		
+		return pausen;		
+	}
 
 	// Tag mit den meisten Pausen bestimmen
 	public int getMaxAnzahlPausen() {
-		int pausen = 0;
 		int temp = 0; // Zwischenspeicher fuer Vergleich
-		String datum = ""; // Datum wird zwischengespeichert
 
 		for (String s : dateMap.keySet()) {
-			pausen = 0;
-			for (Zeitpunkt zp : dateMap.get(s)) {
-				if (zp.getPrefix().equals("PA")) {
-					pausen = pausen + 1;
-				}
-			}
+			int pausen = getAnzahlPausen(s);
 			if (pausen > temp) {
 				temp = pausen;
 			}
 		}
 		return temp;
-
 	}
 
 	// Durchschnittliche Anzahl an Pausen
-	public int getDAPausen() {
-
-		return 0;
+	public double getDAPausen() {
+		int pausen = 0; // Anzahl aller Pausen in Datei
+		
+		for (String s : dateMap.keySet()) {
+			pausen += getAnzahlPausen(s);
+		}
+		return ((double)pausen/dateMap.size());
 	}
 }
