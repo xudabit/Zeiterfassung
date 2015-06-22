@@ -4,9 +4,7 @@ public class Zeitpunkt {
 	private Calendar datum;
 	private String prefix;
 	
-	public Zeitpunkt() {
-		
-	}
+	public Zeitpunkt() {}
 
 	public Calendar getDatum() {
 		return datum;

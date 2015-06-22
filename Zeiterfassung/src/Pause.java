@@ -2,8 +2,7 @@ import java.util.Calendar;
 
 public class Pause {
 	
-	private Calendar pauseStart; // Zuweisungen im Konstruktor
-	private Calendar pauseEnde;
+	private Calendar pauseStart, pauseEnde; // Zuweisungen im Konstruktor
 	
 	public Pause(){}
 
