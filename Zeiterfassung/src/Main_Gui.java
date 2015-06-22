@@ -366,11 +366,15 @@ public class Main_Gui extends JFrame {
 							new ArrayList<Zeitpunkt>());
 
 				}
-				zeit = zeile.split(";");
 				if (PREFIXE.contains(zeit[0])) {
+					zeit = zeile.split(";");
+					
+					if(zeit.length != 3)
+						break;
+					
 					Zeitpunkt zp = new Zeitpunkt();
 					Calendar dat = Calendar.getInstance();
-						dat.set(jahr, monat, tag, Integer.parseInt(zeit[1]), Integer.parseInt(zeit[2]), 0);
+					dat.set(jahr, monat, tag, Integer.parseInt(zeit[1]), Integer.parseInt(zeit[2]), 0);
 					zp.setDatum(dat);
 					zp.setPrefix(zeit[0]);
 						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3]).add(zp);
@@ -403,13 +407,14 @@ public class Main_Gui extends JFrame {
 						tagEnde = zp.getDatum();
 					}
 					if (zp.getPrefix().equals("PA")) {
-						pauseList.add(new Pause());
-						pauseList.get(pauseList.size() - 1).setPauseStart(
-								zp.getDatum());
+						if(pauseList.size() == 0 || pauseList.get(pauseList.size()-1).getPauseStart() != null)
+							pauseList.add(new Pause());
+						pauseList.get(pauseList.size() - 1).setPauseStart(zp.getDatum());
 					}
 					if (zp.getPrefix().equals("PE")) {
-						pauseList.get(pauseList.size() - 1).setPauseEnde(
-								zp.getDatum());
+						if(pauseList.size() == 0 || pauseList.get(pauseList.size()-1).getPauseEnde() != null)
+							pauseList.add(new Pause());
+						pauseList.get(pauseList.size() - 1).setPauseEnde(zp.getDatum());
 					}
 				}
 			}
