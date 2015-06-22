@@ -2,10 +2,14 @@ import java.util.Calendar;
 
 public class Pause {
 	
-	private Calendar pauseStart; // Zuweisungen im Konstruktor
-	private Calendar pauseEnde;
+	private Calendar pauseStart = null, pauseEnde = null; // Zuweisungen im Konstruktor
 	
 	public Pause(){}
+	
+	public Pause(Calendar pa, Calendar pe) {
+		pauseStart = pa;
+		pauseEnde = pe;
+	}
 
 	public Calendar getPauseStart() {
 		return pauseStart;
@@ -24,6 +28,8 @@ public class Pause {
 	}
 	
 	public long berechnePauseInMillis(){
+		if(pauseStart == null || pauseEnde == null)
+			return -1;
 		return pauseEnde.getTimeInMillis() - pauseStart.getTimeInMillis();
 	}	
 	
