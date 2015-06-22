@@ -327,20 +327,16 @@ public class Main_Gui extends JFrame {
 
 	private boolean leseAusDatei() {
 		dateMap = new HashMap<String, ArrayList<Zeitpunkt>>();
-		// Überprüfen, ob die Datei existiert
+		File file = new File(DATEINAME);
+		int tag = 0, monat = 0, jahr = 0;
+		String[] zeit = new String[0], datum = new String[0];
+		String zeile;
+		
 		try {
-			File file = new File(DATEINAME);
-
 			if (!file.exists())
 				return false;
 
 			BufferedReader reader = new BufferedReader(new FileReader(file));
-
-			dateMap = new HashMap<String, ArrayList<Zeitpunkt>>();
-
-			int tag = 0, monat = 0, jahr = 0;
-			String[] zeit = new String[0], datum = new String[0];
-			String zeile;
 
 			while ((zeile = reader.readLine()) != null) {
 				if (zeile.startsWith("DA")) {
@@ -357,16 +353,12 @@ public class Main_Gui extends JFrame {
 				} else {
 					zeit = zeile.split(";");
 					if (PREFIXE.contains(zeit[0])) {
-						int stunden = Integer.parseInt(zeit[1]);
-						int minuten = Integer.parseInt(zeit[2]);
-
 						Zeitpunkt zp = new Zeitpunkt();
 						Calendar dat = Calendar.getInstance();
-						dat.set(jahr, monat, tag, stunden, minuten, 0);
+						dat.set(jahr, monat, tag, Integer.parseInt(zeit[1]), Integer.parseInt(zeit[2]), 0);
 						zp.setDatum(dat);
 						zp.setPrefix(zeit[0]);
-						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3])
-								.add(zp);
+						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3]).add(zp);
 					}
 				}
 			}
