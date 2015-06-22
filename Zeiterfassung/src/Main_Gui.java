@@ -408,11 +408,9 @@ public class Main_Gui extends JFrame {
 
 	private long gesamtAZ() {
 		long summeArbeitstage = 0;
-		long summeHeute = 0;
 
 		for (String s : dateMap.keySet()) {
-			Calendar ta = null;
-			Calendar te = null;
+			Calendar ta = null, te = null;
 
 			ArrayList<Calendar[]> pausen = new ArrayList<Calendar[]>();
 
@@ -425,11 +423,16 @@ public class Main_Gui extends JFrame {
 				}
 
 				if (zp.getPrefix().equals("PA")) {
-					pausen.add(new Calendar[2]);
+					//Kein Calendar-Element vorhanden || beim letzten Argument ist der Pausenanfang bereits gesetzt
+					if(pausen.size() == 0 || pausen.get(pausen.size()-1)[0] != null)
+						pausen.add(new Calendar[2]);
 					pausen.get(pausen.size() - 1)[0] = zp.getDatum();
 				}
 
 				if (zp.getPrefix().equals("PE")) {
+					//Kein Calendar-Element vorhanden || beim letzten Argument ist das Pausenende bereits gesetzt
+					if(pausen.size() == 0 || pausen.get(pausen.size()-1)[1] != null)
+						pausen.add(new Calendar[2]);
 					pausen.get(pausen.size() - 1)[1] = zp.getDatum();
 				}
 			}
@@ -439,9 +442,7 @@ public class Main_Gui extends JFrame {
 				summePausen += (d[1].getTimeInMillis() - d[0].getTimeInMillis());
 			}
 
-			summeHeute = (te.getTimeInMillis() - ta.getTimeInMillis());
-			summeHeute -= summePausen;
-			summeArbeitstage += summeHeute;
+			summeArbeitstage += (te.getTimeInMillis() - ta.getTimeInMillis()) - summePausen;
 
 		}
 		return summeArbeitstage;
