@@ -11,8 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-
-import sun.text.normalizer.UBiDiProps;
+import javax.swing.WindowConstants;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -50,6 +49,7 @@ public class Main_Gui extends JFrame {
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					Main_Gui frame = new Main_Gui();
@@ -92,7 +92,7 @@ public class Main_Gui extends JFrame {
 		});
 
 		setTitle("Zeiterfassung");
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 513, 351);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -112,6 +112,7 @@ public class Main_Gui extends JFrame {
 		btn_tagende.setEnabled(false);
 
 		btn_taganfang.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				tagAnfang = Calendar.getInstance();
 				textArea.append("Tag angefangen um: \t"
@@ -132,6 +133,7 @@ public class Main_Gui extends JFrame {
 		btn_pauseende.setEnabled(false);
 
 		btn_pauseanfang.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				textArea.append("Pause angefangen um: \t"
 						+ zeitAktuell(Calendar.getInstance()) + "\n");
@@ -153,6 +155,7 @@ public class Main_Gui extends JFrame {
 		btn_pauseende.setEnabled(false);
 
 		btn_pauseende.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				textArea.append("Pause beendet um: \t"
 						+ zeitAktuell(Calendar.getInstance()) + "\n");
@@ -174,6 +177,7 @@ public class Main_Gui extends JFrame {
 		btn_tagende.setEnabled(false);
 
 		btn_tagende.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				tagEnde = Calendar.getInstance();
 				textArea.append("Tag beendet um: \t" + zeitAktuell(tagEnde)
@@ -260,6 +264,7 @@ public class Main_Gui extends JFrame {
 
 		JButton btnStatistik = new JButton("Statistik");
 		btnStatistik.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Statistik_GUI s_gui = new Statistik_GUI();
 				s_gui.setVisible(true);
@@ -300,23 +305,20 @@ public class Main_Gui extends JFrame {
 	}
 
 	private boolean schreibeInDatei() {
-		SimpleDateFormat df = new SimpleDateFormat("HH;mm");
-
 		try {
 			File file = new File(DATEINAME);
-			BufferedWriter writer = new BufferedWriter(new FileWriter(file,
-					true));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file,true));
 			
 			writer.write("\nDA_" + datumAktuell(tagAnfang).replace(".", "_")); 	 
 
-			writer.write("\nTA;" + df.format(tagAnfang.getTime()));
+			writer.write("\nTA;" + zeitAktuell(tagAnfang).replace(":", ";"));
 
 			for (Pause p : pauseList) {
-				writer.write("\nPA;" + df.format(p.getPauseStart().getTime()));
-				writer.write("\nPE;" + df.format(p.getPauseEnde().getTime()));
+				writer.write("\nPA;" + zeitAktuell(p.getPauseStart()).replace(":", ";"));
+				writer.write("\nPE;" + zeitAktuell(p.getPauseEnde()).replace(":", ";"));
 			}
 
-			writer.write("\nTE;" + df.format(tagEnde.getTime()));
+			writer.write("\nTE;" + zeitAktuell(tagEnde).replace(":", ";"));
 
 			writer.flush();
 			writer.close();
@@ -330,20 +332,16 @@ public class Main_Gui extends JFrame {
 
 	private boolean leseAusDatei() {
 		dateMap = new HashMap<String, ArrayList<Zeitpunkt>>();
-		// Überprüfen, ob die Datei existiert
+		File file = new File(DATEINAME);
+		int tag = 0, monat = 0, jahr = 0;
+		String[] zeit = new String[0], datum = new String[0];
+		String zeile;
+		
 		try {
-			File file = new File(DATEINAME);
-
 			if (!file.exists())
 				return false;
 
 			BufferedReader reader = new BufferedReader(new FileReader(file));
-
-			dateMap = new HashMap<String, ArrayList<Zeitpunkt>>();
-
-			int tag = 0, monat = 0, jahr = 0;
-			String[] zeit = new String[0], datum = new String[0];
-			String zeile;
 
 			while ((zeile = reader.readLine()) != null) {
 				if(zeile.equals(""))
@@ -365,10 +363,10 @@ public class Main_Gui extends JFrame {
 				if (PREFIXE.contains(zeit[0])) {
 					Zeitpunkt zp = new Zeitpunkt();
 					Calendar dat = Calendar.getInstance();
-					dat.set(jahr, monat, tag, Integer.parseInt(zeit[1]), Integer.parseInt(zeit[2]), 0);
+						dat.set(jahr, monat, tag, Integer.parseInt(zeit[1]), Integer.parseInt(zeit[2]), 0);
 					zp.setDatum(dat);
 					zp.setPrefix(zeit[0]);
-					dateMap.get(datum[1] + "." + datum[2] + "." + datum[3]).add(zp);
+						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3]).add(zp);
 				}
 			}
 			reader.close();
@@ -417,11 +415,9 @@ public class Main_Gui extends JFrame {
 
 	private long gesamtAZ() {
 		long summeArbeitstage = 0;
-		long summeHeute = 0;
 
 		for (String s : dateMap.keySet()) {
-			Calendar ta = null;
-			Calendar te = null;
+			Calendar ta = null, te = null;
 
 			ArrayList<Calendar[]> pausen = new ArrayList<Calendar[]>();
 
@@ -434,11 +430,16 @@ public class Main_Gui extends JFrame {
 				}
 
 				if (zp.getPrefix().equals("PA")) {
-					pausen.add(new Calendar[2]);
+					//Kein Calendar-Element vorhanden || beim letzten Argument ist der Pausenanfang bereits gesetzt
+					if(pausen.size() == 0 || pausen.get(pausen.size()-1)[0] != null)
+						pausen.add(new Calendar[2]);
 					pausen.get(pausen.size() - 1)[0] = zp.getDatum();
 				}
 
 				if (zp.getPrefix().equals("PE")) {
+					//Kein Calendar-Element vorhanden || beim letzten Argument ist das Pausenende bereits gesetzt
+					if(pausen.size() == 0 || pausen.get(pausen.size()-1)[1] != null)
+						pausen.add(new Calendar[2]);
 					pausen.get(pausen.size() - 1)[1] = zp.getDatum();
 				}
 			}
@@ -448,9 +449,7 @@ public class Main_Gui extends JFrame {
 				summePausen += (d[1].getTimeInMillis() - d[0].getTimeInMillis());
 			}
 
-			summeHeute = (te.getTimeInMillis() - ta.getTimeInMillis());
-			summeHeute -= summePausen;
-			summeArbeitstage += summeHeute;
+			summeArbeitstage += (te.getTimeInMillis() - ta.getTimeInMillis()) - summePausen;
 
 		}
 		return summeArbeitstage;
