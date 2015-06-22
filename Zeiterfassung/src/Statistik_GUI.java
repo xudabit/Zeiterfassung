@@ -64,8 +64,9 @@ public class Statistik_GUI extends JFrame {
 		lbl_AnzahlPausen.setText(i + " Pause" + (i == 1 ? "" : "n"));
 	}
 	
-	public void setDAPausen(double i){
-		lbl_dAPausen.setText("" + i);
+	public void setDAPausen(double d){
+		d = (double)Math.round(d*100)/100;
+		lbl_dAPausen.setText("" + d);
 	}
 
 }
