@@ -20,7 +20,7 @@ public class Statistik_GUI extends JFrame {
 	 */
 	public Statistik_GUI() {
 		setTitle("Statistik");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -31,7 +31,7 @@ public class Statistik_GUI extends JFrame {
 		lbl_fABText.setBounds(12, 13, 150, 16);
 		contentPane.add(lbl_fABText);
 		
-		lbl_fAB = new JLabel("New label");
+		lbl_fAB = new JLabel("Keine Daten");
 		lbl_fAB.setBounds(174, 13, 56, 16);
 		contentPane.add(lbl_fAB);
 				
