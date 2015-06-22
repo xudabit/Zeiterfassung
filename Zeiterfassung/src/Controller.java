@@ -207,6 +207,8 @@ public class Controller {
 				}
 			}
 		}
+		if(text.equals(""))
+			return null;
 		return text;
 	}
 

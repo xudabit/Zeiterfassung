@@ -244,7 +244,9 @@ public class Main_Gui extends JFrame {
 		lbl_GesamtAZAusgabe.setText(Controller.getController().getTimeForLabel(Controller.getController().berechneArbeitszeitInMillis()));
 
 		// Button aktivieren/deaktivieren wenn Datum in Datei
-		if (!Controller.getController().getTextForToday().equals("")) {
+		String textForTextArea = Controller.getController().getTextForToday();
+		if (textForTextArea != null) {
+			textArea.setText(textForTextArea);
 			btn_taganfang.setEnabled(false);
 			btn_pauseanfang.setEnabled(false);
 			btn_pauseende.setEnabled(false);
