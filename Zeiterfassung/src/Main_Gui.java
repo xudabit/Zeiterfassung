@@ -27,8 +27,9 @@ public class Main_Gui extends JFrame {
 	private JPanel contentPane;
 	private JTextArea textArea;
 	
-	private Calendar pauseAnfang;
-	
+	private JLabel lbl_GesamtAZAusgabe;
+	private JLabel lbl_ueberstundenSumme;
+	private JLabel lbl_AusgabeSAZnP;
 	/**
 	 * Launch the application.
 	 */
@@ -84,11 +85,11 @@ public class Main_Gui extends JFrame {
 		JLabel lbl_Aktuellesdatum = new JLabel();
 		JLabel lbl_AktuellesDatumRechtsbuendig = new JLabel();
 		JLabel lbl_TextSAZnP = new JLabel("Summe Arbeitszeit:");
-		JLabel lbl_AusgabeSAZnP = new JLabel();
+		lbl_AusgabeSAZnP = new JLabel();
 		JLabel lbl_GesamtAZText = new JLabel("Gesamtarbeitszeit der letzten Tage:");
-		JLabel lbl_GesamtAZAusgabe = new JLabel("00:00");
+		lbl_GesamtAZAusgabe = new JLabel("00:00");
 		JLabel lbl_ueberstundenText = new JLabel("\u00DCberstunden:");
-		JLabel lbl_ueberstundenSumme = new JLabel("Summe");
+		lbl_ueberstundenSumme = new JLabel("Summe");
 		
 		// Text
 		textArea = new JTextArea();
@@ -103,15 +104,14 @@ public class Main_Gui extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Controller.getController().setTagAnfang(Calendar.getInstance());
-				textArea.append("Tag angefangen um: \t"
-						+ Controller.getController().zeitAktuell(Controller.getController().getTagAnfang()) + "\n");
-
+				
 				// Button aktivieren/deaktivieren
 				btn_taganfang.setEnabled(false);
 				btn_pauseanfang.setEnabled(true);
 				btn_pauseende.setEnabled(false);
 				btn_tagende.setEnabled(true);
-
+				
+				updateView();
 			}
 		});
 		btn_taganfang.setBounds(12, 99, 146, 25);
@@ -123,15 +123,13 @@ public class Main_Gui extends JFrame {
 		btn_pauseanfang.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				textArea.append("Pause angefangen um: \t"
-						+ Controller.getController().zeitAktuell(Calendar.getInstance()) + "\n");
+				Controller.getController().addPauseAnfang(Calendar.getInstance());
 
 				btn_taganfang.setEnabled(false);
 				btn_pauseanfang.setEnabled(false);
 				btn_pauseende.setEnabled(true);
 				btn_tagende.setEnabled(false);
-
-				pauseAnfang = Calendar.getInstance();
+				updateView();
 			}
 		});
 		btn_pauseanfang.setBounds(12, 137, 146, 25);
@@ -143,19 +141,14 @@ public class Main_Gui extends JFrame {
 		btn_pauseende.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				textArea.append("Pause beendet um: \t"
-						+ Controller.getController().zeitAktuell(Calendar.getInstance()) + "\n");
-
 				btn_taganfang.setEnabled(false);
 				btn_pauseanfang.setEnabled(true);
 				btn_pauseende.setEnabled(false);
 				btn_tagende.setEnabled(true);
 				
-				if(pauseAnfang != null) {
-					Controller.getController().addPause(pauseAnfang, Calendar.getInstance());
-				}
+				Controller.getController().addPauseEnde(Calendar.getInstance());
 
-				lbl_AusgabeSAZnP.setText(Controller.getController().getTimeForLabel(Controller.getController().berechneArbeitszeitInMillis()));
+				updateView();
 			}
 		});
 		btn_pauseende.setBounds(12, 175, 146, 25);
@@ -168,20 +161,17 @@ public class Main_Gui extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Controller.getController().setTagEnde(Calendar.getInstance());
-				textArea.append("Tag beendet um: \t" + Controller.getController().zeitAktuell(Controller.getController().getTagEnde())
-						+ "\n");
 
 				btn_taganfang.setEnabled(false);
 				btn_pauseanfang.setEnabled(false);
 				btn_pauseende.setEnabled(false);
 				btn_tagende.setEnabled(false);
-
-				lbl_AusgabeSAZnP.setText(Controller.getController().getTimeForLabel(Controller.getController().berechneArbeitszeitInMillis()));
-
+				
 				// Butten AusgabeSAZnP = Summe Arbeitszeit nach Pause
 				Controller.getController().schreibeInDatei();
 				Controller.getController().leseAusDatei();
-				lbl_GesamtAZAusgabe.setText(Controller.getController().getTimeForLabel(Controller.getController().berechneArbeitszeitInMillis()));
+				
+				updateView();
 			}
 		});
 		btn_tagende.setBounds(12, 210, 146, 25);
@@ -211,11 +201,9 @@ public class Main_Gui extends JFrame {
 
 		// Anzeige SAZnP = Summe Arbeitszeit nach Pause
 		
-		lbl_AusgabeSAZnP.setText("nach der ersten Pause und nach Feierabend.");
 		lbl_AusgabeSAZnP.setBounds(170, 253, 279, 16);
 		contentPane.add(lbl_AusgabeSAZnP);
 		
-		lbl_AusgabeSAZnP.setText(Controller.getController().getTimeForLabel(Controller.getController().berechneArbeitszeitInMillis()));
 		// Gesamtarbeitszeit seit Datei erzeugt wurde
 		lbl_GesamtAZText.setBounds(12, 13, 220, 16);
 		contentPane.add(lbl_GesamtAZText);
@@ -231,10 +219,6 @@ public class Main_Gui extends JFrame {
 		
 		lbl_ueberstundenSumme.setBounds(244, 42, 56, 16);
 		contentPane.add(lbl_ueberstundenSumme);
-
-		lbl_ueberstundenSumme.setText(Controller.getController().getTimeForLabel(Controller.getController().berechneArbeitszeitInMillis()));
-		
-		lbl_GesamtAZAusgabe.setText(Controller.getController().getTimeForLabel(Controller.getController().berechneArbeitszeitInMillis()));
 
 		// Button aktivieren/deaktivieren wenn Datum in Datei
 		String textForTextArea = Controller.getController().getTextForToday();
@@ -274,9 +258,16 @@ public class Main_Gui extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(201, 99, 294, 141);
 		contentPane.add(scrollPane);
-		
-				
-				scrollPane.setViewportView(textArea);
+		scrollPane.setViewportView(textArea);
 
+		updateView();
+		
+	}
+	
+	private void updateView() {
+		textArea.setText(Controller.getController().getTextForToday());
+		lbl_GesamtAZAusgabe.setText(Controller.getController().getTimeForLabel(Controller.getController().gesamtAZ()));
+		lbl_ueberstundenSumme.setText(Controller.getController().getTimeForLabel(Controller.getController().ueberstunden()));
+		lbl_AusgabeSAZnP.setText(Controller.getController().getTimeForLabel(Controller.getController().berechneArbeitszeitInMillis()));
 	}
 }
