@@ -32,13 +32,6 @@ public class Main_Gui extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private JLabel lbl_AktuellesDatumRechtsbuendig;
-	private JLabel lbl_Aktuellesdatum;
-	private JLabel lbl_TextSAZnP;
-	private JLabel lbl_AusgabeSAZnP;
-	private JLabel lbl_GesamtAZText;
-	private JLabel lbl_GesamtAZAusgabe;
-	
 	private JPanel contentPane;
 	private JTextArea textArea;
 	
@@ -80,7 +73,7 @@ public class Main_Gui extends JFrame {
 				}
 			}
 		});
-
+		
 		setTitle("Zeiterfassung");
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 513, 351);
@@ -95,6 +88,16 @@ public class Main_Gui extends JFrame {
 		JButton btn_pauseende = new JButton("Pause beenden");
 		JButton btn_tagende = new JButton("Tag beenden");
 
+		// Labels
+		JLabel lbl_Aktuellesdatum = new JLabel();
+		JLabel lbl_AktuellesDatumRechtsbuendig = new JLabel();
+		JLabel lbl_TextSAZnP = new JLabel("Summe Arbeitszeit:");
+		JLabel lbl_AusgabeSAZnP = new JLabel();
+		JLabel lbl_GesamtAZText = new JLabel("Gesamtarbeitszeit der letzten Tage:");
+		JLabel lbl_GesamtAZAusgabe = new JLabel("00:00");
+		JLabel lbl_ueberstundenText = new JLabel("\u00DCberstunden:");
+		JLabel lbl_ueberstundenSumme = new JLabel("Summe");
+		
 		// Tag beginnen
 		btn_taganfang.setEnabled(true);
 		btn_pauseanfang.setEnabled(false);
@@ -194,14 +197,15 @@ public class Main_Gui extends JFrame {
 		contentPane.add(textArea);
 
 		// Text Datum ausgeben
-		lbl_Aktuellesdatum = new JLabel();
+		
+		
 		lbl_Aktuellesdatum.setHorizontalAlignment(SwingConstants.LEFT);
 		lbl_Aktuellesdatum.setText("Datum: ");
 		lbl_Aktuellesdatum.setBounds(12, 70, 46, 16);
 		contentPane.add(lbl_Aktuellesdatum);
 
 		// Aktuelles Datum rechtbuendig ausgeben
-		lbl_AktuellesDatumRechtsbuendig = new JLabel();
+		
 		lbl_AktuellesDatumRechtsbuendig.setBounds(63, 70, 95, 16);
 		lbl_AktuellesDatumRechtsbuendig
 				.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -210,32 +214,30 @@ public class Main_Gui extends JFrame {
 		contentPane.add(lbl_AktuellesDatumRechtsbuendig);
 
 		// Anzeige Text: SAZnP = Summe Arbeitszeit nach Pause
-		lbl_TextSAZnP = new JLabel("Summe Arbeitszeit:");
+		
 		lbl_TextSAZnP.setBounds(12, 253, 192, 16);
 		contentPane.add(lbl_TextSAZnP);
 
 		// Anzeige SAZnP = Summe Arbeitszeit nach Pause
-		lbl_AusgabeSAZnP = new JLabel();
+		
 		lbl_AusgabeSAZnP.setText("nach der ersten Pause und nach Feierabend.");
 		lbl_AusgabeSAZnP.setBounds(170, 253, 279, 16);
 		contentPane.add(lbl_AusgabeSAZnP);
 		
 		lbl_AusgabeSAZnP.setText(Controller.getController().getTimeForLabel(Controller.getController().berechneArbeitszeitInMillis()));
 		// Gesamtarbeitszeit seit Datei erzeugt wurde
-		lbl_GesamtAZText = new JLabel("Gesamtarbeitszeit der letzten Tage:");
 		lbl_GesamtAZText.setBounds(12, 13, 220, 16);
 		contentPane.add(lbl_GesamtAZText);
 
 		// Ausgabe Gesamtarbeitszeit seit Datei erzeugt wurde
-		lbl_GesamtAZAusgabe = new JLabel("00:00");
 		lbl_GesamtAZAusgabe.setBounds(244, 13, 251, 16);
 		contentPane.add(lbl_GesamtAZAusgabe);
 
-		JLabel lbl_ueberstundenText = new JLabel("\u00DCberstunden:");
+		
 		lbl_ueberstundenText.setBounds(12, 42, 95, 16);
 		contentPane.add(lbl_ueberstundenText);
 
-		JLabel lbl_ueberstundenSumme = new JLabel("Summe");
+		
 		lbl_ueberstundenSumme.setBounds(244, 42, 56, 16);
 		contentPane.add(lbl_ueberstundenSumme);
 
