@@ -17,6 +17,9 @@ import javax.swing.WindowConstants;
 import javax.swing.JScrollPane;
 
 import java.util.Calendar;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 public class Main_Gui extends JFrame {
 
@@ -62,13 +65,75 @@ public class Main_Gui extends JFrame {
 		setTitle("Zeiterfassung");
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 513, 301);
+
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+
+		JMenu mnNewMenu = new JMenu("Datei");
+		menuBar.add(mnNewMenu);
+
+		JMenuItem mntmBeenden = new JMenuItem("Beenden");
+		mnNewMenu.add(mntmBeenden);
+
+		JMenu mnBearbeiten = new JMenu("Bearbeiten");
+		menuBar.add(mnBearbeiten);
+
+		JMenu mnNewMenu_1 = new JMenu("Daten l\u00F6schen");
+		mnBearbeiten.add(mnNewMenu_1);
+
+		JMenuItem mntmWochen = new JMenuItem("> 4 Wochen");
+		mnNewMenu_1.add(mntmWochen);
+
+		JMenuItem mntmWochen_1 = new JMenuItem("> 8 Wochen");
+		mnNewMenu_1.add(mntmWochen_1);
+
+		JMenuItem mntmAllesLschen = new JMenuItem("Alle");
+		mnNewMenu_1.add(mntmAllesLschen);
+
+		JMenuItem mntmZeitenndern = new JMenuItem("Zeiten \u00E4ndern");
+		mntmZeitenndern.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				EingabenAendern_GUI eA = new EingabenAendern_GUI(getBounds());
+				eA.setVisible(true);
+				setVisible(false);
+			}
+		});
+		mnBearbeiten.add(mntmZeitenndern);
+
+		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Statistik");
+		mntmNewMenuItem_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (!Controller.getController().getDateMap().isEmpty()) {
+					Statistik_GUI s_gui = new Statistik_GUI(getBounds());
+					setVisible(false);
+					s_gui.setVisible(true);
+					s_gui.setLabel(Controller.getController().findefAZ());
+					s_gui.setPausen(Controller.getController()
+							.getMaxAnzahlPausen());
+					s_gui.setDAPausen(Controller.getController().getDAPausen());
+				} else {
+					Component frame = null;
+					JOptionPane
+							.showMessageDialog(
+									frame,
+									"Speichern Sie mindestens einen Arbeitstag, \n damit eine Statistik erzeugt werden kann.",
+									"Fehlende Daten",
+									JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		});
+		menuBar.add(mntmNewMenuItem_1);
+
+		JMenu mnHilfe = new JMenu("Hilfe");
+		menuBar.add(mnHilfe);
+
+		JMenuItem mntmInfo = new JMenuItem("Info");
+		mnHilfe.add(mntmInfo);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-
-		
 		// Button
 		JButton btn_taganfang = new JButton("Tag beginnen");
 		JButton btn_pauseanfang = new JButton("Pause beginnen");
@@ -206,49 +271,12 @@ public class Main_Gui extends JFrame {
 
 		lbl_AusgabeSAZnP.setText(Controller.getController().getTimeForLabel(
 				Controller.getController().berechneArbeitszeitInMillis()));
-		JButton btnStatistik = new JButton("Statistik");
-		btnStatistik.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (!Controller.getController().getDateMap().isEmpty()) {
-					Statistik_GUI s_gui = new Statistik_GUI(getBounds());
-					setVisible(false);
-					s_gui.setVisible(true);
-					s_gui.setLabel(Controller.getController().findefAZ());
-					s_gui.setPausen(Controller.getController()
-							.getMaxAnzahlPausen());
-					s_gui.setDAPausen(Controller.getController().getDAPausen());
-				} else {
-					Component frame = null;
-					JOptionPane
-							.showMessageDialog(
-									frame,
-									"Speichern Sie mindestens einen Arbeitstag, \n damit eine Statistik erzeugt werden kann.",
-									"Fehlende Daten",
-									JOptionPane.WARNING_MESSAGE);
-				}
-			}
-		});
-		btnStatistik.setBounds(398, 234, 97, 25);
-		contentPane.add(btnStatistik);
 
 		// ScrollPane
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(201, 42, 294, 141);
 		contentPane.add(scrollPane);
 		scrollPane.setViewportView(textArea);
-
-		// Button Eingaben Ändern
-		JButton btn_aendern = new JButton("\u00C4ndern");
-		btn_aendern.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				EingabenAendern_GUI eA = new EingabenAendern_GUI(getBounds());
-				eA.setVisible(true);
-				setVisible(false);
-			}
-		});
-		btn_aendern.setBounds(398, 196, 97, 25);
-		contentPane.add(btn_aendern);
 
 		updateView();
 	}
@@ -259,7 +287,8 @@ public class Main_Gui extends JFrame {
 				Controller.getController().berechneArbeitszeitInMillis()));
 	}
 
-	public void showWindow(Rectangle bounds){
+	public void showWindow(Rectangle bounds) {
+		updateView();
 		setVisible(true);
 		setBounds(bounds);
 	}

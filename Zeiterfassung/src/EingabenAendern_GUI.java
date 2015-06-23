@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.Calendar;
 
 import javax.swing.JLabel;
 
@@ -32,7 +33,7 @@ public class EingabenAendern_GUI extends JFrame {
 	 * Create the frame.
 	 */
 	public void InitEingabenAendern_GUI() {
-		String temp;
+		String temp ="";
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		
 		setTitle("Eingaben \u00E4ndern");
@@ -42,7 +43,9 @@ public class EingabenAendern_GUI extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		temp = Controller.getController().zeitAktuell(Controller.getController().getTagAnfang());
+		if(Controller.getController().getTagAnfang()!= null)
+			temp = Controller.getController().zeitAktuell(Controller.getController().getTagAnfang());
+		
 		tF_tagBeginnen = new JTextField();
 		tF_tagBeginnen.setEnabled(!temp.isEmpty());
 		tF_tagBeginnen.setText(temp);

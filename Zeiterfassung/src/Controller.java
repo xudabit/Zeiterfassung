@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 public class Controller {
 	private static Controller singleton = null;
@@ -21,7 +20,7 @@ public class Controller {
 	private final String DATEINAME = "Zeiterfassung.ze";
 	private final String PREFIXE = "TE#TA#PA#PE";
 
-	//private LinkedHashMap<String, Tag> dateMap;
+	// private LinkedHashMap<String, Tag> dateMap;
 	private HashMap<String, Tag> dateMap;
 	private HashMap<String, String> prefixMap;
 
@@ -53,7 +52,7 @@ public class Controller {
 	}
 
 	public Calendar getTagAnfang() {
-		return getToday().getTagAnfang();
+			return getToday().getTagAnfang();
 	}
 
 	public Calendar getTagEnde() {
@@ -95,7 +94,7 @@ public class Controller {
 	public long berechneArbeitszeitInMillis() {
 		if (getToday() == null || getToday().getTagAnfang() == null)
 			return 0;
-		
+
 		long arbeitstag = (getToday().getTagEnde() == null ? Calendar
 				.getInstance().getTimeInMillis() : getToday().getTagEnde()
 				.getTimeInMillis())
@@ -110,32 +109,38 @@ public class Controller {
 
 	public boolean schreibeInDatei() {
 		try {
-			File file = new File(DATEINAME);
-			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
+					DATEINAME)));
 
 			/*
 			 * --- Ausgabe verbessern ---
 			 */
-			for(String s : dateMap.keySet()) {
+			for (String s : dateMap.keySet()) {
 				Tag t = dateMap.get(s);
-				
+
 				writer.write("\nDA_" + s.replace(".", "_"));
-				
-				if(t.getTagAnfang() != null) {
-					writer.write("\nTA;" + zeitAktuell(t.getTagAnfang()).replace(":", ";"));
+
+				if (t.getTagAnfang() != null) {
+					writer.write("\nTA;"
+							+ zeitAktuell(t.getTagAnfang()).replace(":", ";"));
 				}
 
 				for (Pause p : t.getPausenListe()) {
-					writer.write("\nPA;" + zeitAktuell(p.getPauseStart()).replace(":", ";"));
-					writer.write("\nPE;" + zeitAktuell(p.getPauseEnde()).replace(":", ";"));
-				}
-				
-				if(t.getTemp() != null) {
-					writer.write("\nPA;" + zeitAktuell(t.getTemp().getPauseStart()).replace(":", ";"));
+					writer.write("\nPA;"
+							+ zeitAktuell(p.getPauseStart()).replace(":", ";"));
+					writer.write("\nPE;"
+							+ zeitAktuell(p.getPauseEnde()).replace(":", ";"));
 				}
 
-				if(t.getTagEnde() != null) {
-					writer.write("\nTE;" + zeitAktuell(t.getTagEnde()).replace(":", ";"));
+				if (t.getTemp() != null) {
+					writer.write("\nPA;"
+							+ zeitAktuell(t.getTemp().getPauseStart()).replace(
+									":", ";"));
+				}
+
+				if (t.getTagEnde() != null) {
+					writer.write("\nTE;"
+							+ zeitAktuell(t.getTagEnde()).replace(":", ";"));
 				}
 			}
 
@@ -185,7 +190,7 @@ public class Controller {
 
 					Calendar dat = Calendar.getInstance();
 					dat.set(Calendar.YEAR, jahr);
-					dat.set(Calendar.MONTH, monat-1);
+					dat.set(Calendar.MONTH, monat - 1);
 					dat.set(Calendar.DAY_OF_MONTH, tag);
 					dat.set(Calendar.HOUR_OF_DAY, Integer.parseInt(zeit[1]));
 					dat.set(Calendar.MINUTE, Integer.parseInt(zeit[2]));
@@ -231,11 +236,13 @@ public class Controller {
 				text += (prefixMap.get("PA") + zeitAktuell(p.getPauseStart()) + "\n");
 				text += (prefixMap.get("PE") + zeitAktuell(p.getPauseEnde()) + "\n");
 			}
-			if(getToday().getTemp() != null)
-				text += (prefixMap.get("PA") + zeitAktuell(getToday().getTemp().getPauseStart()) + "\n");
+			if (getToday().getTemp() != null)
+				text += (prefixMap.get("PA")
+						+ zeitAktuell(getToday().getTemp().getPauseStart()) + "\n");
 
-			if(getToday().getTagEnde() != null)
-				text += (prefixMap.get("TE") + zeitAktuell(getToday().getTagEnde()) + "\n");
+			if (getToday().getTagEnde() != null)
+				text += (prefixMap.get("TE")
+						+ zeitAktuell(getToday().getTagEnde()) + "\n");
 		}
 
 		if (text.equals(""))
@@ -274,10 +281,10 @@ public class Controller {
 
 		for (String s : dateMap.keySet()) {
 			if (zp1 == null) {
-				zp1 = dateMap.get(s).getTagAnfang();
+				zp1 = (Calendar) dateMap.get(s).getTagAnfang().clone();
 				zp1.set(1, 1, 2000);
 			} else {
-				Calendar zp2 = dateMap.get(s).getTagAnfang();
+				Calendar zp2 = (Calendar) dateMap.get(s).getTagAnfang().clone();
 				zp2.set(1, 1, 2000);
 				if (zp1.getTimeInMillis() > zp2.getTimeInMillis()) {
 					zp1 = zp2;
@@ -327,19 +334,20 @@ public class Controller {
 		}
 		return ((double) pausen / dateMap.size());
 	}
-	
+
 	public Calendar getCalFromZeitAktuell(String zeit, Calendar cal) {
 		int stunden, minuten;
 		stunden = Integer.parseInt(zeit.split(":")[0]);
 		minuten = Integer.parseInt(zeit.split(":")[1]);
-		
+
 		cal.set(Calendar.HOUR_OF_DAY, stunden);
 		cal.set(Calendar.MINUTE, minuten);
-		
+
 		return cal;
 	}
-	
+
 	public Calendar getCalFromZeitAktuell(String zeit) {
-		return getCalFromZeitAktuell(zeit, (Calendar)getToday().getTagAnfang().clone());
+		return getCalFromZeitAktuell(zeit, (Calendar) getToday().getTagAnfang()
+				.clone());
 	}
 }
