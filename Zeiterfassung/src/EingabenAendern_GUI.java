@@ -47,6 +47,7 @@ public class EingabenAendern_GUI extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				Controller.getController().setTagAnfang(Controller.getController().getCalFromZeitAktuell(tF_tagBeginnen.getText()));
 				setVisible(false);
+				Main_Gui.getMainGui().setVisible(true);
 			}
 		});
 		btn_Speichern.setBounds(323, 217, 97, 25);

@@ -273,6 +273,7 @@ public class Main_Gui extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				EingabenAendern_GUI eA = new EingabenAendern_GUI();
 				eA.setVisible(true);
+				setVisible(false);
 			}
 		});
 		btn_aendern.setBounds(398, 282, 97, 25);
@@ -282,10 +283,17 @@ public class Main_Gui extends JFrame {
 		
 	}
 	
-	private void updateView() {
+	public void updateView() {
 		textArea.setText(Controller.getController().getTextForToday());
 		lbl_GesamtAZAusgabe.setText(Controller.getController().getTimeForLabel(Controller.getController().gesamtAZ()));
 		lbl_ueberstundenSumme.setText(Controller.getController().getTimeForLabel(Controller.getController().ueberstunden()));
 		lbl_AusgabeSAZnP.setText(Controller.getController().getTimeForLabel(Controller.getController().berechneArbeitszeitInMillis()));
+	}
+	
+	public void setVisible(boolean visibility) {
+		if(visibility) {
+			updateView();
+		}
+		super.setVisible(visibility);
 	}
 }
