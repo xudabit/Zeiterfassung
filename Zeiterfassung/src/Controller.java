@@ -182,8 +182,11 @@ public class Controller {
 						break;
 
 					Calendar dat = Calendar.getInstance();
-					dat.set(jahr, monat, tag, Integer.parseInt(zeit[1]),
-							Integer.parseInt(zeit[2]), 0);
+					dat.set(Calendar.YEAR, jahr);
+					dat.set(Calendar.MONTH, monat-1);
+					dat.set(Calendar.DAY_OF_MONTH, tag);
+					dat.set(Calendar.HOUR_OF_DAY, Integer.parseInt(zeit[1]));
+					dat.set(Calendar.MINUTE, Integer.parseInt(zeit[2]));
 
 					if (zeit[0].equals("TA")) {
 						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3])
@@ -321,18 +324,14 @@ public class Controller {
 	}
 	
 	public Calendar getCalFromZeitAktuell(String zeit, Calendar cal) {
-		Calendar c = Calendar.getInstance();
-		int stunden, minuten, jahr, monat, tag;
+		int stunden, minuten;
 		stunden = Integer.parseInt(zeit.split(":")[0]);
 		minuten = Integer.parseInt(zeit.split(":")[1]);
-		String[] arr = datumAktuell(cal).split("[.]");
 		
-		jahr = Integer.parseInt(arr[2]);
-		monat = Integer.parseInt(arr[1]);
-		tag = Integer.parseInt(arr[0]);
+		cal.set(Calendar.HOUR_OF_DAY, stunden);
+		cal.set(Calendar.MINUTE, minuten);
 		
-		c.set(jahr, monat, tag, stunden, minuten);
-		return c;
+		return cal;
 	}
 	
 	public Calendar getCalFromZeitAktuell(String zeit) {
