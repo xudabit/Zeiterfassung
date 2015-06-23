@@ -1,5 +1,10 @@
+import java.awt.AWTException;
 import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.Image;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
@@ -13,7 +18,9 @@ import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+
 import java.util.Calendar;
+
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 
@@ -60,23 +67,49 @@ public class Main_Gui extends JFrame {
 	 */
 	private Main_Gui() {
 		setResizable(false);
+		
+		if(SystemTray.isSupported()) {
+			TrayIcon icon;
+			SystemTray tray = SystemTray.getSystemTray();
+			Image image = Toolkit.getDefaultToolkit().getImage("uhr.png");
+			
+			icon = new TrayIcon(image, "Zeiterfassung");
+			
+			ActionListener trayListener = new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					setVisible(!isVisible());
+				}
+			};
+			try {
+				icon.addActionListener(trayListener);
+				tray.add(icon);
+				
+			} catch (AWTException ex) {
+				System.err.println(ex.getMessage());
+			}
+		}
+		
+		
+		
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent arg0) {
-				Object[] options = { "OK", "Abbrechen" };
-				int n = JOptionPane.showOptionDialog(new JFrame(),
-						"Sollen die Angaben gelöscht werden?", "Frage",
-						JOptionPane.OK_CANCEL_OPTION,
-						JOptionPane.WARNING_MESSAGE, null, options, options[1]);
-
-				if (n == 0) {
-					System.exit(0);
-				}
+//				Object[] options = { "OK", "Abbrechen" };
+//				int n = JOptionPane.showOptionDialog(new JFrame(),
+//						"Sollen die Angaben gelöscht werden?", "Frage",
+//						JOptionPane.OK_CANCEL_OPTION,
+//						JOptionPane.WARNING_MESSAGE, null, options, options[1]);
+//
+//				if (n == 0) {
+//					System.exit(0);
+//				}
+				
+				
 			}
 		});
 		
 		setTitle("Zeiterfassung");
-		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 513, 351);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
