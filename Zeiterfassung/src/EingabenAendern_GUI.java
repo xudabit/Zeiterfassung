@@ -1,5 +1,6 @@
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -7,8 +8,6 @@ import javax.swing.JButton;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.util.Calendar;
-
 import javax.swing.JLabel;
 
 public class EingabenAendern_GUI extends JFrame {
@@ -34,7 +33,7 @@ public class EingabenAendern_GUI extends JFrame {
 	 */
 	public void InitEingabenAendern_GUI() {
 		String temp ="";
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		
 		setTitle("Eingaben \u00E4ndern");
 		setBounds(100, 100, 513, 301);
@@ -64,6 +63,7 @@ public class EingabenAendern_GUI extends JFrame {
 		
 		JButton btn_Speichern = new JButton("Speichern");
 		btn_Speichern.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(!tF_tagBeginnen.getText().isEmpty()) {
 					Controller.getController().setTagAnfang(Controller.getController().getCalFromZeitAktuell(tF_tagBeginnen.getText()));
@@ -88,6 +88,7 @@ public class EingabenAendern_GUI extends JFrame {
 		
 		btn_Abbrechen = new JButton("Abbrechen");
 		btn_Abbrechen.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				setVisible(false);
 				Main_Gui.getMainGui().showWindow(getBounds());				

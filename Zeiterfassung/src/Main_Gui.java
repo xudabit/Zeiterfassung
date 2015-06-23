@@ -1,12 +1,10 @@
 import java.awt.AWTException;
-import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.Rectangle;
 import java.awt.Image;
 import java.awt.SystemTray;
-import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -20,7 +18,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
-import javax.swing.JPopupMenu;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -29,7 +26,6 @@ import javax.swing.WindowConstants;
 
 import javax.swing.JScrollPane;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -183,6 +179,7 @@ public class Main_Gui extends JFrame {
 
 		JMenuItem mntmBeenden = new JMenuItem("Beenden");
 		mntmBeenden.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				System.exit(0);
 			}
@@ -197,6 +194,7 @@ public class Main_Gui extends JFrame {
 
 		JMenuItem mntmWochen = new JMenuItem("> 1 Monat");
 		mntmWochen.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Controller.getController().deleteOlder(1);
 				updateView();
@@ -206,6 +204,7 @@ public class Main_Gui extends JFrame {
 
 		JMenuItem mntmWochen_1 = new JMenuItem("> 2 Monate");
 		mntmWochen_1.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Controller.getController().deleteOlder(2);
 				updateView();
@@ -215,6 +214,7 @@ public class Main_Gui extends JFrame {
 
 		JMenuItem mntmAllesLschen = new JMenuItem("Alle");
 		mntmAllesLschen.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Controller.getController().deleteAll();
 				updateView();
@@ -224,6 +224,7 @@ public class Main_Gui extends JFrame {
 
 		JMenuItem mntmZeitenndern = new JMenuItem("Zeiten \u00E4ndern");
 		mntmZeitenndern.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				EingabenAendern_GUI eA = new EingabenAendern_GUI(getBounds());
 				eA.setVisible(true);
@@ -234,6 +235,7 @@ public class Main_Gui extends JFrame {
 
 		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Statistik");
 		mntmNewMenuItem_1.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (!Controller.getController().getDateMap().isEmpty()) {
 					Statistik_GUI s_gui = new Statistik_GUI(getBounds());
