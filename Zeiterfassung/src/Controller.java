@@ -1,9 +1,13 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -17,7 +21,7 @@ public class Controller {
 		return singleton;
 	}
 
-	private final String DATEINAME = "Zeiterfassung.ze";
+	private final String DATEINAME = "Zeiterfassung.imp";
 	private final String PREFIXE = "TE#TA#PA#PE";
 
 	// private LinkedHashMap<String, Tag> dateMap;
@@ -103,21 +107,113 @@ public class Controller {
 	}
 	
 	public boolean schreibeInDatei() {
-		for(String s : dateMap.keySet()) {
-			File f = new File(s + ".ze");
-			Tag.saveTag(dateMap.get(s), f);
+		try {
+			ObjectOutputStream o = new ObjectOutputStream(
+					new FileOutputStream(
+							new File("ausgabe.ze")));
+			for(String s : dateMap.keySet()) {
+				o.writeObject(dateMap.get(s));
+			}
+			o.close();
+		} catch (IOException ex) {
+			System.err.println(ex.getMessage());
 		}
 		return true;
 	}
 	
-	public void leseAusDatei() {
+	public boolean leseAusDatei() {
 		dateMap = new HashMap<String, Tag>();
-		
-		for (File f : new File(".").listFiles()) {
-			if(f.getName().endsWith(".ze")) {
-				dateMap.put(f.getName(), Tag.restoreTag(f));
+		File file = new File(DATEINAME);
+		int tag = 0, monat = 0, jahr = 0;
+		String[] zeit = new String[0], datum = new String[0];
+		String zeile;
+
+		try {
+			if (!file.exists())
+				return false;
+
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+
+			while ((zeile = reader.readLine()) != null) {
+				if (zeile.equals(""))
+					continue;
+
+				if (zeile.startsWith("DA")) {
+
+					datum = zeile.split("_");
+
+					tag = Integer.parseInt(datum[1]);
+					monat = Integer.parseInt(datum[2]);
+					jahr = Integer.parseInt(datum[3]);
+
+					dateMap.put(datum[1] + "." + datum[2] + "." + datum[3],
+							new Tag());
+
+				}
+				zeit = zeile.split(";");
+				if (PREFIXE.contains(zeit[0])) {
+					if (zeit.length != 3)
+						break;
+
+					Calendar dat = Calendar.getInstance();
+					dat.set(Calendar.YEAR, jahr);
+					dat.set(Calendar.MONTH, monat - 1);
+					dat.set(Calendar.DAY_OF_MONTH, tag);
+					dat.set(Calendar.HOUR_OF_DAY, Integer.parseInt(zeit[1]));
+					dat.set(Calendar.MINUTE, Integer.parseInt(zeit[2]));
+
+					if (zeit[0].equals("TA")) {
+						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3])
+								.setTagAnfang(dat);
+					}
+					if (zeit[0].equals("PA")) {
+						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3])
+								.setPausenAnfang(dat);
+					}
+					if (zeit[0].equals("PE")) {
+						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3])
+								.setPausenEnde(dat);
+					}
+					if (zeit[0].equals("TE")) {
+						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3])
+								.setTagEnde(dat);
+					}
+				}
 			}
+			reader.close();
+			readData();
+			
+		} catch (IOException ex) {
+			System.err.println(ex.getMessage());
+		} catch (NumberFormatException ex) {
+			System.err.println(ex.getMessage()); // Datei auslesen
+													// fehlgeschlagen aufgrund
+													// fehlerhafter Daten
 		}
+		return false;
+	}
+	
+	public void readData() {
+		try {
+			File f = new File("ausgabe.ze");
+			if(!f.exists())
+				return;
+			
+			FileInputStream fs = new FileInputStream(f);
+			ObjectInputStream i = new ObjectInputStream(fs);
+
+			//File.exists()
+			while(fs.available() > 0) {
+				Tag tag = (Tag)i.readObject();
+				dateMap.put(datumAktuell(tag.getTagAnfang()), tag);
+			}
+			i.close();
+		} catch (IOException ex) {
+			System.err.println(ex.getMessage());
+		} catch (ClassNotFoundException ex) {
+			System.err.println(ex.getMessage());
+		}
+		
 	}
 
 	public String getTextForToday() {
