@@ -13,9 +13,9 @@ import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
-import java.util.Calendar;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+
+import java.util.Calendar;
 
 public class Main_Gui extends JFrame {
 

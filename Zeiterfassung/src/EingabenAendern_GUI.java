@@ -1,6 +1,3 @@
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -9,14 +6,19 @@ import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.util.Calendar;
-
+import javax.swing.JLabel;
 
 public class EingabenAendern_GUI extends JFrame {
 
+	/**
+	 * EingabenAendern_GUI
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField tF_tagBeginnen;
 	private JTextField tF_TagBeenden;
+	private JLabel lbl_TagBegonnenUm;
+	private JLabel lblTagBeendetUm;
 
 	/**
 	 * Create the frame.
@@ -31,14 +33,14 @@ public class EingabenAendern_GUI extends JFrame {
 		
 		tF_tagBeginnen = new JTextField();
 		tF_tagBeginnen.setText(Controller.getController().zeitAktuell(Controller.getController().getTagAnfang()));
-		tF_tagBeginnen.setBounds(157, 43, 116, 22);
+		tF_tagBeginnen.setBounds(177, 10, 116, 22);
 		contentPane.add(tF_tagBeginnen);
 		tF_tagBeginnen.setColumns(10);
 		
 			
 		tF_TagBeenden = new JTextField();
 		tF_TagBeenden.setText(Controller.getController().zeitAktuell(Controller.getController().getTagEnde()));
-		tF_TagBeenden.setBounds(157, 110, 116, 22);
+		tF_TagBeenden.setBounds(177, 45, 116, 22);
 		contentPane.add(tF_TagBeenden);
 		tF_TagBeenden.setColumns(10);
 		
@@ -52,5 +54,13 @@ public class EingabenAendern_GUI extends JFrame {
 		});
 		btn_Speichern.setBounds(323, 217, 97, 25);
 		contentPane.add(btn_Speichern);
+		
+		lbl_TagBegonnenUm = new JLabel("Tag begonnen um: ");
+		lbl_TagBegonnenUm.setBounds(12, 13, 133, 16);
+		contentPane.add(lbl_TagBegonnenUm);
+		
+		lblTagBeendetUm = new JLabel("Tag beendet um:");
+		lblTagBeendetUm.setBounds(12, 48, 133, 16);
+		contentPane.add(lblTagBeendetUm);
 	}
 }
