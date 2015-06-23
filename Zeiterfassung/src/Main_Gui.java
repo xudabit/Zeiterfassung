@@ -1,10 +1,18 @@
+import java.awt.AWTException;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Rectangle;
+import java.awt.Image;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -14,6 +22,8 @@ import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+
+
 import javax.swing.JScrollPane;
 
 import java.util.Calendar;
@@ -35,7 +45,9 @@ public class Main_Gui extends JFrame {
 	 * Main_Gui
 	 */
 	private static final long serialVersionUID = 1L;
-
+	private final String TRAYICON = "uhr.jpg";
+	
+	
 	private JPanel contentPane;
 	private JTextArea textArea;
 	private JLabel lbl_AusgabeSAZnP;
@@ -65,7 +77,34 @@ public class Main_Gui extends JFrame {
 		setTitle("Zeiterfassung");
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 513, 301);
-
+		
+		if(SystemTray.isSupported()) {
+			TrayIcon icon;
+			SystemTray tray = SystemTray.getSystemTray();
+			Image image = null;
+			
+			try {
+				//image = Toolkit.getDefaultToolkit().getImage("uhr.png");
+				image = ImageIO.read(new File(TRAYICON));
+			} catch (IOException ex) {
+				System.out.println(ex.getMessage());
+			}
+			icon = new TrayIcon(image, "Zeiterfassung");
+			icon.setImageAutoSize(true);
+			ActionListener trayListener = new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					setVisible(!isVisible());
+				}
+			};
+			try {
+				icon.addActionListener(trayListener);
+				tray.add(icon);
+				
+			} catch (AWTException ex) {
+				System.err.println(ex.getMessage());
+			}
+		}
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
@@ -119,7 +158,15 @@ public class Main_Gui extends JFrame {
 									"Speichern Sie mindestens einen Arbeitstag, \n damit eine Statistik erzeugt werden kann.",
 									"Fehlende Daten",
 									JOptionPane.WARNING_MESSAGE);
-				}
+			}
+		}
+		
+		
+		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent arg0) {
+				setVisible(false);
 			}
 		});
 		menuBar.add(mntmNewMenuItem_1);
