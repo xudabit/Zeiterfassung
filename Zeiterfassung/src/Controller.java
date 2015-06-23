@@ -52,11 +52,15 @@ public class Controller {
 	}
 
 	public Calendar getTagAnfang() {
+		if(getToday() != null)
 			return getToday().getTagAnfang();
+		return null;
 	}
 
 	public Calendar getTagEnde() {
-		return getToday().getTagEnde();
+		if(getToday() != null)
+			return getToday().getTagEnde();
+		return null;
 	}
 
 	public void setTagEnde(Calendar te) {
@@ -149,9 +153,10 @@ public class Controller {
 
 		} catch (IOException ex) {
 			System.err.println(ex.getMessage());
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 
 	public boolean leseAusDatei() {
@@ -349,5 +354,37 @@ public class Controller {
 	public Calendar getCalFromZeitAktuell(String zeit) {
 		return getCalFromZeitAktuell(zeit, (Calendar) getToday().getTagAnfang()
 				.clone());
+	}
+	
+	public boolean deleteAll(){
+		dateMap.clear();
+		return schreibeInDatei();
+	}
+	
+	public boolean deleteOlder(int month){
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.MONTH, -month);
+		String key;
+		while((key = getNextKeyOlder(month)) != null) {
+			dateMap.remove(key);
+		}
+		
+		return schreibeInDatei();
+	}
+	
+	private String getNextKeyOlder(int month) {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.MONTH, -month);
+		
+		for(String s : dateMap.keySet()){
+			if(dateMap.get(s).getTagAnfang().before(cal)){
+				return s;
+			}
+		}
+		return null;
+	}
+	
+	public boolean hasOlder(int month){
+		return (getNextKeyOlder(month)!=null);
 	}
 }
