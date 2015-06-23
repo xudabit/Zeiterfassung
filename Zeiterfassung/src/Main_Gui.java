@@ -245,6 +245,7 @@ public class Main_Gui extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if(!Controller.getController().getDateMap().isEmpty()){
 				Statistik_GUI s_gui = new Statistik_GUI();
+				setVisible(false);
 				s_gui.setVisible(true);
 				s_gui.setLabel(Controller.getController().findefAZ());
 				s_gui.setPausen(Controller.getController().getMaxAnzahlPausen());
