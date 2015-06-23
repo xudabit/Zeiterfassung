@@ -35,7 +35,7 @@ public class Main_Gui extends JFrame {
 	private JPanel contentPane;
 	private JTextArea textArea;
 	
-	private JLabel lbl_GesamtAZAusgabe;
+	
 	private JLabel lbl_ueberstundenSumme;
 	private JLabel lbl_AusgabeSAZnP;
 	/**
@@ -94,8 +94,8 @@ public class Main_Gui extends JFrame {
 		JLabel lbl_AktuellesDatumRechtsbuendig = new JLabel();
 		JLabel lbl_TextSAZnP = new JLabel("Summe Arbeitszeit:");
 		lbl_AusgabeSAZnP = new JLabel();
-		JLabel lbl_GesamtAZText = new JLabel("Gesamtarbeitszeit der letzten Tage:");
-		lbl_GesamtAZAusgabe = new JLabel("00:00");
+		
+		
 		JLabel lbl_ueberstundenText = new JLabel("\u00DCberstunden:");
 		lbl_ueberstundenSumme = new JLabel("Summe");
 		
@@ -212,13 +212,8 @@ public class Main_Gui extends JFrame {
 		lbl_AusgabeSAZnP.setBounds(170, 253, 279, 16);
 		contentPane.add(lbl_AusgabeSAZnP);
 		
-		// Gesamtarbeitszeit seit Datei erzeugt wurde
-		lbl_GesamtAZText.setBounds(12, 13, 220, 16);
-		contentPane.add(lbl_GesamtAZText);
-
-		// Ausgabe Gesamtarbeitszeit seit Datei erzeugt wurde
-		lbl_GesamtAZAusgabe.setBounds(244, 13, 251, 16);
-		contentPane.add(lbl_GesamtAZAusgabe);
+		
+		
 
 		
 		lbl_ueberstundenText.setBounds(12, 42, 95, 16);
@@ -262,13 +257,13 @@ public class Main_Gui extends JFrame {
 		btnStatistik.setBounds(12, 282, 97, 25);
 		contentPane.add(btnStatistik);
 		
-		
-		
+		// ScrollPane 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(201, 99, 294, 141);
 		contentPane.add(scrollPane);
 		scrollPane.setViewportView(textArea);
 		
+		// Button Eingaben Ändern
 		JButton btn_aendern = new JButton("\u00C4ndern");
 		btn_aendern.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -286,7 +281,6 @@ public class Main_Gui extends JFrame {
 	
 	public void updateView() {
 		textArea.setText(Controller.getController().getTextForToday());
-		lbl_GesamtAZAusgabe.setText(Controller.getController().getTimeForLabel(Controller.getController().gesamtAZ()));
 		lbl_ueberstundenSumme.setText(Controller.getController().getTimeForLabel(Controller.getController().ueberstunden()));
 		lbl_AusgabeSAZnP.setText(Controller.getController().getTimeForLabel(Controller.getController().berechneArbeitszeitInMillis()));
 	}
