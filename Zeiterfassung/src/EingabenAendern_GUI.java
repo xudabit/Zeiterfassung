@@ -22,6 +22,8 @@ public class EingabenAendern_GUI extends JFrame {
 	 * Create the frame.
 	 */
 	public EingabenAendern_GUI() {
+		String temp;
+		
 		setTitle("Eingaben \u00E4ndern");
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -29,15 +31,19 @@ public class EingabenAendern_GUI extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		temp = Controller.getController().zeitAktuell(Controller.getController().getTagAnfang());
 		tF_tagBeginnen = new JTextField();
-		tF_tagBeginnen.setText(Controller.getController().zeitAktuell(Controller.getController().getTagAnfang()));
+		tF_tagBeginnen.setEnabled(!temp.isEmpty());
+		tF_tagBeginnen.setText(temp);
 		tF_tagBeginnen.setBounds(157, 43, 116, 22);
 		contentPane.add(tF_tagBeginnen);
 		tF_tagBeginnen.setColumns(10);
 		
-			
+		
+		temp = Controller.getController().zeitAktuell(Controller.getController().getTagEnde());
 		tF_TagBeenden = new JTextField();
-		tF_TagBeenden.setText(Controller.getController().zeitAktuell(Controller.getController().getTagEnde()));
+		tF_TagBeenden.setEnabled(!temp.isEmpty());		
+		tF_TagBeenden.setText(temp);
 		tF_TagBeenden.setBounds(157, 110, 116, 22);
 		contentPane.add(tF_TagBeenden);
 		tF_TagBeenden.setColumns(10);
