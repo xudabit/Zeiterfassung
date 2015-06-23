@@ -348,7 +348,7 @@ public class Main_Gui extends JFrame {
 		scrollPane.setBounds(201, 42, 294, 141);
 		contentPane.add(scrollPane);
 		scrollPane.setViewportView(textArea);
-
+		
 		updateView();
 	}
 

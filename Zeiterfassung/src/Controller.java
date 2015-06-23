@@ -103,122 +103,21 @@ public class Controller {
 	}
 	
 	public boolean schreibeInDatei() {
-		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
-					DATEINAME)));
-
-			/*
-			 * --- Ausgabe verbessern ---
-			 */
-			for (String s : dateMap.keySet()) {
-				Tag t = dateMap.get(s);
-
-				writer.write("\nDA_" + s.replace(".", "_"));
-
-				if (t.getTagAnfang() != null) {
-					writer.write("\nTA;"
-							+ zeitAktuell(t.getTagAnfang()).replace(":", ";"));
-				}
-
-				for (Pause p : t.getPausenListe()) {
-					writer.write("\nPA;"
-							+ zeitAktuell(p.getPauseStart()).replace(":", ";"));
-					writer.write("\nPE;"
-							+ zeitAktuell(p.getPauseEnde()).replace(":", ";"));
-				}
-
-				if (t.getTemp() != null) {
-					writer.write("\nPA;"
-							+ zeitAktuell(t.getTemp().getPauseStart()).replace(
-									":", ";"));
-				}
-
-				if (t.getTagEnde() != null) {
-					writer.write("\nTE;"
-							+ zeitAktuell(t.getTagEnde()).replace(":", ";"));
-				}
-			}
-
-			writer.flush();
-			writer.close();
-
-		} catch (IOException ex) {
-			System.err.println(ex.getMessage());
-			return false;
+		for(String s : dateMap.keySet()) {
+			File f = new File(s + ".ze");
+			Tag.saveTag(dateMap.get(s), f);
 		}
-
 		return true;
 	}
-
-	public boolean leseAusDatei() {
+	
+	public void leseAusDatei() {
 		dateMap = new HashMap<String, Tag>();
-		File file = new File(DATEINAME);
-		int tag = 0, monat = 0, jahr = 0;
-		String[] zeit = new String[0], datum = new String[0];
-		String zeile;
-
-		try {
-			if (!file.exists())
-				return false;
-
-			BufferedReader reader = new BufferedReader(new FileReader(file));
-
-			while ((zeile = reader.readLine()) != null) {
-				if (zeile.equals(""))
-					continue;
-
-				if (zeile.startsWith("DA")) {
-
-					datum = zeile.split("_");
-
-					tag = Integer.parseInt(datum[1]);
-					monat = Integer.parseInt(datum[2]);
-					jahr = Integer.parseInt(datum[3]);
-
-					dateMap.put(datum[1] + "." + datum[2] + "." + datum[3],
-							new Tag());
-
-				}
-				zeit = zeile.split(";");
-				if (PREFIXE.contains(zeit[0])) {
-					if (zeit.length != 3)
-						break;
-
-					Calendar dat = Calendar.getInstance();
-					dat.set(Calendar.YEAR, jahr);
-					dat.set(Calendar.MONTH, monat - 1);
-					dat.set(Calendar.DAY_OF_MONTH, tag);
-					dat.set(Calendar.HOUR_OF_DAY, Integer.parseInt(zeit[1]));
-					dat.set(Calendar.MINUTE, Integer.parseInt(zeit[2]));
-
-					if (zeit[0].equals("TA")) {
-						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3])
-								.setTagAnfang(dat);
-					}
-					if (zeit[0].equals("PA")) {
-						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3])
-								.setPausenAnfang(dat);
-					}
-					if (zeit[0].equals("PE")) {
-						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3])
-								.setPausenEnde(dat);
-					}
-					if (zeit[0].equals("TE")) {
-						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3])
-								.setTagEnde(dat);
-					}
-				}
+		
+		for (File f : new File(".").listFiles()) {
+			if(f.getName().endsWith(".ze")) {
+				dateMap.put(f.getName(), Tag.restoreTag(f));
 			}
-			reader.close();
-
-		} catch (IOException ex) {
-			System.err.println(ex.getMessage());
-		} catch (NumberFormatException ex) {
-			System.err.println(ex.getMessage()); // Datei auslesen
-													// fehlgeschlagen aufgrund
-													// fehlerhafter Daten
 		}
-		return false;
 	}
 
 	public String getTextForToday() {

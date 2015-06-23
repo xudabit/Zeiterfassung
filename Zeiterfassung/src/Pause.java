@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.Calendar;
 
-public class Pause {
+public class Pause implements Serializable{
 	
 	private Calendar pauseStart = null, pauseEnde = null; // Zuweisungen im Konstruktor
 	
