@@ -1,6 +1,8 @@
 import java.awt.AWTException;
 import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
 import java.awt.Rectangle;
 import java.awt.Image;
 import java.awt.SystemTray;
@@ -18,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
+import javax.swing.JPopupMenu;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -26,7 +29,9 @@ import javax.swing.WindowConstants;
 
 import javax.swing.JScrollPane;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -51,12 +56,12 @@ public class Main_Gui extends JFrame {
 	private JPanel contentPane;
 	private JTextArea textArea;
 	private JLabel lbl_AusgabeSAZnP;
+	private PopupMenu popup;
 	
 	// Button
-	private JButton btn_taganfang;
-	private JButton btn_pauseanfang;
-	private JButton btn_pauseende;
-	private JButton btn_tagende;
+	private JButton btn_taganfang, btn_pauseanfang, btn_pauseende, btn_tagende;
+	
+	private MenuItem mi_taganfang, mi_pauseanfang, mi_pauseende, mi_tagenede;
 
 	/**
 	 * Launch the application.
@@ -84,6 +89,26 @@ public class Main_Gui extends JFrame {
 		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		setBounds(100, 100, 513, 301);
 
+		ActionListener btn_mi_al = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(arg0.getActionCommand().equals("TA")) {
+					Controller.getController().setTagAnfang(Calendar.getInstance());
+				}
+				if(arg0.getActionCommand().equals("PA")) {
+					Controller.getController().addPauseAnfang(Calendar.getInstance());
+				}
+				if(arg0.getActionCommand().equals("PE")) {
+					Controller.getController().addPauseEnde(Calendar.getInstance());
+					
+				}
+				if(arg0.getActionCommand().equals("TE")) {
+					Controller.getController().setTagEnde(Calendar.getInstance());
+				}
+				updateView();
+			}
+		}; 
+		
 		if (Controller.getController().hasOlder(3)) {
 			Object[] options = { "Ja", "Nein"};
 			int n = JOptionPane.showOptionDialog(null,
@@ -115,7 +140,23 @@ public class Main_Gui extends JFrame {
 			} catch (IOException ex) {
 				System.out.println(ex.getMessage());
 			}
-			icon = new TrayIcon(image, "Zeiterfassung");
+			
+			popup = new PopupMenu();
+			
+			String[][] values = new String[][] {
+					{"TA", "Tag anfangen"}, 
+					{"PA", "Pause anfangen"}, 
+					{"PE", "Pause beenden"}, 
+					{"TE", "Tag beenden"}};
+			
+			for(String[] arr : values) {
+				MenuItem temp = new MenuItem(arr[1]);
+				temp.setActionCommand(arr[0]);
+				temp.addActionListener(btn_mi_al);
+				popup.add(temp);
+			}		
+			
+			icon = new TrayIcon(image, "Zeiterfassung", popup);
 			icon.setImageAutoSize(true);
 			ActionListener trayListener = new ActionListener() {
 				@Override
@@ -244,64 +285,26 @@ public class Main_Gui extends JFrame {
 		textArea = new JTextArea();
 
 		// Tag beginnen
-		btn_taganfang.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Controller.getController().setTagAnfang(Calendar.getInstance());
-
-				// Button aktivieren/deaktivieren
-
-				updateView();
-			}
-		});
+		btn_taganfang.setActionCommand("TA");
+		btn_taganfang.addActionListener(btn_mi_al);
 		btn_taganfang.setBounds(12, 42, 146, 25);
 		contentPane.add(btn_taganfang);
 
 		// Pause beginnen
-		btn_pauseende.setEnabled(false);
-
-		btn_pauseanfang.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Controller.getController().addPauseAnfang(
-						Calendar.getInstance());
-				updateView();
-			}
-		});
+		btn_pauseanfang.setActionCommand("PA");
+		btn_pauseanfang.addActionListener(btn_mi_al);
 		btn_pauseanfang.setBounds(12, 80, 146, 25);
 		contentPane.add(btn_pauseanfang);
 
 		// Pause beenden
-		btn_pauseende.setEnabled(false);
-
-		btn_pauseende.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-
-				Controller.getController().addPauseEnde(Calendar.getInstance());
-
-				updateView();
-			}
-		});
+		btn_pauseende.setActionCommand("PE");
+		btn_pauseende.addActionListener(btn_mi_al);
 		btn_pauseende.setBounds(12, 118, 146, 25);
 		contentPane.add(btn_pauseende);
 
 		// Tag beenden
-		btn_tagende.setEnabled(false);
-
-		btn_tagende.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Controller.getController().setTagEnde(Calendar.getInstance());
-
-
-				// Butten AusgabeSAZnP = Summe Arbeitszeit nach Pause
-				Controller.getController().schreibeInDatei();
-				Controller.getController().leseAusDatei();
-
-				updateView();
-			}
-		});
+		btn_tagende.setActionCommand("TE");
+		btn_tagende.addActionListener(btn_mi_al);
 		btn_tagende.setBounds(12, 153, 146, 25);
 		contentPane.add(btn_tagende);
 
@@ -354,21 +357,49 @@ public class Main_Gui extends JFrame {
 		lbl_AusgabeSAZnP.setText(Controller.getController().getTimeForLabel(
 				Controller.getController().berechneArbeitszeitInMillis()));
 		
+		enableButtons();
+	}
+	
+	private void enableButtons() {
+		MenuItem ta = new MenuItem(), pa = new MenuItem(), pe = new MenuItem(), te = new MenuItem();
+		
+		for(int x = 0; x < popup.getItemCount(); x++) {
+			if(popup.getItem(x).getActionCommand().equals("TA"))
+				ta = popup.getItem(x);
+			if(popup.getItem(x).getActionCommand().equals("PA"))
+				pa = popup.getItem(x);
+			if(popup.getItem(x).getActionCommand().equals("PE"))
+				pe = popup.getItem(x);
+			if(popup.getItem(x).getActionCommand().equals("TE"))
+				te = popup.getItem(x);
+		}
+		
 		btn_taganfang.setEnabled(false);
 		btn_pauseanfang.setEnabled(false);
 		btn_pauseende.setEnabled(false);
 		btn_tagende.setEnabled(false);
+		
+		ta.setEnabled(false);
+		pa.setEnabled(false);
+		pe.setEnabled(false);
+		te.setEnabled(false);
 		
 		if(Controller.getController().getTagEnde() != null)
 			return;
 		
 		if(Controller.getController().getTagAnfang() == null){
 			btn_taganfang.setEnabled(true);
+			ta.setEnabled(true);
 		}else if(Controller.getController().getToday().getTemp() == null){
 			btn_pauseanfang.setEnabled(true);
 			btn_tagende.setEnabled(true);
+			
+			pa.setEnabled(true);
+			te.setEnabled(true);
 		} else {
 			btn_pauseende.setEnabled(true);
+			
+			pe.setEnabled(true);
 		}
 	}
 
