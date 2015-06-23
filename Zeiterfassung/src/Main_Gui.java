@@ -19,6 +19,14 @@ import javax.swing.JScrollPane;
 
 public class Main_Gui extends JFrame {
 
+	private static Main_Gui singleton;
+	
+	public static Main_Gui getMainGui() {
+		if(singleton == null)
+			singleton = new Main_Gui();
+		return singleton;
+	}
+	
 	/**
 	 * Main_Gui
 	 */
@@ -38,7 +46,7 @@ public class Main_Gui extends JFrame {
 			@Override
 			public void run() {
 				try {
-					Main_Gui frame = new Main_Gui();
+					Main_Gui frame = Main_Gui.getMainGui();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -50,7 +58,7 @@ public class Main_Gui extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Main_Gui() {
+	private Main_Gui() {
 		setResizable(false);
 		addWindowListener(new WindowAdapter() {
 			@Override
