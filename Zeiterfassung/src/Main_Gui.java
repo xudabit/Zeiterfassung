@@ -8,7 +8,10 @@ import java.awt.TrayIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -38,7 +41,9 @@ public class Main_Gui extends JFrame {
 	 * Main_Gui
 	 */
 	private static final long serialVersionUID = 1L;
-
+	private final String TRAYICON = "uhr.jpg";
+	
+	
 	private JPanel contentPane;
 	private JTextArea textArea;
 	
@@ -71,10 +76,16 @@ public class Main_Gui extends JFrame {
 		if(SystemTray.isSupported()) {
 			TrayIcon icon;
 			SystemTray tray = SystemTray.getSystemTray();
-			Image image = Toolkit.getDefaultToolkit().getImage("uhr.png");
+			Image image = null;
 			
+			try {
+				//image = Toolkit.getDefaultToolkit().getImage("uhr.png");
+				image = ImageIO.read(new File(TRAYICON));
+			} catch (IOException ex) {
+				System.out.println(ex.getMessage());
+			}
 			icon = new TrayIcon(image, "Zeiterfassung");
-			
+			icon.setImageAutoSize(true);
 			ActionListener trayListener = new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
@@ -95,17 +106,7 @@ public class Main_Gui extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent arg0) {
-//				Object[] options = { "OK", "Abbrechen" };
-//				int n = JOptionPane.showOptionDialog(new JFrame(),
-//						"Sollen die Angaben gelöscht werden?", "Frage",
-//						JOptionPane.OK_CANCEL_OPTION,
-//						JOptionPane.WARNING_MESSAGE, null, options, options[1]);
-//
-//				if (n == 0) {
-//					System.exit(0);
-//				}
-				
-				
+				setVisible(false);
 			}
 		});
 		
