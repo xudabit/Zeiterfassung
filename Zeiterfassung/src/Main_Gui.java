@@ -57,8 +57,6 @@ public class Main_Gui extends JFrame {
 	
 	// Button
 	private JButton btn_taganfang, btn_pauseanfang, btn_pauseende, btn_tagende;
-	
-	private MenuItem mi_taganfang, mi_pauseanfang, mi_pauseende, mi_tagenede;
 
 	/**
 	 * Launch the application.
