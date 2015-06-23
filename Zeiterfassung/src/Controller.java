@@ -41,14 +41,16 @@ public class Controller {
 	}
 
 	public void setTagAnfang(Calendar ta) {
-		dateMap.put(datumAktuell(ta), new Tag());
-		dateMap.get(datumAktuell(ta)).setTagAnfang(ta);
+		if (!dateMap.containsKey(datumAktuell(Calendar.getInstance()))) {
+			dateMap.put(datumAktuell(Calendar.getInstance()), new Tag());
+		}
+		getToday().setTagAnfang(ta);
 	}
 
-	private Tag getToday() {
-		return dateMap.get(datumAktuell(Calendar.getInstance())); //null bei fehlendem Wert?
+	public Tag getToday() {
+		return dateMap.get(datumAktuell(Calendar.getInstance()));
 	}
-	
+
 	public Calendar getTagAnfang() {
 		return getToday().getTagAnfang();
 	}
@@ -69,20 +71,20 @@ public class Controller {
 	}
 
 	public void addPauseAnfang(Calendar pa) {
-		if(getToday() != null)
+		if (getToday() != null)
 			getToday().setPausenAnfang(pa);
 	}
-	
+
 	public void addPauseEnde(Calendar pe) {
-		if(getToday() != null)
+		if (getToday() != null)
 			getToday().setPausenEnde(pe);
 	}
-	
+
 	// Aktuelle Zeit abfragen
 	public String zeitAktuell(Calendar d) {
-		if(d == null)
+		if (d == null)
 			return "";
-		
+
 		SimpleDateFormat df = new SimpleDateFormat("HH:mm");
 		return df.format(d.getTime());
 	}
@@ -97,12 +99,15 @@ public class Controller {
 		if (getToday() == null || getToday().getTagAnfang() == null)
 			return 0;
 
-		long arbeitstag = (getToday().getTagEnde() == null ? Calendar.getInstance()
-				.getTimeInMillis() : getToday().getTagEnde().getTimeInMillis())
+		System.out.println(datumAktuell(getToday().getTagAnfang()) + " " + zeitAktuell(getToday().getTagAnfang()));
+		
+		long arbeitstag = (getToday().getTagEnde() == null ? Calendar
+				.getInstance().getTimeInMillis() : getToday().getTagEnde()
+				.getTimeInMillis())
 				- getToday().getTagAnfang().getTimeInMillis();
 		long summePausen = 0;
 
-		for(Pause p : getToday().getPausenListe()) {
+		for (Pause p : getToday().getPausenListe()) {
 			summePausen += p.berechnePauseInMillis();
 		}
 		return arbeitstag - summePausen;
@@ -114,23 +119,24 @@ public class Controller {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file,
 					true));
 
-			
 			/*
-			 * ---
-			 * Ausgabe verbessern
-			 * ---
+			 * --- Ausgabe verbessern ---
 			 */
-			writer.write("\nDA_" + datumAktuell(getToday().getTagAnfang()).replace(".", "_"));
-			writer.write("\nTA;" + zeitAktuell(getToday().getTagAnfang()).replace(":", ";"));
-			
-			for(Pause p : getToday().getPausenListe()) {
-				writer.write("\nPA;" + zeitAktuell(p.getPauseStart()).replace(":", ";"));
-				writer.write("\nPE;" + zeitAktuell(p.getPauseEnde()).replace(":", ";"));
+			writer.write("\nDA_"
+					+ datumAktuell(getToday().getTagAnfang()).replace(".", "_"));
+			writer.write("\nTA;"
+					+ zeitAktuell(getToday().getTagAnfang()).replace(":", ";"));
+
+			for (Pause p : getToday().getPausenListe()) {
+				writer.write("\nPA;"
+						+ zeitAktuell(p.getPauseStart()).replace(":", ";"));
+				writer.write("\nPE;"
+						+ zeitAktuell(p.getPauseEnde()).replace(":", ";"));
 			}
-			
-			writer.write("\nTE;" + zeitAktuell(getToday().getTagEnde()).replace(":", ";"));
-			
-			
+
+			writer.write("\nTE;"
+					+ zeitAktuell(getToday().getTagEnde()).replace(":", ";"));
+
 			writer.flush();
 			writer.close();
 
@@ -178,18 +184,22 @@ public class Controller {
 					Calendar dat = Calendar.getInstance();
 					dat.set(jahr, monat, tag, Integer.parseInt(zeit[1]),
 							Integer.parseInt(zeit[2]), 0);
-					
-					if(zeit[0].equals("TA")) {
-						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3]).setTagAnfang(dat);
+
+					if (zeit[0].equals("TA")) {
+						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3])
+								.setTagAnfang(dat);
 					}
-					if(zeit[0].equals("PA")) {
-						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3]).setPausenAnfang(dat);
+					if (zeit[0].equals("PA")) {
+						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3])
+								.setPausenAnfang(dat);
 					}
-					if(zeit[0].equals("PE")) {
-						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3]).setPausenEnde(dat);
+					if (zeit[0].equals("PE")) {
+						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3])
+								.setPausenEnde(dat);
 					}
-					if(zeit[0].equals("TE")) {
-						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3]).setTagEnde(dat);
+					if (zeit[0].equals("TE")) {
+						dateMap.get(datum[1] + "." + datum[2] + "." + datum[3])
+								.setTagEnde(dat);
 					}
 				}
 			}
@@ -207,18 +217,19 @@ public class Controller {
 
 	public String getTextForToday() {
 		String text = "";
-		
+
 		if (getToday() != null) {
-			text += (prefixMap.get("TA") + zeitAktuell(getToday().getTagAnfang()) + "\n");
-			
-			for(Pause p : getToday().getPausenListe()) {
+			text += (prefixMap.get("TA")
+					+ zeitAktuell(getToday().getTagAnfang()) + "\n");
+
+			for (Pause p : getToday().getPausenListe()) {
 				text += (prefixMap.get("PA") + zeitAktuell(p.getPauseStart()) + "\n");
 				text += (prefixMap.get("PE") + zeitAktuell(p.getPauseEnde()) + "\n");
 			}
-			
+
 			text += (prefixMap.get("TE") + zeitAktuell(getToday().getTagEnde()) + "\n");
 		}
-		
+
 		if (text.equals(""))
 			return null;
 		return text;
@@ -228,15 +239,18 @@ public class Controller {
 		long summeArbeitstage = 0;
 
 		for (String s : dateMap.keySet()) {
-			if(dateMap.get(s).getTagAnfang() == null || dateMap.get(s).getTagEnde() == null)
+			if (dateMap.get(s).getTagAnfang() == null
+					|| dateMap.get(s).getTagEnde() == null)
 				continue;
-			
+
 			long summePausen = 0;
 			for (Pause p : dateMap.get(s).getPausenListe()) {
 				summePausen += p.berechnePauseInMillis();
 			}
 
-			summeArbeitstage += (dateMap.get(s).getTagEnde().getTimeInMillis() - dateMap.get(s).getTagAnfang().getTimeInMillis()) - summePausen;
+			summeArbeitstage += (dateMap.get(s).getTagEnde().getTimeInMillis() - dateMap
+					.get(s).getTagAnfang().getTimeInMillis())
+					- summePausen;
 
 		}
 		return summeArbeitstage;
@@ -277,10 +291,10 @@ public class Controller {
 		return ((neg ? "-" : "") + (stunden < 10 ? "0" : "") + stunden + ":"
 				+ (minuten < 10 ? "0" : "") + minuten);
 	}
-	
+
 	// Anzahl der Pausen für ein Datum zurückgeben
-	private int getAnzahlPausen(String datum){
-		return dateMap.get(datum).getPausenListe().size();		
+	private int getAnzahlPausen(String datum) {
+		return dateMap.get(datum).getPausenListe().size();
 	}
 
 	// Tag mit den meisten Pausen bestimmen
@@ -299,11 +313,29 @@ public class Controller {
 	// Durchschnittliche Anzahl an Pausen
 	public double getDAPausen() {
 		int pausen = 0; // Anzahl aller Pausen in Datei
-		
+
 		for (String s : dateMap.keySet()) {
 			pausen += getAnzahlPausen(s);
 		}
-		return ((double)pausen/dateMap.size());
+		return ((double) pausen / dateMap.size());
 	}
-
+	
+	public Calendar getCalFromZeitAktuell(String zeit, Calendar cal) {
+		Calendar c = Calendar.getInstance();
+		int stunden, minuten, jahr, monat, tag;
+		stunden = Integer.parseInt(zeit.split(":")[0]);
+		minuten = Integer.parseInt(zeit.split(":")[1]);
+		String[] arr = datumAktuell(cal).split("[.]");
+		
+		jahr = Integer.parseInt(arr[2]);
+		monat = Integer.parseInt(arr[1]);
+		tag = Integer.parseInt(arr[0]);
+		
+		c.set(jahr, monat, tag, stunden, minuten);
+		return c;
+	}
+	
+	public Calendar getCalFromZeitAktuell(String zeit) {
+		return getCalFromZeitAktuell(zeit, getToday().getTagAnfang());
+	}
 }

@@ -259,6 +259,16 @@ public class Main_Gui extends JFrame {
 		scrollPane.setBounds(201, 99, 294, 141);
 		contentPane.add(scrollPane);
 		scrollPane.setViewportView(textArea);
+		
+		JButton btn_aendern = new JButton("\u00C4ndern");
+		btn_aendern.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				EingabenAendern_GUI eA = new EingabenAendern_GUI();
+				eA.setVisible(true);
+			}
+		});
+		btn_aendern.setBounds(398, 282, 97, 25);
+		contentPane.add(btn_aendern);
 
 		updateView();
 		
