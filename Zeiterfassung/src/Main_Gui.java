@@ -23,7 +23,6 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
-
 import javax.swing.JScrollPane;
 
 import java.util.Calendar;
@@ -46,11 +45,16 @@ public class Main_Gui extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private final String TRAYICON = "uhr.jpg";
-	
-	
+
 	private JPanel contentPane;
 	private JTextArea textArea;
 	private JLabel lbl_AusgabeSAZnP;
+	
+	// Button
+	private JButton btn_taganfang;
+	private JButton btn_pauseanfang;
+	private JButton btn_pauseende;
+	private JButton btn_tagende;
 
 	/**
 	 * Launch the application.
@@ -75,16 +79,37 @@ public class Main_Gui extends JFrame {
 	private Main_Gui() {
 		setResizable(false);
 		setTitle("Zeiterfassung");
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		setBounds(100, 100, 513, 301);
-		
-		if(SystemTray.isSupported()) {
+
+		if (Controller.getController().hasOlder(3)) {
+			Object[] options = { "Ja", "Nein"};
+			int n = JOptionPane.showOptionDialog(null,
+					"Möchten Sie die Daten älter als 2 Monate löschen?",
+					"Alte Daten löschen?", JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+			System.out.println(n);
+			
+			if(n == 0){
+				if(Controller.getController().deleteOlder(2)){
+					JOptionPane.showMessageDialog(null,
+						    "Daten erfolgreich gelöscht.");
+				}else{
+					JOptionPane.showMessageDialog(null,
+						    "Daten konnten nicht gelöscht werden.",
+						    "Fehler beim löschen",
+						    JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		}
+
+		if (SystemTray.isSupported()) {
 			TrayIcon icon;
 			SystemTray tray = SystemTray.getSystemTray();
 			Image image = null;
-			
+
 			try {
-				//image = Toolkit.getDefaultToolkit().getImage("uhr.png");
+				// image = Toolkit.getDefaultToolkit().getImage("uhr.png");
 				image = ImageIO.read(new File(TRAYICON));
 			} catch (IOException ex) {
 				System.out.println(ex.getMessage());
@@ -100,11 +125,12 @@ public class Main_Gui extends JFrame {
 			try {
 				icon.addActionListener(trayListener);
 				tray.add(icon);
-				
+
 			} catch (AWTException ex) {
 				System.err.println(ex.getMessage());
 			}
 		}
+
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
@@ -112,6 +138,11 @@ public class Main_Gui extends JFrame {
 		menuBar.add(mnNewMenu);
 
 		JMenuItem mntmBeenden = new JMenuItem("Beenden");
+		mntmBeenden.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(0);
+			}
+		});
 		mnNewMenu.add(mntmBeenden);
 
 		JMenu mnBearbeiten = new JMenu("Bearbeiten");
@@ -120,13 +151,31 @@ public class Main_Gui extends JFrame {
 		JMenu mnNewMenu_1 = new JMenu("Daten l\u00F6schen");
 		mnBearbeiten.add(mnNewMenu_1);
 
-		JMenuItem mntmWochen = new JMenuItem("> 4 Wochen");
+		JMenuItem mntmWochen = new JMenuItem("> 1 Monat");
+		mntmWochen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Controller.getController().deleteOlder(1);
+				updateView();
+			}
+		});
 		mnNewMenu_1.add(mntmWochen);
 
-		JMenuItem mntmWochen_1 = new JMenuItem("> 8 Wochen");
+		JMenuItem mntmWochen_1 = new JMenuItem("> 2 Monate");
+		mntmWochen_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Controller.getController().deleteOlder(2);
+				updateView();
+			}
+		});
 		mnNewMenu_1.add(mntmWochen_1);
 
 		JMenuItem mntmAllesLschen = new JMenuItem("Alle");
+		mntmAllesLschen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Controller.getController().deleteAll();
+				updateView();
+			}
+		});
 		mnNewMenu_1.add(mntmAllesLschen);
 
 		JMenuItem mntmZeitenndern = new JMenuItem("Zeiten \u00E4ndern");
@@ -151,18 +200,16 @@ public class Main_Gui extends JFrame {
 							.getMaxAnzahlPausen());
 					s_gui.setDAPausen(Controller.getController().getDAPausen());
 				} else {
-					Component frame = null;
 					JOptionPane
 							.showMessageDialog(
-									frame,
+									null,
 									"Speichern Sie mindestens einen Arbeitstag, \n damit eine Statistik erzeugt werden kann.",
 									"Fehlende Daten",
 									JOptionPane.WARNING_MESSAGE);
+				}
 			}
-		}
-		
-		
-		
+		});
+
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent arg0) {
@@ -182,10 +229,10 @@ public class Main_Gui extends JFrame {
 		contentPane.setLayout(null);
 
 		// Button
-		JButton btn_taganfang = new JButton("Tag beginnen");
-		JButton btn_pauseanfang = new JButton("Pause beginnen");
-		JButton btn_pauseende = new JButton("Pause beenden");
-		JButton btn_tagende = new JButton("Tag beenden");
+		btn_taganfang = new JButton("Tag beginnen");
+		btn_pauseanfang = new JButton("Pause beginnen");
+		btn_pauseende = new JButton("Pause beenden");
+		btn_tagende = new JButton("Tag beenden");
 
 		// Labels
 		JLabel lbl_Aktuellesdatum = new JLabel();
@@ -197,22 +244,12 @@ public class Main_Gui extends JFrame {
 		textArea = new JTextArea();
 
 		// Tag beginnen
-		btn_taganfang.setEnabled(true);
-		btn_pauseanfang.setEnabled(false);
-		btn_pauseende.setEnabled(false);
-		btn_tagende.setEnabled(false);
-
 		btn_taganfang.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Controller.getController().setTagAnfang(Calendar.getInstance());
 
 				// Button aktivieren/deaktivieren
-				btn_taganfang.setEnabled(false);
-				btn_pauseanfang.setEnabled(true);
-				btn_pauseende.setEnabled(false);
-				btn_tagende.setEnabled(true);
-
 				updateView();
 			}
 		});
@@ -227,11 +264,6 @@ public class Main_Gui extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				Controller.getController().addPauseAnfang(
 						Calendar.getInstance());
-
-				btn_taganfang.setEnabled(false);
-				btn_pauseanfang.setEnabled(false);
-				btn_pauseende.setEnabled(true);
-				btn_tagende.setEnabled(false);
 				updateView();
 			}
 		});
@@ -244,13 +276,7 @@ public class Main_Gui extends JFrame {
 		btn_pauseende.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				btn_taganfang.setEnabled(false);
-				btn_pauseanfang.setEnabled(true);
-				btn_pauseende.setEnabled(false);
-				btn_tagende.setEnabled(true);
-
 				Controller.getController().addPauseEnde(Calendar.getInstance());
-
 				updateView();
 			}
 		});
@@ -264,11 +290,6 @@ public class Main_Gui extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Controller.getController().setTagEnde(Calendar.getInstance());
-
-				btn_taganfang.setEnabled(false);
-				btn_pauseanfang.setEnabled(false);
-				btn_pauseende.setEnabled(false);
-				btn_tagende.setEnabled(false);
 
 				// Butten AusgabeSAZnP = Summe Arbeitszeit nach Pause
 				Controller.getController().schreibeInDatei();
@@ -310,10 +331,6 @@ public class Main_Gui extends JFrame {
 		String textForTextArea = Controller.getController().getTextForToday();
 		if (textForTextArea != null) {
 			textArea.setText(textForTextArea);
-			btn_taganfang.setEnabled(false);
-			btn_pauseanfang.setEnabled(false);
-			btn_pauseende.setEnabled(false);
-			btn_tagende.setEnabled(false);
 		}
 
 		lbl_AusgabeSAZnP.setText(Controller.getController().getTimeForLabel(
@@ -332,6 +349,23 @@ public class Main_Gui extends JFrame {
 		textArea.setText(Controller.getController().getTextForToday());
 		lbl_AusgabeSAZnP.setText(Controller.getController().getTimeForLabel(
 				Controller.getController().berechneArbeitszeitInMillis()));
+		
+		btn_taganfang.setEnabled(false);
+		btn_pauseanfang.setEnabled(false);
+		btn_pauseende.setEnabled(false);
+		btn_tagende.setEnabled(false);
+		
+		if(Controller.getController().getTagEnde() != null)
+			return;
+		
+		if(Controller.getController().getTagAnfang() == null){
+			btn_taganfang.setEnabled(true);
+		}else if(Controller.getController().getToday().getTemp() == null){
+			btn_pauseanfang.setEnabled(true);
+			btn_tagende.setEnabled(true);
+		} else {
+			btn_pauseende.setEnabled(true);
+		}
 	}
 
 	public void showWindow(Rectangle bounds) {
