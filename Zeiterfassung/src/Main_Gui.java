@@ -31,6 +31,7 @@ import javax.swing.JScrollPane;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -56,7 +57,7 @@ public class Main_Gui extends JFrame {
 	private JPanel contentPane;
 	private JTextArea textArea;
 	private JLabel lbl_AusgabeSAZnP;
-	private PopupMenu popup;
+	private HashMap<String, MenuItem> mi_map;
 	
 	// Button
 	private JButton btn_taganfang, btn_pauseanfang, btn_pauseende, btn_tagende;
@@ -85,6 +86,7 @@ public class Main_Gui extends JFrame {
 	 */
 	private Main_Gui() {
 		setResizable(false);
+		mi_map = new HashMap<String, MenuItem>();
 		setTitle("Zeiterfassung");
 		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		setBounds(100, 100, 513, 301);
@@ -141,7 +143,7 @@ public class Main_Gui extends JFrame {
 				System.out.println(ex.getMessage());
 			}
 			
-			popup = new PopupMenu();
+			PopupMenu popup = new PopupMenu();
 			
 			String[][] values = new String[][] {
 					{"TA", "Tag anfangen"}, 
@@ -153,6 +155,7 @@ public class Main_Gui extends JFrame {
 				MenuItem temp = new MenuItem(arr[1]);
 				temp.setActionCommand(arr[0]);
 				temp.addActionListener(btn_mi_al);
+				mi_map.put(arr[0], temp);
 				popup.add(temp);
 			}		
 			
@@ -361,45 +364,32 @@ public class Main_Gui extends JFrame {
 	}
 	
 	private void enableButtons() {
-		MenuItem ta = new MenuItem(), pa = new MenuItem(), pe = new MenuItem(), te = new MenuItem();
-		
-		for(int x = 0; x < popup.getItemCount(); x++) {
-			if(popup.getItem(x).getActionCommand().equals("TA"))
-				ta = popup.getItem(x);
-			if(popup.getItem(x).getActionCommand().equals("PA"))
-				pa = popup.getItem(x);
-			if(popup.getItem(x).getActionCommand().equals("PE"))
-				pe = popup.getItem(x);
-			if(popup.getItem(x).getActionCommand().equals("TE"))
-				te = popup.getItem(x);
+		for(String s : mi_map.keySet()) {
+			mi_map.get(s).setEnabled(false);
 		}
 		
 		btn_taganfang.setEnabled(false);
 		btn_pauseanfang.setEnabled(false);
 		btn_pauseende.setEnabled(false);
 		btn_tagende.setEnabled(false);
-		
-		ta.setEnabled(false);
-		pa.setEnabled(false);
-		pe.setEnabled(false);
-		te.setEnabled(false);
-		
+				
 		if(Controller.getController().getTagEnde() != null)
 			return;
 		
 		if(Controller.getController().getTagAnfang() == null){
 			btn_taganfang.setEnabled(true);
-			ta.setEnabled(true);
+			
+			mi_map.get("TA").setEnabled(true);
 		}else if(Controller.getController().getToday().getTemp() == null){
 			btn_pauseanfang.setEnabled(true);
 			btn_tagende.setEnabled(true);
 			
-			pa.setEnabled(true);
-			te.setEnabled(true);
+			mi_map.get("PA").setEnabled(true);
+			mi_map.get("TE").setEnabled(true);
 		} else {
 			btn_pauseende.setEnabled(true);
 			
-			pe.setEnabled(true);
+			mi_map.get("PE").setEnabled(true);
 		}
 	}
 
