@@ -6,7 +6,7 @@ public class Tag {
 	private ArrayList<Pause> pausenListe;
 	private Calendar tagAnfang;
 	private Calendar tagEnde;
-	private Pause temp;
+	private Pause temp_pausenAnfang;
 
 	public Tag() {
 		setPausenListe(new ArrayList<Pause>());
@@ -41,15 +41,19 @@ public class Tag {
 	}
 	
 	public void setPausenAnfang(Calendar pa) {
-		temp = new Pause();
-		temp.setPauseStart(pa);
+		temp_pausenAnfang = new Pause();
+		temp_pausenAnfang.setPauseStart(pa);
 	}
 	
 	public void setPausenEnde(Calendar pe) {
-		if(temp != null && temp.getPauseStart() != null) {
-			temp.setPauseEnde(pe);
-			addPause(temp);
-			temp = null;
+		if(temp_pausenAnfang != null && temp_pausenAnfang.getPauseStart() != null) {
+			temp_pausenAnfang.setPauseEnde(pe);
+			addPause(temp_pausenAnfang);
+			temp_pausenAnfang = null;
 		}
 	}
+
+	public Pause getTemp() {
+		return temp_pausenAnfang;
+	}	
 }

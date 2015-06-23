@@ -227,8 +227,11 @@ public class Controller {
 				text += (prefixMap.get("PA") + zeitAktuell(p.getPauseStart()) + "\n");
 				text += (prefixMap.get("PE") + zeitAktuell(p.getPauseEnde()) + "\n");
 			}
+			if(getToday().getTemp() != null)
+				text += (prefixMap.get("PA") + zeitAktuell(getToday().getTemp().getPauseStart()) + "\n");
 
-			text += (prefixMap.get("TE") + zeitAktuell(getToday().getTagEnde()) + "\n");
+			if(getToday().getTagEnde() != null)
+				text += (prefixMap.get("TE") + zeitAktuell(getToday().getTagEnde()) + "\n");
 		}
 
 		if (text.equals(""))
