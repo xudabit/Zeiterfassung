@@ -4,8 +4,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
+import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.JLabel;
 
 public class EingabenAendern_GUI extends JFrame {
@@ -19,13 +21,20 @@ public class EingabenAendern_GUI extends JFrame {
 	private JTextField tF_TagBeenden;
 	private JLabel lbl_TagBegonnenUm;
 	private JLabel lblTagBeendetUm;
+	private JButton btn_Abbrechen;
+	
+	public EingabenAendern_GUI(Rectangle bounds){
+		InitEingabenAendern_GUI();
+		setBounds(bounds);
+	}
 
 	/**
 	 * Create the frame.
 	 */
-	public EingabenAendern_GUI() {
+	public void InitEingabenAendern_GUI() {
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setTitle("Eingaben \u00E4ndern");
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 513, 301);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -49,10 +58,10 @@ public class EingabenAendern_GUI extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				Controller.getController().setTagAnfang(Controller.getController().getCalFromZeitAktuell(tF_tagBeginnen.getText()));
 				setVisible(false);
-				Main_Gui.getMainGui().setVisible(true);
+				Main_Gui.getMainGui().showWindow(getBounds());
 			}
 		});
-		btn_Speichern.setBounds(323, 217, 97, 25);
+		btn_Speichern.setBounds(137, 218, 97, 25);
 		contentPane.add(btn_Speichern);
 		
 		lbl_TagBegonnenUm = new JLabel("Tag begonnen um: ");
@@ -62,5 +71,15 @@ public class EingabenAendern_GUI extends JFrame {
 		lblTagBeendetUm = new JLabel("Tag beendet um:");
 		lblTagBeendetUm.setBounds(12, 48, 133, 16);
 		contentPane.add(lblTagBeendetUm);
+		
+		btn_Abbrechen = new JButton("Abbrechen");
+		btn_Abbrechen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setVisible(false);
+				Main_Gui.getMainGui().showWindow(getBounds());				
+			}
+		});
+		btn_Abbrechen.setBounds(260, 218, 97, 25);
+		contentPane.add(btn_Abbrechen);
 	}
 }

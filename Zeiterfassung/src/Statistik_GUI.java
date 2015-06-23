@@ -5,6 +5,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 
+import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
@@ -22,32 +23,22 @@ public class Statistik_GUI extends JFrame {
 	private JLabel lbl_fAB;
 	private JLabel lbl_AnzahlPausen;
 	private JLabel lbl_dAPausen;
+	
+	public Statistik_GUI(Rectangle bounds){
+		InitStatistik_GUI();
+		setBounds(bounds);
+	}
 
 	/**
 	 * Create the frame.
 	 */
-	public Statistik_GUI() {
+	private void InitStatistik_GUI() {
+		
 		setResizable(false);
-
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(java.awt.event.WindowEvent arg0) {
-				Object[] options = { "OK", "Abbrechen" };
-				int n = JOptionPane.showOptionDialog(new JFrame(),
-						"Sollen die Angaben gelöscht werden?", "Frage",
-						JOptionPane.OK_CANCEL_OPTION,
-						JOptionPane.WARNING_MESSAGE, null, options, options[1]);
-
-				if (n == 0) {
-					System.exit(0);
-				}
-			}
-		});
-
 		setTitle("Statistik");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
-		setBounds(100, 100, 573, 300);
+		setBounds(100, 100, 513, 301);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -65,11 +56,11 @@ public class Statistik_GUI extends JFrame {
 		// lbl_GesamtAZAusgabe.setText(Controller.getController().getTimeForLabel(Controller.getController().gesamtAZ()));
 
 		JLabel lbl_fABText = new JLabel("Fr\u00FChester Arbeitsbeginn:");
-		lbl_fABText.setBounds(10, 42, 218, 16);
+		lbl_fABText.setBounds(10, 71, 218, 16);
 		contentPane.add(lbl_fABText);
 
 		lbl_fAB = new JLabel("Keine Daten");
-		lbl_fAB.setBounds(304, 42, 251, 16);
+		lbl_fAB.setBounds(304, 71, 251, 16);
 		contentPane.add(lbl_fAB);
 
 		JLabel lbl_AnzahlPausenText = new JLabel("Meisten Pausen an einem Tag:");
@@ -93,12 +84,20 @@ public class Statistik_GUI extends JFrame {
 		btnZurck.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setVisible(false);
-				Main_Gui.getMainGui().setVisible(true);
+				Main_Gui.getMainGui().showWindow(getBounds());
 			}
 		});
-		btnZurck.setBounds(458, 229, 97, 25);
+		btnZurck.setBounds(398, 234, 97, 25);
 		contentPane.add(btnZurck);
-
+		
+		JLabel label = new JLabel("\u00DCberstunden:");
+		label.setBounds(10, 42, 220, 16);
+		contentPane.add(label);
+		
+		JLabel label_1 = new JLabel("00:00");
+		label_1.setBounds(304, 42, 251, 16);
+		contentPane.add(label_1);
+		
 	}
 
 	public void setLabel(String s) {
