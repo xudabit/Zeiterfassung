@@ -98,8 +98,6 @@ public class Controller {
 	public long berechneArbeitszeitInMillis() {
 		if (getToday() == null || getToday().getTagAnfang() == null)
 			return 0;
-
-		System.out.println(datumAktuell(getToday().getTagAnfang()) + " " + zeitAktuell(getToday().getTagAnfang()));
 		
 		long arbeitstag = (getToday().getTagEnde() == null ? Calendar
 				.getInstance().getTimeInMillis() : getToday().getTagEnde()
