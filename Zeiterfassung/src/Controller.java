@@ -95,22 +95,13 @@ public class Controller {
 		return da.format(d.getTime());
 	}
 
-	public long berechneArbeitszeitInMillis() {
-		if (getToday() == null || getToday().getTagAnfang() == null)
-			return 0;
-
-		long arbeitstag = (getToday().getTagEnde() == null ? Calendar
-				.getInstance().getTimeInMillis() : getToday().getTagEnde()
-				.getTimeInMillis())
-				- getToday().getTagAnfang().getTimeInMillis();
-		long summePausen = 0;
-
-		for (Pause p : getToday().getPausenListe()) {
-			summePausen += p.berechnePauseInMillis();
+	public long getArbeitszeit() {
+		if(getToday() != null) {
+			return getToday().berechneArbeitszeitInMillis();
 		}
-		return arbeitstag - summePausen;
+		return 0;
 	}
-
+	
 	public boolean schreibeInDatei() {
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(

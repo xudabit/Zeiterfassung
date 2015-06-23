@@ -343,9 +343,6 @@ public class Main_Gui extends JFrame {
 			textArea.setText(textForTextArea);
 		}
 
-		lbl_AusgabeSAZnP.setText(Controller.getController().getTimeForLabel(
-				Controller.getController().berechneArbeitszeitInMillis()));
-
 		// ScrollPane
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(201, 42, 294, 141);
@@ -357,8 +354,9 @@ public class Main_Gui extends JFrame {
 
 	public void updateView() {
 		textArea.setText(Controller.getController().getTextForToday());
+		
 		lbl_AusgabeSAZnP.setText(Controller.getController().getTimeForLabel(
-				Controller.getController().berechneArbeitszeitInMillis()));
+				Controller.getController().getArbeitszeit()));
 		
 		enableButtons();
 	}

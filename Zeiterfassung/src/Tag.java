@@ -56,4 +56,19 @@ public class Tag {
 	public Pause getTemp() {
 		return temp_pausenAnfang;
 	}	
+	
+	public long berechneArbeitszeitInMillis() {
+		if (tagAnfang == null)
+			return 0;
+
+		long arbeitstag = (tagEnde==null?
+				Calendar.getInstance().getTimeInMillis():
+					tagEnde.getTimeInMillis())
+					-tagAnfang.getTimeInMillis();
+
+		for (Pause p : pausenListe) {
+			arbeitstag -= p.berechnePauseInMillis();
+		}
+		return arbeitstag;
+	}
 }
