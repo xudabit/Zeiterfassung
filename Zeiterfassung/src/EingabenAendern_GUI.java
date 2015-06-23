@@ -45,7 +45,12 @@ public class EingabenAendern_GUI extends JFrame {
 		JButton btn_Speichern = new JButton("Speichern");
 		btn_Speichern.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Controller.getController().setTagAnfang(Controller.getController().getCalFromZeitAktuell(tF_tagBeginnen.getText()));
+				if(!tF_tagBeginnen.getText().isEmpty()) {
+					Controller.getController().setTagAnfang(Controller.getController().getCalFromZeitAktuell(tF_tagBeginnen.getText()));
+				}
+				if(!tF_TagBeenden.getText().isEmpty()) {
+					Controller.getController().setTagEnde(Controller.getController().getCalFromZeitAktuell(tF_TagBeenden.getText()));
+				}
 				setVisible(false);
 				Main_Gui.getMainGui().setVisible(true);
 			}

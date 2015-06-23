@@ -66,14 +66,6 @@ public class Controller {
 		schreibeInDatei();
 	}
 
-	public void addPause(Calendar pa, Calendar pe) {
-		Pause p = new Pause();
-		p.setPauseStart(pa);
-		p.setPauseEnde(pe);
-		getToday().addPause(p);
-		schreibeInDatei();
-	}
-
 	public void addPauseAnfang(Calendar pa) {
 		if (getToday() != null)
 			getToday().setPausenAnfang(pa);
@@ -128,8 +120,7 @@ public class Controller {
 			for(String s : dateMap.keySet()) {
 				Tag t = dateMap.get(s);
 				
-				writer.write("\nDA_"
-						+ datumAktuell(t.getTagAnfang()).replace(".", "_"));
+				writer.write("\nDA_" + s.replace(".", "_"));
 				
 				if(t.getTagAnfang() != null) {
 					writer.write("\nTA;" + zeitAktuell(t.getTagAnfang()).replace(":", ";"));
@@ -350,6 +341,6 @@ public class Controller {
 	}
 	
 	public Calendar getCalFromZeitAktuell(String zeit) {
-		return getCalFromZeitAktuell(zeit, getToday().getTagAnfang());
+		return getCalFromZeitAktuell(zeit, (Calendar)getToday().getTagAnfang().clone());
 	}
 }
