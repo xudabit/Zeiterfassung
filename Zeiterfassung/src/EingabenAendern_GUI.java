@@ -32,7 +32,9 @@ public class EingabenAendern_GUI extends JFrame {
 	 * Create the frame.
 	 */
 	public void InitEingabenAendern_GUI() {
+		String temp;
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		
 		setTitle("Eingaben \u00E4ndern");
 		setBounds(100, 100, 513, 301);
 		contentPane = new JPanel();
@@ -40,15 +42,19 @@ public class EingabenAendern_GUI extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		temp = Controller.getController().zeitAktuell(Controller.getController().getTagAnfang());
 		tF_tagBeginnen = new JTextField();
-		tF_tagBeginnen.setText(Controller.getController().zeitAktuell(Controller.getController().getTagAnfang()));
+		tF_tagBeginnen.setEnabled(!temp.isEmpty());
+		tF_tagBeginnen.setText(temp);
 		tF_tagBeginnen.setBounds(177, 10, 116, 22);
 		contentPane.add(tF_tagBeginnen);
 		tF_tagBeginnen.setColumns(10);
 		
-			
+		
+		temp = Controller.getController().zeitAktuell(Controller.getController().getTagEnde());
 		tF_TagBeenden = new JTextField();
-		tF_TagBeenden.setText(Controller.getController().zeitAktuell(Controller.getController().getTagEnde()));
+		tF_TagBeenden.setEnabled(!temp.isEmpty());		
+		tF_TagBeenden.setText(temp);
 		tF_TagBeenden.setBounds(177, 45, 116, 22);
 		contentPane.add(tF_TagBeenden);
 		tF_TagBeenden.setColumns(10);
@@ -56,7 +62,12 @@ public class EingabenAendern_GUI extends JFrame {
 		JButton btn_Speichern = new JButton("Speichern");
 		btn_Speichern.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Controller.getController().setTagAnfang(Controller.getController().getCalFromZeitAktuell(tF_tagBeginnen.getText()));
+				if(!tF_tagBeginnen.getText().isEmpty()) {
+					Controller.getController().setTagAnfang(Controller.getController().getCalFromZeitAktuell(tF_tagBeginnen.getText()));
+				}
+				if(!tF_TagBeenden.getText().isEmpty()) {
+					Controller.getController().setTagEnde(Controller.getController().getCalFromZeitAktuell(tF_TagBeenden.getText()));
+				}
 				setVisible(false);
 				Main_Gui.getMainGui().showWindow(getBounds());
 			}

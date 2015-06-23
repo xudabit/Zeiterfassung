@@ -21,11 +21,12 @@ public class Controller {
 	private final String DATEINAME = "Zeiterfassung.ze";
 	private final String PREFIXE = "TE#TA#PA#PE";
 
-	private LinkedHashMap<String, Tag> dateMap;
+	//private LinkedHashMap<String, Tag> dateMap;
+	private HashMap<String, Tag> dateMap;
 	private HashMap<String, String> prefixMap;
 
 	private Controller() {
-		dateMap = new LinkedHashMap<String, Tag>();
+		dateMap = new HashMap<String, Tag>();
 		prefixMap = new HashMap<String, String>();
 		prefixMap.put("TA", "Tag angefangen um:\t");
 		prefixMap.put("TE", "Tag beendet um:\t");
@@ -44,6 +45,7 @@ public class Controller {
 			dateMap.put(datumAktuell(Calendar.getInstance()), new Tag());
 		}
 		getToday().setTagAnfang(ta);
+		schreibeInDatei();
 	}
 
 	public Tag getToday() {
@@ -60,23 +62,19 @@ public class Controller {
 
 	public void setTagEnde(Calendar te) {
 		getToday().setTagEnde(te);
-	}
-
-	public void addPause(Calendar pa, Calendar pe) {
-		Pause p = new Pause();
-		p.setPauseStart(pa);
-		p.setPauseEnde(pe);
-		getToday().addPause(p);
+		schreibeInDatei();
 	}
 
 	public void addPauseAnfang(Calendar pa) {
 		if (getToday() != null)
 			getToday().setPausenAnfang(pa);
+		schreibeInDatei();
 	}
 
 	public void addPauseEnde(Calendar pe) {
 		if (getToday() != null)
 			getToday().setPausenEnde(pe);
+		schreibeInDatei();
 	}
 
 	// Aktuelle Zeit abfragen
@@ -113,26 +111,33 @@ public class Controller {
 	public boolean schreibeInDatei() {
 		try {
 			File file = new File(DATEINAME);
-			BufferedWriter writer = new BufferedWriter(new FileWriter(file,
-					true));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
 
 			/*
 			 * --- Ausgabe verbessern ---
 			 */
-			writer.write("\nDA_"
-					+ datumAktuell(getToday().getTagAnfang()).replace(".", "_"));
-			writer.write("\nTA;"
-					+ zeitAktuell(getToday().getTagAnfang()).replace(":", ";"));
+			for(String s : dateMap.keySet()) {
+				Tag t = dateMap.get(s);
+				
+				writer.write("\nDA_" + s.replace(".", "_"));
+				
+				if(t.getTagAnfang() != null) {
+					writer.write("\nTA;" + zeitAktuell(t.getTagAnfang()).replace(":", ";"));
+				}
 
-			for (Pause p : getToday().getPausenListe()) {
-				writer.write("\nPA;"
-						+ zeitAktuell(p.getPauseStart()).replace(":", ";"));
-				writer.write("\nPE;"
-						+ zeitAktuell(p.getPauseEnde()).replace(":", ";"));
+				for (Pause p : t.getPausenListe()) {
+					writer.write("\nPA;" + zeitAktuell(p.getPauseStart()).replace(":", ";"));
+					writer.write("\nPE;" + zeitAktuell(p.getPauseEnde()).replace(":", ";"));
+				}
+				
+				if(t.getTemp() != null) {
+					writer.write("\nPA;" + zeitAktuell(t.getTemp().getPauseStart()).replace(":", ";"));
+				}
+
+				if(t.getTagEnde() != null) {
+					writer.write("\nTE;" + zeitAktuell(t.getTagEnde()).replace(":", ";"));
+				}
 			}
-
-			writer.write("\nTE;"
-					+ zeitAktuell(getToday().getTagEnde()).replace(":", ";"));
 
 			writer.flush();
 			writer.close();
@@ -145,7 +150,7 @@ public class Controller {
 	}
 
 	public boolean leseAusDatei() {
-		dateMap = new LinkedHashMap<String, Tag>();
+		dateMap = new HashMap<String, Tag>();
 		File file = new File(DATEINAME);
 		int tag = 0, monat = 0, jahr = 0;
 		String[] zeit = new String[0], datum = new String[0];
@@ -335,6 +340,6 @@ public class Controller {
 	}
 	
 	public Calendar getCalFromZeitAktuell(String zeit) {
-		return getCalFromZeitAktuell(zeit, getToday().getTagAnfang());
+		return getCalFromZeitAktuell(zeit, (Calendar)getToday().getTagAnfang().clone());
 	}
 }
