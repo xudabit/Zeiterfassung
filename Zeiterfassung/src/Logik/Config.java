@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.HashMap;
 
 public class Config implements Serializable{
 	
@@ -21,28 +22,41 @@ public class Config implements Serializable{
 		return singleton;
 	}
 	
+	private HashMap<boolConfigValues, Boolean> bool_conf;
+	private HashMap<stringConfigValues, String> string_conf;
+	
 	/*
 	 * Festlegung der Konfigurationswerte
 	 */
-	public enum configValues {
-		TESTWERT
+	public enum boolConfigValues {
+		MINIMIZETOTRAY
 	}
 	
-	private Config(){}
+	public enum stringConfigValues {
+		
+	}
 	
+	private Config(){
+		bool_conf = new HashMap<boolConfigValues, Boolean>();
+		string_conf = new HashMap<stringConfigValues, String>();
+		
+		setDefConfig();
+	}
+	
+	private void setDefConfig() {
+		bool_conf.put(boolConfigValues.MINIMIZETOTRAY, true);
+	}
+		
 	/*
 	 * Ausgabe der passenden Konfigurationswerte
 	 */
-	public String getValue(configValues key) {
-		switch (key) {
-			case TESTWERT:
-				return "RETURN SOMETHING";
-		}
-		return "";
+	public String getValue(stringConfigValues key) {
+		return string_conf.get(key);
 	}
 	
-	
-	
+	public boolean getValue(boolConfigValues key) {
+		return bool_conf.get(key);
+	}
 	
 	/*
 	 * Speicherung und Widerherstellung der Config
