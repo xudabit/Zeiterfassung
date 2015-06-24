@@ -21,15 +21,31 @@ public class Config implements Serializable{
 		return singleton;
 	}
 	
+	/*
+	 * Festlegung der Konfigurationswerte
+	 */
+	public enum configValues {
+		TESTWERT
+	}
+	
 	private Config(){}
 	
-	
+	/*
+	 * Ausgabe der passenden Konfigurationswerte
+	 */
+	public String getValue(configValues key) {
+		switch (key) {
+			case TESTWERT:
+				return "RETURN SOMETHING";
+		}
+		return "";
+	}
 	
 	
 	
 	
 	/*
-	 * Speicherung und Widerherstellung der Konfig
+	 * Speicherung und Widerherstellung der Config
 	 */
 	
 	public void saveThisConfig() {
