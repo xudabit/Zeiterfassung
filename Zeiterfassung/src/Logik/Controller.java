@@ -409,4 +409,28 @@ public class Controller {
 		}
 		return output;
 	}
+	
+	public boolean isTAFirst(Calendar ta) {
+		if(getToday() != null) {
+			for(Pause p : getToday().getPausenListe()) {
+				if(p.getPauseStart().before(ta))
+					return false;
+			}
+			if(getToday().getTagEnde().before(ta))
+				return false;
+		}
+		return true;
+	}
+	
+	public boolean isTELast(Calendar te) {
+		if(getToday() != null) {
+			if(getToday().getTagAnfang().after(te))
+				return false;
+			for(Pause p : getToday().getPausenListe()) {
+				if(p.getPauseEnde().after(te))
+					return false;
+			}
+		}
+		return true;
+	}
 }

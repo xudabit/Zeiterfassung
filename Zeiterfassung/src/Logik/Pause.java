@@ -8,12 +8,12 @@ public class Pause implements Serializable{
 	private static int id_inc = 1;
 	private int id;
 	
-	public Pause(){
-		id = Pause.id_inc++;
+	public Pause(int id){
+		this.id = id;
 	}
 	
-	public Pause(Calendar pa, Calendar pe) {
-		id = Pause.id_inc++;
+	public Pause(Calendar pa, Calendar pe, int id) {
+		this.id = id;
 		
 		pauseStart = pa;
 		pauseEnde = pe;
