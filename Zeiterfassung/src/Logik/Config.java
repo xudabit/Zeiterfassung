@@ -46,7 +46,7 @@ public class Config implements Serializable{
 		bool_conf.putIfAbsent(boolConfigValues.MINIMIZETOTRAY, true);
 		
 		string_conf.putIfAbsent(stringConfigValues.IMPORTPFAD, "Zeiterfassung.imp");
-		string_conf.putIfAbsent(stringConfigValues.AUSGABEPFAD, "save.ze");
+		string_conf.putIfAbsent(stringConfigValues.AUSGABEPFAD, "data/timedata.ze");
 		string_conf.putIfAbsent(stringConfigValues.ICONPFAD, "icon/uhr.jpg");
 		string_conf.putIfAbsent(stringConfigValues.PAUSEIMAGE, "icon/pause.jpg");
 	}
