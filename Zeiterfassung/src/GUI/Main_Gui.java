@@ -1,4 +1,5 @@
 package GUI;
+
 import java.awt.AWTException;
 import java.awt.EventQueue;
 import java.awt.MenuItem;
@@ -23,7 +24,6 @@ import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
-
 
 import javax.swing.JScrollPane;
 
@@ -51,13 +51,15 @@ public class Main_Gui extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private final String TRAYICON = "uhr.jpg";
-	
-	
+
+	// Ja == 0; Nein == 1
+	private int optionJaNein;
+
 	private JPanel contentPane;
 	private JTextArea textArea;
 	private JLabel lbl_AusgabeSAZnP;
 	private HashMap<String, MenuItem> mi_map;
-	
+
 	// Button
 	private JButton btn_taganfang, btn_pauseanfang, btn_pauseende, btn_tagende;
 
@@ -85,46 +87,52 @@ public class Main_Gui extends JFrame {
 		setResizable(false);
 		mi_map = new HashMap<String, MenuItem>();
 		setTitle("Zeiterfassung");
-		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+
+		Object[] options = { "Ja", "Nein" };
+
 		setBounds(100, 100, 513, 301);
 
 		ActionListener btn_mi_al = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(arg0.getActionCommand().equals("TA")) {
-					Controller.getController().setTagAnfang(Calendar.getInstance());
+				if (arg0.getActionCommand().equals("TA")) {
+					Controller.getController().setTagAnfang(
+							Calendar.getInstance());
 				}
-				if(arg0.getActionCommand().equals("PA")) {
-					Controller.getController().addPauseAnfang(Calendar.getInstance());
+				if (arg0.getActionCommand().equals("PA")) {
+					Controller.getController().addPauseAnfang(
+							Calendar.getInstance());
 				}
-				if(arg0.getActionCommand().equals("PE")) {
-					Controller.getController().addPauseEnde(Calendar.getInstance());
-					
+				if (arg0.getActionCommand().equals("PE")) {
+					Controller.getController().addPauseEnde(
+							Calendar.getInstance());
+
 				}
-				if(arg0.getActionCommand().equals("TE")) {
-					Controller.getController().setTagEnde(Calendar.getInstance());
+				if (arg0.getActionCommand().equals("TE")) {
+					Controller.getController().setTagEnde(
+							Calendar.getInstance());
 				}
 				updateView();
 			}
-		}; 
-		
+		};
+
 		if (Controller.getController().hasOlder(3)) {
-			Object[] options = { "Ja", "Nein"};
-			int n = JOptionPane.showOptionDialog(null,
-					"M�chten Sie die Daten �lter als 2 Monate l�schen?",
-					"Alte Daten l�schen?", JOptionPane.YES_NO_OPTION,
+
+			optionJaNein = JOptionPane.showOptionDialog(null,
+					"Moechten Sie die Daten aelter als 2 Monate loeschen?",
+					"Alte Daten loeschen?", JOptionPane.YES_NO_OPTION,
 					JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
-			System.out.println(n);
-			
-			if(n == 0){
-				if(Controller.getController().deleteOlder(2)){
+
+			if (optionJaNein == 0) {
+				if (Controller.getController().deleteOlder(2)) {
 					JOptionPane.showMessageDialog(null,
-						    "Daten erfolgreich gel�scht.");
-				}else{
-					JOptionPane.showMessageDialog(null,
-						    "Daten konnten nicht gel�scht werden.",
-						    "Fehler beim l�schen",
-						    JOptionPane.WARNING_MESSAGE);
+							"Daten erfolgreich geloescht.");
+				} else {
+					JOptionPane
+							.showMessageDialog(null,
+									"Daten konnten nicht geloecht werden.",
+									"Fehler beim loeschen",
+									JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		}
@@ -133,29 +141,27 @@ public class Main_Gui extends JFrame {
 			TrayIcon icon;
 			SystemTray tray = SystemTray.getSystemTray();
 			Image image = null;
-			
+
 			try {
 				image = ImageIO.read(new File(TRAYICON));
 			} catch (IOException ex) {
 				System.out.println(ex.getMessage());
 			}
-			
+
 			PopupMenu popup = new PopupMenu();
-			
-			String[][] values = new String[][] {
-					{"TA", "Tag anfangen"}, 
-					{"PA", "Pause anfangen"}, 
-					{"PE", "Pause beenden"}, 
-					{"TE", "Tag beenden"}};
-			
-			for(String[] arr : values) {
+
+			String[][] values = new String[][] { { "TA", "Tag anfangen" },
+					{ "PA", "Pause anfangen" }, { "PE", "Pause beenden" },
+					{ "TE", "Tag beenden" } };
+
+			for (String[] arr : values) {
 				MenuItem temp = new MenuItem(arr[1]);
 				temp.setActionCommand(arr[0]);
 				temp.addActionListener(btn_mi_al);
 				mi_map.put(arr[0], temp);
 				popup.add(temp);
-			}		
-			
+			}
+
 			icon = new TrayIcon(image, "Zeiterfassung", popup);
 			icon.setImageAutoSize(true);
 			ActionListener trayListener = new ActionListener() {
@@ -167,7 +173,7 @@ public class Main_Gui extends JFrame {
 			try {
 				icon.addActionListener(trayListener);
 				tray.add(icon);
-				
+
 			} catch (AWTException ex) {
 				System.err.println(ex.getMessage());
 			}
@@ -189,6 +195,17 @@ public class Main_Gui extends JFrame {
 
 		JMenu mnBearbeiten = new JMenu("Bearbeiten");
 		menuBar.add(mnBearbeiten);
+
+		JMenuItem mntmZeitenndern = new JMenuItem("Zeiten \u00E4ndern");
+		mntmZeitenndern.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				EingabenAendern_GUI eA = new EingabenAendern_GUI(getBounds());
+				eA.setVisible(true);
+				setVisible(false);
+			}
+		});
+		mnBearbeiten.add(mntmZeitenndern);
 
 		JMenu mnNewMenu_1 = new JMenu("Daten l\u00F6schen");
 		mnBearbeiten.add(mnNewMenu_1);
@@ -223,17 +240,6 @@ public class Main_Gui extends JFrame {
 		});
 		mnNewMenu_1.add(mntmAllesLschen);
 
-		JMenuItem mntmZeitenndern = new JMenuItem("Zeiten \u00E4ndern");
-		mntmZeitenndern.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				EingabenAendern_GUI eA = new EingabenAendern_GUI(getBounds());
-				eA.setVisible(true);
-				setVisible(false);
-			}
-		});
-		mnBearbeiten.add(mntmZeitenndern);
-
 		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Statistik");
 		mntmNewMenuItem_1.addActionListener(new ActionListener() {
 			@Override
@@ -260,7 +266,23 @@ public class Main_Gui extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent arg0) {
-				setVisible(false);
+
+				optionJaNein = JOptionPane
+						.showOptionDialog(
+								null,
+								"Programm in das Benachrichtigungsfeld minimieren?",
+								"Minimieren?", JOptionPane.YES_NO_OPTION,
+								JOptionPane.QUESTION_MESSAGE, null, options,
+								options[1]);
+
+				if (optionJaNein == 0) {
+					setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+					setVisible(false);
+				} else {
+					setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+					setVisible(true);
+				}
+
 			}
 		});
 		menuBar.add(mntmNewMenuItem_1);
@@ -269,6 +291,17 @@ public class Main_Gui extends JFrame {
 		menuBar.add(mnHilfe);
 
 		JMenuItem mntmInfo = new JMenuItem("Info");
+		mntmInfo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+				JOptionPane
+						.showMessageDialog(
+								null,
+								"Programm zur Zeiterfassung der t\u00E4glichen Arbeitszeit und Auflistung der Pausen.",
+								"Information", JOptionPane.INFORMATION_MESSAGE);
+
+			}
+		});
 		mnHilfe.add(mntmInfo);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -351,45 +384,45 @@ public class Main_Gui extends JFrame {
 		scrollPane.setBounds(201, 42, 294, 141);
 		contentPane.add(scrollPane);
 		scrollPane.setViewportView(textArea);
-		
+
 		updateView();
 	}
 
 	public void updateView() {
 		textArea.setText(Controller.getController().getTextForToday());
-		
+
 		lbl_AusgabeSAZnP.setText(Controller.getController().getTimeForLabel(
 				Controller.getController().getArbeitszeit()));
-		
+
 		enableButtons();
 	}
-	
+
 	private void enableButtons() {
-		for(String s : mi_map.keySet()) {
+		for (String s : mi_map.keySet()) {
 			mi_map.get(s).setEnabled(false);
 		}
-		
+
 		btn_taganfang.setEnabled(false);
 		btn_pauseanfang.setEnabled(false);
 		btn_pauseende.setEnabled(false);
 		btn_tagende.setEnabled(false);
-				
-		if(Controller.getController().getTagEnde() != null)
+
+		if (Controller.getController().getTagEnde() != null)
 			return;
-		
-		if(Controller.getController().getTagAnfang() == null){
+
+		if (Controller.getController().getTagAnfang() == null) {
 			btn_taganfang.setEnabled(true);
-			
+
 			mi_map.get("TA").setEnabled(true);
-		}else if(Controller.getController().getToday().getTemp() == null){
+		} else if (Controller.getController().getToday().getTemp() == null) {
 			btn_pauseanfang.setEnabled(true);
 			btn_tagende.setEnabled(true);
-			
+
 			mi_map.get("PA").setEnabled(true);
 			mi_map.get("TE").setEnabled(true);
 		} else {
 			btn_pauseende.setEnabled(true);
-			
+
 			mi_map.get("PE").setEnabled(true);
 		}
 	}
