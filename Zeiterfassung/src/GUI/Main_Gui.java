@@ -145,7 +145,6 @@ public class Main_Gui extends JFrame {
 
 			try {
 				image = ImageIO.read(ClassLoader.getSystemResource(Config.getConfig().getValue(Config.stringConfigValues.ICONPFAD)));
-						Config.stringConfigValues.ICONPFAD)));
 			} catch (IOException ex) {
 				System.out.println(ex.getMessage());
 			}
