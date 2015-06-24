@@ -33,8 +33,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.awt.Label;
+
 import javax.swing.border.TitledBorder;
 import javax.swing.UIManager;
+
 import java.awt.Color;
 
 public class EingabenAendern_Gui extends JFrame {
@@ -292,14 +294,11 @@ public class EingabenAendern_Gui extends JFrame {
 		JLabel label_1 = new JLabel("Bild");
 		label_1.setBounds(352, 48, 67, 67);
 		try{
-			File im = new File(Config.getConfig().getValue(Config.stringConfigValues.PAUSEIMAGE));
-			if(im.exists()) {
-				BufferedImage image = ImageIO.read(im);
-				Image icon = image.getScaledInstance((int)label_1.getBounds().getWidth(), (int)label_1.getBounds().getHeight(), Image.SCALE_SMOOTH);
-				if(icon != null) {
-					label_1 = new JLabel(new ImageIcon(icon));
-					label_1.setBounds(300, 48, 161, 61);
-				}
+			BufferedImage image = ImageIO.read(ClassLoader.getSystemResource(Config.getConfig().getValue(Config.stringConfigValues.PAUSEIMAGE)));
+			Image icon = image.getScaledInstance((int)label_1.getBounds().getWidth(), (int)label_1.getBounds().getHeight(), Image.SCALE_SMOOTH);
+			if(icon != null) {
+				label_1 = new JLabel(new ImageIcon(icon));
+				label_1.setBounds(300, 48, 161, 61);
 			}
 		} catch (IOException ex) {
 			System.err.println(ex.getMessage());
