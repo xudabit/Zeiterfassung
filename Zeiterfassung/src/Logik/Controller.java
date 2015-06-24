@@ -26,6 +26,9 @@ public class Controller {
 	private final String PREFIXE = "TE#TA#PA#PE";
 
 	// private LinkedHashMap<String, Tag> dateMap;
+	
+	private Config conf;
+	
 	private HashMap<String, Tag> dateMap;
 	private HashMap<String, String> prefixMap;
 
@@ -116,6 +119,7 @@ public class Controller {
 				o.writeObject(dateMap.get(s));
 			}
 			o.close();
+			conf.saveThisConfig();
 		} catch (IOException ex) {
 			System.err.println(ex.getMessage());
 		}
@@ -195,6 +199,7 @@ public class Controller {
 	}
 	
 	public void readData() {
+		conf = Config.getConfig();
 		try {
 			File f = new File("ausgabe.ze");
 			if(!f.exists())
@@ -209,6 +214,7 @@ public class Controller {
 				dateMap.put(datumAktuell(tag.getTagAnfang()), tag);
 			}
 			i.close();
+			
 		} catch (IOException ex) {
 			System.err.println(ex.getMessage());
 		} catch (ClassNotFoundException ex) {

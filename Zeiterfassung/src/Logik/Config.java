@@ -36,20 +36,29 @@ public class Config implements Serializable{
 		Config.saveConfig(this);
 	}
 	
-	public static void saveConfig(Config conf) {
+	public static boolean saveConfig(Config conf) {
 		try {
 			File file = new File(CONFIG_FILE);
+			if(!file.getParentFile().exists()) {
+				if(!file.getParentFile().mkdir()) {
+					return false;
+				}
+			}
 			ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream(file));
 			o.writeObject(conf);
 			o.close();
 		} catch (IOException ex) {
 			System.err.println(ex.getMessage());
+			return false;
 		}
+		return true;
 	}
 	
 	public static Config restoreConfig() {
 		try {
 			File file = new File(CONFIG_FILE);
+			if(!file.exists())
+				return null;
 			ObjectInputStream i = new ObjectInputStream(new FileInputStream(file));
 			Config conf = (Config)i.readObject();
 			i.close();
