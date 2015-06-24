@@ -34,7 +34,7 @@ public class Config implements Serializable{
 	}
 	
 	public enum stringConfigValues {
-		IMPORTPFAD, ICONPFAD, AUSGABEPFAD
+		IMPORTPFAD, ICONPFAD, AUSGABEPFAD, PAUSEIMAGE
 	}
 	
 	private Config(){
@@ -48,6 +48,7 @@ public class Config implements Serializable{
 		string_conf.putIfAbsent(stringConfigValues.IMPORTPFAD, "Zeiterfassung.imp");
 		string_conf.putIfAbsent(stringConfigValues.AUSGABEPFAD, "save.ze");
 		string_conf.putIfAbsent(stringConfigValues.ICONPFAD, "icon/uhr.jpg");
+		string_conf.putIfAbsent(stringConfigValues.PAUSEIMAGE, "icon/pause.jpg");
 	}
 		
 	public void setValue(stringConfigValues key, String s) {
