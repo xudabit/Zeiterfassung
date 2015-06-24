@@ -1,3 +1,4 @@
+package GUI;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
@@ -8,7 +9,10 @@ import javax.swing.JButton;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.JLabel;
+
+import Logik.Controller;
 
 public class EingabenAendern_GUI extends JFrame {
 

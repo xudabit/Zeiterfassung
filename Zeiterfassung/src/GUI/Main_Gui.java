@@ -1,3 +1,4 @@
+package GUI;
 import java.awt.AWTException;
 import java.awt.EventQueue;
 import java.awt.MenuItem;
@@ -32,6 +33,8 @@ import java.util.HashMap;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+
+import Logik.Controller;
 
 public class Main_Gui extends JFrame {
 
