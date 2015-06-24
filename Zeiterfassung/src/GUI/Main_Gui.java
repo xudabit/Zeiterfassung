@@ -11,10 +11,7 @@ import java.awt.TrayIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
-import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -23,15 +20,18 @@ import javax.swing.JButton;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-import javax.swing.WindowConstants;
 import javax.swing.JScrollPane;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 import java.util.Calendar;
 import java.util.HashMap;
 
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import Logik.Controller;
 import Logik.Config;
@@ -143,7 +143,8 @@ public class Main_Gui extends JFrame {
 			Image image = null;
 
 			try {
-				image = ImageIO.read(new File(Config.getConfig().getValue(Config.stringConfigValues.ICONPFAD)));
+				image = ImageIO.read(new File(Config.getConfig().getValue(
+						Config.stringConfigValues.ICONPFAD)));
 			} catch (IOException ex) {
 				System.out.println(ex.getMessage());
 			}
@@ -184,59 +185,57 @@ public class Main_Gui extends JFrame {
 		JMenu mnNewMenu = new JMenu("Datei");
 		menuBar.add(mnNewMenu);
 
-		JMenuItem mntmBeenden = new JMenuItem("Beenden");
-		mntmBeenden.addActionListener(new ActionListener() {
+		JMenuItem mn_Beenden = new JMenuItem("Beenden");
+		mn_Beenden.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				System.exit(0);
 			}
 		});
-		
-		JMenuItem mntmSpeichern = new JMenuItem("Speichern");
-		mntmSpeichern.addActionListener(new ActionListener() {
+
+		JMenuItem mn_Speichern = new JMenuItem("Speichern");
+		mn_Speichern.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Controller.getController().schreibeInDatei();
 			}
 		});
-		mnNewMenu.add(mntmSpeichern);
-		
-		JMenuItem mntmImport = new JMenuItem("Import");
-		mnNewMenu.add(mntmImport);
-		mntmImport.addActionListener(new ActionListener() {
+		mnNewMenu.add(mn_Speichern);
+
+		JMenuItem mn_Import = new JMenuItem("Import");
+		mnNewMenu.add(mn_Import);
+		mn_Import.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Controller.getController().importData();
 				updateView();
 			}
 		});
-		
-		JMenuItem mntmAlleDatenAnzeigen = new JMenuItem("Alle Daten anzeigen");
-		mntmAlleDatenAnzeigen.addActionListener(new ActionListener() {
+
+		JMenuItem mn_AlleDatenAnzeigen = new JMenuItem("Alle Daten anzeigen");
+		mn_AlleDatenAnzeigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				new AllData_Gui(getBounds());
 				setVisible(false);
 			}
 		});
-		mnNewMenu.add(mntmAlleDatenAnzeigen);
+		mnNewMenu.add(mn_AlleDatenAnzeigen);
 		mnNewMenu.addSeparator();
-		
-				JMenuItem mntmInfo = new JMenuItem("Info");
-				mnNewMenu.add(mntmInfo);
-				mntmInfo.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
 
-						JOptionPane
-								.showMessageDialog(
-										null,
-										"Version: " + version + "\n\nErstellt von Marcel Knoth" + "\nJuni 2015",
-										"Information", JOptionPane.INFORMATION_MESSAGE);
+		JMenuItem mn_Info = new JMenuItem("Info");
+		mnNewMenu.add(mn_Info);
+		mn_Info.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
 
-					}
-				});
+				JOptionPane.showMessageDialog(null, "Version: " + version
+						+ "\n\nErstellt von Marcel Knoth" + "\nJuni 2015",
+						"Information", JOptionPane.INFORMATION_MESSAGE);
+
+			}
+		});
 		mnNewMenu.addSeparator();
-		mnNewMenu.add(mntmBeenden);
+		mnNewMenu.add(mn_Beenden);
 
-		JMenu mnBearbeiten = new JMenu("Bearbeiten");
-		menuBar.add(mnBearbeiten);
+		JMenu mn_Bearbeiten = new JMenu("Bearbeiten");
+		menuBar.add(mn_Bearbeiten);
 
 		JMenuItem mntmZeitenndern = new JMenuItem("Zeiten \u00E4ndern");
 		mntmZeitenndern.addActionListener(new ActionListener() {
@@ -247,10 +246,10 @@ public class Main_Gui extends JFrame {
 				setVisible(false);
 			}
 		});
-		mnBearbeiten.add(mntmZeitenndern);
+		mn_Bearbeiten.add(mntmZeitenndern);
 
 		JMenu mnNewMenu_1 = new JMenu("Daten l\u00F6schen");
-		mnBearbeiten.add(mnNewMenu_1);
+		mn_Bearbeiten.add(mnNewMenu_1);
 
 		JMenuItem mntmWochen = new JMenuItem("> 1 Monat");
 		mntmWochen.addActionListener(new ActionListener() {
@@ -260,7 +259,7 @@ public class Main_Gui extends JFrame {
 				updateView();
 			}
 		});
-		
+
 		JMenuItem mntmHeute = new JMenuItem("Heute");
 		mntmHeute.addActionListener(new ActionListener() {
 			@Override
@@ -291,7 +290,7 @@ public class Main_Gui extends JFrame {
 			}
 		});
 		mnNewMenu_1.add(mntmAllesLschen);
-		
+
 		JMenuItem mntmOptionen = new JMenuItem("Optionen");
 		mntmOptionen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -299,11 +298,10 @@ public class Main_Gui extends JFrame {
 				setVisible(false);
 			}
 		});
-		mnBearbeiten.add(mntmOptionen);
+		mn_Bearbeiten.add(mntmOptionen);
 
-				EingabenAendern_Gui eA = new EingabenAendern_Gui(getBounds());
-		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Statistik");
-		mntmNewMenuItem_1.addActionListener(new ActionListener() {
+		JMenuItem mn_Statistik = new JMenuItem("Statistik");
+		mn_Statistik.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (!Controller.getController().getDateMap().isEmpty()) {
@@ -328,15 +326,16 @@ public class Main_Gui extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent arg0) {
-				
-				if (Config.getConfig().getValue(Config.boolConfigValues.MINIMIZETOTRAY)) {
+
+				if (Config.getConfig().getValue(
+						Config.boolConfigValues.MINIMIZETOTRAY)) {
 					setVisible(false);
 				} else {
 					System.exit(0);
 				}
 			}
 		});
-		menuBar.add(mntmNewMenuItem_1);
+		menuBar.add(mn_Statistik);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

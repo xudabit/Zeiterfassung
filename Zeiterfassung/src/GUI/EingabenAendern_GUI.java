@@ -1,6 +1,5 @@
 package GUI;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -9,33 +8,32 @@ import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JComboBox;
+import javax.swing.border.TitledBorder;
+import javax.swing.UIManager;
 
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+import java.awt.image.BufferedImage;
+import java.awt.Color;
 
-import javax.swing.JLabel;
 
 import Logik.Config;
 import Logik.Controller;
 import Logik.Pause;
 
-import javax.swing.JComboBox;
-import javax.swing.JSeparator;
-import javax.swing.JSpinner;
-
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.awt.Label;
-import javax.swing.border.TitledBorder;
-import javax.swing.UIManager;
-import java.awt.Color;
+
+import javax.imageio.ImageIO;
 
 public class EingabenAendern_Gui extends JFrame {
 

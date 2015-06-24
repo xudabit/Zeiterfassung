@@ -1,9 +1,5 @@
 package GUI;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.awt.Rectangle;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -11,8 +7,7 @@ import javax.swing.JComboBox;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-
-import Logik.Config;
+import javax.swing.border.LineBorder;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -20,10 +15,17 @@ import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.border.LineBorder;
+import java.awt.Rectangle;
 import java.awt.Color;
 
+import Logik.Config;
+
 public class Options_Gui extends JFrame {
+
+	/**
+	 *  Options_Gui
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private JPanel contentPane;
 	
@@ -123,7 +125,7 @@ public class Options_Gui extends JFrame {
 	}
 	
 	private void readConfig() {
-		Config conf = Config.getConfig();
+		//Config conf = Config.getConfig();
 		
 		for(Config.boolConfigValues b : Config.boolConfigValues.values()) {
 			cb_bool.addItem(b);
