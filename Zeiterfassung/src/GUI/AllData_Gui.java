@@ -24,7 +24,9 @@ public class AllData_Gui extends JFrame {
 	 * Create the frame.
 	 */
 	public AllData_Gui(Rectangle bounds) {
+		setResizable(false);
 		setTitle("Gespeicherte Daten");
+		
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {

@@ -4,6 +4,10 @@ import java.util.Calendar;
 
 public class Pause implements Serializable{
 	
+	/**
+	 *  Pause
+	 */
+	private static final long serialVersionUID = 1L;
 	private Calendar pauseStart = null, pauseEnde = null; // Zuweisungen im Konstruktor
 	private static int id_inc = 1;
 	private int id;
@@ -51,6 +55,14 @@ public class Pause implements Serializable{
 	
 	public int getPauseID() {
 		return id;
+	}
+
+	public static int getId_inc() {
+		return id_inc;
+	}
+
+	public static void setId_inc(int id_inc) {
+		Pause.id_inc = id_inc;
 	}
 	
 }

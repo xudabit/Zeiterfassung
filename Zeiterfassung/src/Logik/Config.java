@@ -11,6 +11,10 @@ import java.util.HashMap;
 
 public class Config implements Serializable{
 	
+	/**
+	 *  Config
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Config singleton;
 	private static final String CONFIG_FILE = "conf/config.ze";
 	public static Config getConfig() {

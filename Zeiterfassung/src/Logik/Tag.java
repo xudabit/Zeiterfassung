@@ -1,16 +1,22 @@
 package Logik;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Tag implements Serializable {
+	/**
+	 *  Tag
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private int id_inc = 1;
 	
 	private ArrayList<Pause> pausenListe;
