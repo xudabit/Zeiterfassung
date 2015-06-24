@@ -33,7 +33,7 @@ public class Config implements Serializable{
 	}
 	
 	public enum stringConfigValues {
-		
+		IMPORTPFAD
 	}
 	
 	private Config(){
@@ -45,8 +45,17 @@ public class Config implements Serializable{
 	
 	private void setDefConfig() {
 		bool_conf.put(boolConfigValues.MINIMIZETOTRAY, true);
+		
+		string_conf.put(stringConfigValues.IMPORTPFAD, "TestPfad");
 	}
 		
+	public void setValue(stringConfigValues key, String s) {
+		string_conf.put(key, s);
+	}
+	
+	public void setValue(boolConfigValues key, boolean b) {
+		bool_conf.put(key, b);
+	}
 	/*
 	 * Ausgabe der passenden Konfigurationswerte
 	 */
