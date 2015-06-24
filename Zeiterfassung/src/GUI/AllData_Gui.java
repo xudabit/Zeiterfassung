@@ -23,6 +23,7 @@ public class AllData_Gui extends JFrame {
 	 * Create the frame.
 	 */
 	public AllData_Gui(Rectangle bounds) {
+		setTitle("Gespeicherte Daten");
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
@@ -38,7 +39,7 @@ public class AllData_Gui extends JFrame {
 		contentPane.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 13, 408, 229);
+		scrollPane.setBounds(12, 13, 471, 229);
 		contentPane.add(scrollPane);
 		
 		JTextArea ta_data = new JTextArea();
