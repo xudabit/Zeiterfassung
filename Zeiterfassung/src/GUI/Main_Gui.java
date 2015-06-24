@@ -50,7 +50,6 @@ public class Main_Gui extends JFrame {
 	 * Main_Gui
 	 */
 	private static final long serialVersionUID = 1L;
-	private final String TRAYICON = "uhr.jpg";
 
 	// Ja == 0; Nein == 1
 	private int optionJaNein;
@@ -143,7 +142,7 @@ public class Main_Gui extends JFrame {
 			Image image = null;
 
 			try {
-				image = ImageIO.read(new File(TRAYICON));
+				image = ImageIO.read(new File(Config.getConfig().getValue(Config.stringConfigValues.ICONPFAD)));
 			} catch (IOException ex) {
 				System.out.println(ex.getMessage());
 			}
