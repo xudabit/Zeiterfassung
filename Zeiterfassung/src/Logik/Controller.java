@@ -378,4 +378,8 @@ public class Controller {
 	public boolean hasOlder(int month){
 		return (getNextKeyOlder(month)!=null);
 	}
+	
+	public void deleteToday() {
+		dateMap.remove(datumAktuell(Calendar.getInstance()));
+	}
 }

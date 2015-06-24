@@ -218,6 +218,16 @@ public class Main_Gui extends JFrame {
 				updateView();
 			}
 		});
+		
+		JMenuItem mntmHeute = new JMenuItem("Heute");
+		mntmHeute.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Controller.getController().deleteToday();
+				updateView();
+			}
+		});
+		mnNewMenu_1.add(mntmHeute);
 		mnNewMenu_1.add(mntmWochen);
 
 		JMenuItem mntmWochen_1 = new JMenuItem("> 2 Monate");
