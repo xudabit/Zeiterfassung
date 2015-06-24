@@ -333,23 +333,6 @@ public class Main_Gui extends JFrame {
 				} else {
 					System.exit(0);
 				}
-				
-//				optionJaNein = JOptionPane
-//						.showOptionDialog(
-//								null,
-//								"Programm in das Benachrichtigungsfeld minimieren?",
-//								"Minimieren?", JOptionPane.YES_NO_OPTION,
-//								JOptionPane.QUESTION_MESSAGE, null, options,
-//								options[1]);
-//
-//				if (optionJaNein == 0) {
-//					setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-//					setVisible(false);
-//				} else {
-//					setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-//					setVisible(true);
-//				}
-
 			}
 		});
 		menuBar.add(mntmNewMenuItem_1);
