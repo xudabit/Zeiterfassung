@@ -18,6 +18,7 @@ public class Config implements Serializable{
 			if((singleton = restoreConfig())== null) {
 				singleton = new Config();
 			}
+			singleton.setDefConfig();
 		}
 		return singleton;
 	}
@@ -33,20 +34,19 @@ public class Config implements Serializable{
 	}
 	
 	public enum stringConfigValues {
-		IMPORTPFAD
+		IMPORTPFAD, ICONPFAD
 	}
 	
 	private Config(){
 		bool_conf = new HashMap<boolConfigValues, Boolean>();
 		string_conf = new HashMap<stringConfigValues, String>();
-		
-		setDefConfig();
 	}
 	
-	private void setDefConfig() {
-		bool_conf.put(boolConfigValues.MINIMIZETOTRAY, true);
+	public void setDefConfig() {
+		bool_conf.putIfAbsent(boolConfigValues.MINIMIZETOTRAY, true);
 		
-		string_conf.put(stringConfigValues.IMPORTPFAD, "TestPfad");
+		string_conf.putIfAbsent(stringConfigValues.IMPORTPFAD, "Zeiterfassung.imp");
+		string_conf.putIfAbsent(stringConfigValues.ICONPFAD, "icon/uhr.jpg");
 	}
 		
 	public void setValue(stringConfigValues key, String s) {
