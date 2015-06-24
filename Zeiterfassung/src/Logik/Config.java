@@ -34,7 +34,7 @@ public class Config implements Serializable{
 	 * Festlegung der Konfigurationswerte
 	 */
 	public enum boolConfigValues {
-		MINIMIZETOTRAY
+		MINIMIZETOTRAY, WARNINGOLDDATA
 	}
 	
 	public enum stringConfigValues {
@@ -48,6 +48,7 @@ public class Config implements Serializable{
 	
 	public void setDefConfig() {
 		bool_conf.putIfAbsent(boolConfigValues.MINIMIZETOTRAY, true);
+		bool_conf.putIfAbsent(boolConfigValues.WARNINGOLDDATA, true);
 		
 		string_conf.putIfAbsent(stringConfigValues.IMPORTPFAD, "Zeiterfassung.imp");
 		string_conf.putIfAbsent(stringConfigValues.AUSGABEPFAD, "data/timedata.ze");

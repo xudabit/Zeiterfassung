@@ -187,6 +187,7 @@ public class Controller {
 				}
 			}
 			reader.close();
+			schreibeInDatei();
 			
 			
 		} catch (IOException ex) {
@@ -206,7 +207,8 @@ public class Controller {
 		dateMap = new HashMap<String, Tag>();
 		try {
 			File f = new File(Config.getConfig().getValue(Config.stringConfigValues.AUSGABEPFAD));
-			f.getParentFile().mkdirs();
+			if(f.getParentFile() != null)
+				f.getParentFile().mkdirs();
 			if(!f.exists())
 				return;
 			

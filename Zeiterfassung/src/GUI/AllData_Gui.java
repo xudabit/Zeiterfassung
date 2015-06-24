@@ -11,6 +11,10 @@ import Logik.Controller;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.Rectangle;
+import javax.swing.JComboBox;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class AllData_Gui extends JFrame {
 
@@ -42,13 +46,25 @@ public class AllData_Gui extends JFrame {
 		contentPane.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 13, 471, 229);
+		scrollPane.setBounds(12, 98, 471, 144);
 		contentPane.add(scrollPane);
 		
 		JTextArea ta_data = new JTextArea();
 		scrollPane.setViewportView(ta_data);
 		
 		ta_data.setText(Controller.getController().getAllData());
+		
+		JComboBox cB_Datum = new JComboBox();
+		cB_Datum.setBounds(12, 13, 216, 22);
+		contentPane.add(cB_Datum);
+		
+		JButton btn_Delete = new JButton("Delete");
+		btn_Delete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btn_Delete.setBounds(354, 12, 129, 25);
+		contentPane.add(btn_Delete);
 		setVisible(true);
 	}
 }

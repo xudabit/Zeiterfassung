@@ -117,7 +117,7 @@ public class Main_Gui extends JFrame {
 			}
 		};
 
-		if (Controller.getController().hasOlder(3)) {
+		if (Config.getConfig().getValue(Config.boolConfigValues.WARNINGOLDDATA) && Controller.getController().hasOlder(3)) {
 
 			optionJaNein = JOptionPane.showOptionDialog(null,
 					"Moechten Sie die Daten aelter als 2 Monate loeschen?",
