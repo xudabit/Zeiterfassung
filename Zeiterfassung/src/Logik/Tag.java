@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Tag implements Serializable {
+	private int id_inc = 1;
+	
 	private ArrayList<Pause> pausenListe;
 	private Calendar tagAnfang;
 	private Calendar tagEnde;
@@ -49,7 +51,7 @@ public class Tag implements Serializable {
 	}
 
 	public void setPausenAnfang(Calendar pa) {
-		temp_pausenAnfang = new Pause();
+		temp_pausenAnfang = new Pause(id_inc++);
 		temp_pausenAnfang.setPauseStart(pa);
 	}
 
@@ -102,5 +104,19 @@ public class Tag implements Serializable {
 			System.err.println(ex.getMessage());
 		}
 		return null;
+	}
+	
+	public int getAndIncID() {
+		return id_inc++;
+	}
+	
+	public boolean deletePause(Pause p) {
+		for(int x = 0; x < pausenListe.size(); x++) {
+			if(pausenListe.get(x).equals(p)) {
+				pausenListe.remove(x);
+				return true;
+			}
+		}
+		return false;
 	}
 }
