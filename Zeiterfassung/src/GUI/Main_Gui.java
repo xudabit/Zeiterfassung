@@ -24,7 +24,6 @@ import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
-
 import javax.swing.JScrollPane;
 
 import java.util.Calendar;
@@ -35,6 +34,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 import Logik.Controller;
+import Logik.Config;
 
 public class Main_Gui extends JFrame {
 
@@ -275,6 +275,15 @@ public class Main_Gui extends JFrame {
 			}
 		});
 		mnNewMenu_1.add(mntmAllesLschen);
+		
+		JMenuItem mntmOptionen = new JMenuItem("Optionen");
+		mntmOptionen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new Options_Gui(getBounds());
+				setVisible(false);
+			}
+		});
+		mnBearbeiten.add(mntmOptionen);
 
 				EingabenAendern_Gui eA = new EingabenAendern_Gui(getBounds());
 		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Statistik");
@@ -303,22 +312,28 @@ public class Main_Gui extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent arg0) {
-
-				optionJaNein = JOptionPane
-						.showOptionDialog(
-								null,
-								"Programm in das Benachrichtigungsfeld minimieren?",
-								"Minimieren?", JOptionPane.YES_NO_OPTION,
-								JOptionPane.QUESTION_MESSAGE, null, options,
-								options[1]);
-
-				if (optionJaNein == 0) {
-					setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+				
+				if (Config.getConfig().getValue(Config.boolConfigValues.MINIMIZETOTRAY)) {
 					setVisible(false);
 				} else {
-					setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-					setVisible(true);
+					System.exit(0);
 				}
+				
+//				optionJaNein = JOptionPane
+//						.showOptionDialog(
+//								null,
+//								"Programm in das Benachrichtigungsfeld minimieren?",
+//								"Minimieren?", JOptionPane.YES_NO_OPTION,
+//								JOptionPane.QUESTION_MESSAGE, null, options,
+//								options[1]);
+//
+//				if (optionJaNein == 0) {
+//					setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+//					setVisible(false);
+//				} else {
+//					setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+//					setVisible(true);
+//				}
 
 			}
 		});
