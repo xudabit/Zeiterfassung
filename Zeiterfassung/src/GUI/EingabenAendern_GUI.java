@@ -13,6 +13,15 @@ import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 
 import Logik.Controller;
+import Logik.Pause;
+
+import javax.swing.JComboBox;
+import javax.swing.JSeparator;
+import javax.swing.JSpinner;
+
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+import java.util.Calendar;
 
 public class EingabenAendern_Gui extends JFrame {
 
@@ -26,6 +35,13 @@ public class EingabenAendern_Gui extends JFrame {
 	private JLabel lbl_TagBegonnenUm;
 	private JLabel lblTagBeendetUm;
 	private JButton btn_Abbrechen;
+	private JTextField tf_pa_h;
+	private JTextField tf_pa_m;
+	private JTextField tf_pe_h;
+	private JTextField tf_pe_m;
+	private JLabel lblPauseanfang;
+	private JLabel lblPauseended;
+	private JComboBox<String> cb_pause;
 	
 	public EingabenAendern_Gui(Rectangle bounds){
 		InitEingabenAendern_GUI();
@@ -61,7 +77,7 @@ public class EingabenAendern_Gui extends JFrame {
 		tF_TagBeenden = new JTextField();
 		tF_TagBeenden.setEnabled(!temp.isEmpty());		
 		tF_TagBeenden.setText(temp);
-		tF_TagBeenden.setBounds(177, 45, 116, 22);
+		tF_TagBeenden.setBounds(177, 183, 116, 22);
 		contentPane.add(tF_TagBeenden);
 		tF_TagBeenden.setColumns(10);
 		
@@ -75,6 +91,32 @@ public class EingabenAendern_Gui extends JFrame {
 				if(!tF_TagBeenden.getText().isEmpty()) {
 					Controller.getController().setTagEnde(Controller.getController().getCalFromZeitAktuell(tF_TagBeenden.getText()));
 				}
+				
+				if(Controller.getController().getToday() != null) {
+					Calendar c_pa = (Calendar)getSelectedPause().getPauseStart().clone();
+					Calendar c_pe = (Calendar)getSelectedPause().getPauseEnde().clone();
+					
+					if(!tf_pa_h.getText().isEmpty() && !tf_pa_m.getText().isEmpty()) {
+						c_pa.set(Calendar.HOUR_OF_DAY, Integer.parseInt(tf_pa_h.getText()));
+						c_pa.set(Calendar.MINUTE, Integer.parseInt(tf_pa_m.getText()));
+					}
+					
+					if(!tf_pe_h.getText().isEmpty() && !tf_pe_m.getText().isEmpty()) {
+						c_pe.set(Calendar.HOUR_OF_DAY, Integer.parseInt(tf_pe_h.getText()));
+						c_pe.set(Calendar.MINUTE, Integer.parseInt(tf_pe_m.getText()));
+					}
+					
+					/*
+					 * Überprüfung
+					 * 
+					 * - Pauseanfang und Pauseende zwischen Taganfang und Tagende
+					 * - PauseAnfang und PauseEnde NICHT inerhalb von anderen Pausen
+					 */
+					
+					getSelectedPause().setPauseStart(c_pa);
+					getSelectedPause().setPauseEnde(c_pe);
+				}
+				
 				setVisible(false);
 				Main_Gui.getMainGui().showWindow(getBounds());
 			}
@@ -87,7 +129,7 @@ public class EingabenAendern_Gui extends JFrame {
 		contentPane.add(lbl_TagBegonnenUm);
 		
 		lblTagBeendetUm = new JLabel("Tag beendet um:");
-		lblTagBeendetUm.setBounds(12, 48, 133, 16);
+		lblTagBeendetUm.setBounds(12, 186, 133, 16);
 		contentPane.add(lblTagBeendetUm);
 		
 		btn_Abbrechen = new JButton("Abbrechen");
@@ -100,5 +142,97 @@ public class EingabenAendern_Gui extends JFrame {
 		});
 		btn_Abbrechen.setBounds(260, 218, 97, 25);
 		contentPane.add(btn_Abbrechen);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(12, 42, 300, 122);
+		contentPane.add(panel);
+		panel.setLayout(null);
+		
+		cb_pause = new JComboBox<String>();
+		cb_pause.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				setPauseFields(getSelectedPause());
+			}
+		});
+		cb_pause.setBounds(12, 13, 276, 22);
+		panel.add(cb_pause);
+		
+		tf_pa_h = new JTextField();
+		tf_pa_h.setEditable(false);
+		tf_pa_h.setBounds(206, 48, 35, 22);
+		panel.add(tf_pa_h);
+		tf_pa_h.setColumns(10);
+		
+		tf_pa_m = new JTextField();
+		tf_pa_m.setEditable(false);
+		tf_pa_m.setColumns(10);
+		tf_pa_m.setBounds(253, 48, 35, 22);
+		panel.add(tf_pa_m);
+		
+		JLabel lblNewLabel = new JLabel(":");
+		lblNewLabel.setBounds(244, 48, 5, 22);
+		panel.add(lblNewLabel);
+		
+		tf_pe_h = new JTextField();
+		tf_pe_h.setEditable(false);
+		tf_pe_h.setColumns(10);
+		tf_pe_h.setBounds(206, 87, 35, 22);
+		panel.add(tf_pe_h);
+		
+		JLabel label = new JLabel(":");
+		label.setBounds(244, 87, 5, 22);
+		panel.add(label);
+		
+		tf_pe_m = new JTextField();
+		tf_pe_m.setEditable(false);
+		tf_pe_m.setColumns(10);
+		tf_pe_m.setBounds(253, 87, 35, 22);
+		panel.add(tf_pe_m);
+		
+		lblPauseanfang = new JLabel("Anfang der Pause");
+		lblPauseanfang.setBounds(12, 48, 113, 22);
+		panel.add(lblPauseanfang);
+		
+		lblPauseended = new JLabel("Ende der Pause");
+		lblPauseended.setBounds(12, 90, 113, 22);
+		panel.add(lblPauseended);
+		
+		/*
+		 * READ PAUSE METHODE
+		 */
+		
+		if(Controller.getController().getToday() != null) {
+			for(Pause p : Controller.getController().getToday().getPausenListe()) {
+				cb_pause.addItem("Pause " + p.getPauseID() + " von " + Controller.getController().zeitAktuell(p.getPauseStart()) 
+						+ " bis " + Controller.getController().zeitAktuell(p.getPauseEnde()));				
+			}
+		}
+	}
+	
+	private void setPauseFields(Pause p) {
+		tf_pa_h.setEditable(true);
+		tf_pa_m.setEditable(true);
+		tf_pe_h.setEditable(true);
+		tf_pe_m.setEditable(true);
+		
+		tf_pa_h.setText("" + p.getPauseStart().get(Calendar.HOUR_OF_DAY));
+		tf_pa_m.setText("" + p.getPauseStart().get(Calendar.MINUTE));
+		tf_pe_h.setText("" + p.getPauseEnde().get(Calendar.HOUR_OF_DAY));
+		tf_pe_m.setText("" + p.getPauseEnde().get(Calendar.MINUTE));
+		
+	}
+	
+	private Pause getSelectedPause() {
+		int id = 0;
+		String cb_string = (String)cb_pause.getSelectedItem();
+		id = Integer.parseInt(cb_string.split(" ")[1]);
+		if(Controller.getController().getToday() != null) {
+			for(Pause p : Controller.getController().getToday().getPausenListe()) {
+				if(p.getPauseID() == id) {
+					return p;
+				}
+			}
+		}
+		return null;
 	}
 }
