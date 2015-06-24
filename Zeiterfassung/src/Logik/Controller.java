@@ -25,7 +25,6 @@ public class Controller {
 		return singleton;
 	}
 
-	private final String DATEINAME = "Zeiterfassung.imp";
 	private final String PREFIXE = "TE#TA#PA#PE";
 
 	// private LinkedHashMap<String, Tag> dateMap;
@@ -130,7 +129,7 @@ public class Controller {
 	}
 	
 	public boolean importData() {
-		File file = new File(DATEINAME);
+		File file = new File(Config.getConfig().getValue(Config.stringConfigValues.IMPORTPFAD));
 		int tag = 0, monat = 0, jahr = 0;
 		String[] zeit = new String[0], datum = new String[0];
 		String zeile;
