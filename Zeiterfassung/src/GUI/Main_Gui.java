@@ -212,7 +212,7 @@ public class Main_Gui extends JFrame {
 		JMenuItem mntmAlleDatenAnzeigen = new JMenuItem("Alle Daten anzeigen");
 		mntmAlleDatenAnzeigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new AllData_Gui();
+				new AllData_Gui(getBounds());
 				setVisible(false);
 			}
 		});
