@@ -21,6 +21,7 @@ import javax.swing.JSpinner;
 
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class EingabenAendern_Gui extends JFrame {
@@ -113,8 +114,33 @@ public class EingabenAendern_Gui extends JFrame {
 					 * - PauseAnfang und PauseEnde NICHT inerhalb von anderen Pausen
 					 */
 					
-					getSelectedPause().setPauseStart(c_pa);
-					getSelectedPause().setPauseEnde(c_pe);
+					boolean allTestsPassed = true;
+					ArrayList<Boolean> testPassed = new ArrayList<Boolean>();
+					
+					testPassed.add(Controller.getController().getTagAnfang().before(c_pa));
+					testPassed.add(Controller.getController().getTagEnde().after(c_pe));
+					testPassed.add(c_pa.before(c_pe));
+					
+					for(Pause p : Controller.getController().getToday().getPausenListe()){
+						if(p.equals(getSelectedPause())){
+							continue;
+						}
+						testPassed.add(!(p.getPauseStart().before(c_pa) && p.getPauseEnde().after(c_pa)));
+						testPassed.add(!(p.getPauseStart().before(c_pe) && p.getPauseEnde().after(c_pe)));
+					}
+							
+					
+					for(Boolean b : testPassed) {
+						if(!b) {
+							allTestsPassed = false;
+							break;
+						}
+					}
+					
+					if (allTestsPassed) {
+						getSelectedPause().setPauseStart(c_pa);
+						getSelectedPause().setPauseEnde(c_pe);
+					}
 				}
 				
 				setVisible(false);
