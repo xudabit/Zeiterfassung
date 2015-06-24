@@ -1,4 +1,5 @@
 package Logik;
+import java.awt.List;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -10,8 +11,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Set;
 
 public class Controller {
 	private static Controller singleton = null;
@@ -385,14 +388,25 @@ public class Controller {
 	
 	public String getAllData() {
 		String output = "";
-		for(String s : dateMap.keySet()) {
+		ArrayList<String> keys = new ArrayList<String>();
+		keys.addAll(dateMap.keySet());
+		java.util.Collections.sort(keys);
+		for(String s : keys) {
 			output +="Datum: " + datumAktuell(dateMap.get(s).getTagAnfang()) + "\n";
 			output +="Tag angefangen um\t" + zeitAktuell(dateMap.get(s).getTagAnfang()) + "\n";
 			for(Pause p : dateMap.get(s).getPausenListe()) {
 				output +="Pause angefangen um\t" + zeitAktuell(p.getPauseStart()) + "\n";
 				output +="Pause beendet um\t" + zeitAktuell(p.getPauseEnde()) + "\n";
 			}
-			output +="Tag beendet um\t" + zeitAktuell(dateMap.get(s).getTagEnde()) + "\n";
+		
+			if(dateMap.get(s).getTemp() != null) {
+				output +="Pause angefangen um\t" + zeitAktuell(dateMap.get(s).getTemp().getPauseStart()) + "\n";
+			}
+			
+			if(dateMap.get(s).getTagEnde() != null) {
+				output +="Tag beendet um\t" + zeitAktuell(dateMap.get(s).getTagEnde()) + "\n";
+			}
+			output += "-------------------------\n";
 		}
 		return output;
 	}
