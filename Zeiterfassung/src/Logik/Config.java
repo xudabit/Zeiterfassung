@@ -9,8 +9,36 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public class Config implements Serializable{
-	public static void saveConfig(File file, Config conf) {
+	
+	private static Config singleton;
+	private static final String CONFIG_FILE = "conf/config.ze";
+	public static Config getConfig() {
+		if(singleton == null) {
+			if((singleton = restoreConfig())== null) {
+				singleton = new Config();
+			}
+		}
+		return singleton;
+	}
+	
+	private Config(){}
+	
+	
+	
+	
+	
+	
+	/*
+	 * Speicherung und Widerherstellung der Konfig
+	 */
+	
+	public void saveThisConfig() {
+		Config.saveConfig(this);
+	}
+	
+	public static void saveConfig(Config conf) {
 		try {
+			File file = new File(CONFIG_FILE);
 			ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream(file));
 			o.writeObject(conf);
 			o.close();
@@ -19,8 +47,9 @@ public class Config implements Serializable{
 		}
 	}
 	
-	public static Config restoreConfig(File file) {
+	public static Config restoreConfig() {
 		try {
+			File file = new File(CONFIG_FILE);
 			ObjectInputStream i = new ObjectInputStream(new FileInputStream(file));
 			Config conf = (Config)i.readObject();
 			i.close();
@@ -32,4 +61,7 @@ public class Config implements Serializable{
 		}
 		return null;
 	}
+	/*
+	 * --- ENDE ---
+	 */
 }
