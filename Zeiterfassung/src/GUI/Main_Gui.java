@@ -193,6 +193,15 @@ public class Main_Gui extends JFrame {
 			}
 		});
 		mnNewMenu.add(mntmSpeichern);
+		
+		JMenuItem mntmImport = new JMenuItem("Import");
+		mnNewMenu.add(mntmImport);
+		mntmImport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Controller.getController().importData();
+				updateView();
+			}
+		});
 		mnNewMenu.add(mntmBeenden);
 
 		JMenu mnBearbeiten = new JMenu("Bearbeiten");
@@ -271,15 +280,6 @@ public class Main_Gui extends JFrame {
 				setVisible(false);
 			}
 		});
-		
-		JMenuItem mntmImport = new JMenuItem("Import");
-		mntmImport.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				Controller.getController().importData();
-				updateView();
-			}
-		});
-		menuBar.add(mntmImport);
 		menuBar.add(mntmNewMenuItem_1);
 
 		JMenu mnHilfe = new JMenu("Hilfe");
