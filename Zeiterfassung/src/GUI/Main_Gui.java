@@ -254,7 +254,7 @@ public class Main_Gui extends JFrame {
 		mntmZeitenndern.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				EingabenAendern_GUI eA = new EingabenAendern_GUI(getBounds());
+				EingabenAendern_Gui eA = new EingabenAendern_Gui(getBounds());
 				eA.setVisible(true);
 				setVisible(false);
 			}
@@ -266,7 +266,7 @@ public class Main_Gui extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (!Controller.getController().getDateMap().isEmpty()) {
-					Statistik_GUI s_gui = new Statistik_GUI(getBounds());
+					Statistik_Gui s_gui = new Statistik_Gui(getBounds());
 					setVisible(false);
 					s_gui.setVisible(true);
 					s_gui.setLabel(Controller.getController().findefAZ());

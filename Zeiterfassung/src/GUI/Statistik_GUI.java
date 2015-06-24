@@ -10,7 +10,7 @@ import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class Statistik_GUI extends JFrame {
+public class Statistik_Gui extends JFrame {
 
 	/**
 	 * Statistik_GUI
@@ -24,7 +24,7 @@ public class Statistik_GUI extends JFrame {
 	private JLabel lbl_AnzahlPausen;
 	private JLabel lbl_dAPausen;
 	
-	public Statistik_GUI(Rectangle bounds){
+	public Statistik_Gui(Rectangle bounds){
 		InitStatistik_GUI();
 		setBounds(bounds);
 	}

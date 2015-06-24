@@ -14,7 +14,7 @@ import javax.swing.JLabel;
 
 import Logik.Controller;
 
-public class EingabenAendern_GUI extends JFrame {
+public class EingabenAendern_Gui extends JFrame {
 
 	/**
 	 * EingabenAendern_GUI
@@ -27,7 +27,7 @@ public class EingabenAendern_GUI extends JFrame {
 	private JLabel lblTagBeendetUm;
 	private JButton btn_Abbrechen;
 	
-	public EingabenAendern_GUI(Rectangle bounds){
+	public EingabenAendern_Gui(Rectangle bounds){
 		InitEingabenAendern_GUI();
 		setBounds(bounds);
 	}
