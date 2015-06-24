@@ -117,9 +117,7 @@ public class Controller {
 			ObjectOutputStream o = new ObjectOutputStream(
 					new FileOutputStream(
 							new File("ausgabe.ze")));
-			for(String s : dateMap.keySet()) {
-				o.writeObject(dateMap.get(s));
-			}
+			o.writeObject(dateMap);
 			o.close();
 			conf.saveThisConfig();
 		} catch (IOException ex) {
@@ -201,6 +199,7 @@ public class Controller {
 		return true;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void readData() {
 		dateMap = new HashMap<String, Tag>();
 		try {
@@ -211,19 +210,15 @@ public class Controller {
 			FileInputStream fs = new FileInputStream(f);
 			ObjectInputStream i = new ObjectInputStream(fs);
 
-			//File.exists()
-			while(fs.available() > 0) {
-				Tag tag = (Tag)i.readObject();
-				dateMap.put(datumAktuell(tag.getTagAnfang()), tag);
-			}
+			dateMap = (HashMap<String, Tag>)i.readObject();
+			
 			i.close();
 			
 		} catch (IOException ex) {
 			System.err.println(ex.getMessage());
 		} catch (ClassNotFoundException ex) {
 			System.err.println(ex.getMessage());
-		}
-		
+		}		
 	}
 
 	public String getTextForToday() {
