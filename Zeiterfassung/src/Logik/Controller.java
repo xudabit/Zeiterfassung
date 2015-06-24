@@ -118,7 +118,7 @@ public class Controller {
 		try {
 			ObjectOutputStream o = new ObjectOutputStream(
 					new FileOutputStream(
-							new File("ausgabe.ze")));
+							new File(Config.getConfig().getValue(Config.stringConfigValues.AUSGABEPFAD))));
 			o.writeObject(dateMap);
 			o.close();
 			conf.saveThisConfig();
@@ -205,7 +205,8 @@ public class Controller {
 	public void readData() {
 		dateMap = new HashMap<String, Tag>();
 		try {
-			File f = new File("ausgabe.ze");
+			File f = new File(Config.getConfig().getValue(Config.stringConfigValues.AUSGABEPFAD));
+			f.getParentFile().mkdirs();
 			if(!f.exists())
 				return;
 			

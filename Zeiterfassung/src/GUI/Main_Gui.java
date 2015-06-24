@@ -11,6 +11,7 @@ import java.awt.TrayIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
+import java.net.URL;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -143,8 +144,7 @@ public class Main_Gui extends JFrame {
 			Image image = null;
 
 			try {
-				image = ImageIO.read(new File(Config.getConfig().getValue(
-						Config.stringConfigValues.ICONPFAD)));
+				image = ImageIO.read(ClassLoader.getSystemResource(Config.getConfig().getValue(Config.stringConfigValues.ICONPFAD)));
 			} catch (IOException ex) {
 				System.out.println(ex.getMessage());
 			}
@@ -162,21 +162,24 @@ public class Main_Gui extends JFrame {
 				mi_map.put(arr[0], temp);
 				popup.add(temp);
 			}
-
-			icon = new TrayIcon(image, "Zeiterfassung", popup);
-			icon.setImageAutoSize(true);
 			ActionListener trayListener = new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					setVisible(!isVisible());
 				}
 			};
-			try {
-				icon.addActionListener(trayListener);
-				tray.add(icon);
-
-			} catch (AWTException ex) {
-				System.err.println(ex.getMessage());
+			
+			if(image != null) {
+				icon = new TrayIcon(image, "Zeiterfassung", popup);
+				icon.setImageAutoSize(true);
+			
+				try {
+					icon.addActionListener(trayListener);
+					tray.add(icon);
+	
+				} catch (AWTException ex) {
+					System.err.println(ex.getMessage());
+				}
 			}
 		}
 		JMenuBar menuBar = new JMenuBar();
