@@ -226,7 +226,7 @@ public class Main_Gui extends JFrame {
 		mntmZeitenndern.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				EingabenAendern_GUI eA = new EingabenAendern_GUI(getBounds());
+				EingabenAendern_Gui eA = new EingabenAendern_Gui(getBounds());
 				eA.setVisible(true);
 				setVisible(false);
 			}
