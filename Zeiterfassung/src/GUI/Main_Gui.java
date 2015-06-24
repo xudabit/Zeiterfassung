@@ -50,6 +50,7 @@ public class Main_Gui extends JFrame {
 	 * Main_Gui
 	 */
 	private static final long serialVersionUID = 1L;
+	private final double version = 0.0624;
 
 	// Ja == 0; Nein == 1
 	private int optionJaNein;
@@ -226,7 +227,7 @@ public class Main_Gui extends JFrame {
 						JOptionPane
 								.showMessageDialog(
 										null,
-										"Programm zur Zeiterfassung der t\u00E4glichen Arbeitszeit und Auflistung der Pausen.",
+										"Version: " + version + "\n\nErstellt von Marcel Knoth" + "\nJuni 2015",
 										"Information", JOptionPane.INFORMATION_MESSAGE);
 
 					}
