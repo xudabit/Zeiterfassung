@@ -216,6 +216,22 @@ public class Main_Gui extends JFrame {
 			}
 		});
 		mnNewMenu.add(mntmAlleDatenAnzeigen);
+		mnNewMenu.addSeparator();
+		
+				JMenuItem mntmInfo = new JMenuItem("Info");
+				mnNewMenu.add(mntmInfo);
+				mntmInfo.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+
+						JOptionPane
+								.showMessageDialog(
+										null,
+										"Programm zur Zeiterfassung der t\u00E4glichen Arbeitszeit und Auflistung der Pausen.",
+										"Information", JOptionPane.INFORMATION_MESSAGE);
+
+					}
+				});
+		mnNewMenu.addSeparator();
 		mnNewMenu.add(mntmBeenden);
 
 		JMenu mnBearbeiten = new JMenu("Bearbeiten");
@@ -337,23 +353,6 @@ public class Main_Gui extends JFrame {
 			}
 		});
 		menuBar.add(mntmNewMenuItem_1);
-
-		JMenu mnHilfe = new JMenu("Hilfe");
-		menuBar.add(mnHilfe);
-
-		JMenuItem mntmInfo = new JMenuItem("Info");
-		mntmInfo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-
-				JOptionPane
-						.showMessageDialog(
-								null,
-								"Programm zur Zeiterfassung der t\u00E4glichen Arbeitszeit und Auflistung der Pausen.",
-								"Information", JOptionPane.INFORMATION_MESSAGE);
-
-			}
-		});
-		mnHilfe.add(mntmInfo);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
