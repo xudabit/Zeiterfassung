@@ -202,6 +202,15 @@ public class Main_Gui extends JFrame {
 				updateView();
 			}
 		});
+		
+		JMenuItem mntmAlleDatenAnzeigen = new JMenuItem("Alle Daten anzeigen");
+		mntmAlleDatenAnzeigen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new AllData_Gui();
+				setVisible(false);
+			}
+		});
+		mnNewMenu.add(mntmAlleDatenAnzeigen);
 		mnNewMenu.add(mntmBeenden);
 
 		JMenu mnBearbeiten = new JMenu("Bearbeiten");

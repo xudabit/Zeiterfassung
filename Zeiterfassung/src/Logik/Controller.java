@@ -382,4 +382,18 @@ public class Controller {
 	public void deleteToday() {
 		dateMap.remove(datumAktuell(Calendar.getInstance()));
 	}
+	
+	public String getAllData() {
+		String output = "";
+		for(String s : dateMap.keySet()) {
+			output +="Datum: " + datumAktuell(dateMap.get(s).getTagAnfang()) + "\n";
+			output +="Tag angefangen um\t" + zeitAktuell(dateMap.get(s).getTagAnfang()) + "\n";
+			for(Pause p : dateMap.get(s).getPausenListe()) {
+				output +="Pause angefangen um\t" + zeitAktuell(p.getPauseStart()) + "\n";
+				output +="Pause beendet um\t" + zeitAktuell(p.getPauseEnde()) + "\n";
+			}
+			output +="Tag beendet um\t" + zeitAktuell(dateMap.get(s).getTagEnde()) + "\n";
+		}
+		return output;
+	}
 }
