@@ -33,14 +33,16 @@ public class Controller {
 	private HashMap<String, String> prefixMap;
 
 	private Controller() {
+		conf = Config.getConfig();
+		
 		dateMap = new HashMap<String, Tag>();
 		prefixMap = new HashMap<String, String>();
 		prefixMap.put("TA", "Tag angefangen um:\t");
 		prefixMap.put("TE", "Tag beendet um:\t");
 		prefixMap.put("PA", "Pause angefangen um:\t");
 		prefixMap.put("PE", "Pause beendet um:\t");
-
-		leseAusDatei();
+		
+		readData();
 	}
 
 	public HashMap<String, Tag> getDateMap() {
@@ -126,8 +128,7 @@ public class Controller {
 		return true;
 	}
 	
-	public boolean leseAusDatei() {
-		dateMap = new HashMap<String, Tag>();
+	public boolean importData() {
 		File file = new File(DATEINAME);
 		int tag = 0, monat = 0, jahr = 0;
 		String[] zeit = new String[0], datum = new String[0];
@@ -186,20 +187,22 @@ public class Controller {
 				}
 			}
 			reader.close();
-			readData();
+			
 			
 		} catch (IOException ex) {
 			System.err.println(ex.getMessage());
+			return false;
 		} catch (NumberFormatException ex) {
 			System.err.println(ex.getMessage()); // Datei auslesen
 													// fehlgeschlagen aufgrund
 													// fehlerhafter Daten
+			return false;
 		}
-		return false;
+		return true;
 	}
 	
 	public void readData() {
-		conf = Config.getConfig();
+		dateMap = new HashMap<String, Tag>();
 		try {
 			File f = new File("ausgabe.ze");
 			if(!f.exists())

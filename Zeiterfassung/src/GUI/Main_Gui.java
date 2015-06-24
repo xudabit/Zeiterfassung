@@ -185,6 +185,14 @@ public class Main_Gui extends JFrame {
 				System.exit(0);
 			}
 		});
+		
+		JMenuItem mntmSpeichern = new JMenuItem("Speichern");
+		mntmSpeichern.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Controller.getController().schreibeInDatei();
+			}
+		});
+		mnNewMenu.add(mntmSpeichern);
 		mnNewMenu.add(mntmBeenden);
 
 		JMenu mnBearbeiten = new JMenu("Bearbeiten");
@@ -263,6 +271,15 @@ public class Main_Gui extends JFrame {
 				setVisible(false);
 			}
 		});
+		
+		JMenuItem mntmImport = new JMenuItem("Import");
+		mntmImport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Controller.getController().importData();
+				updateView();
+			}
+		});
+		menuBar.add(mntmImport);
 		menuBar.add(mntmNewMenuItem_1);
 
 		JMenu mnHilfe = new JMenu("Hilfe");
