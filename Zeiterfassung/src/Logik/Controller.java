@@ -259,7 +259,14 @@ public class Controller {
 	}
 
 	public long getUeberstunden() {
-		return (getGesamtAZ() - ((dateMap.keySet().size() * 8) * 3600000));
+		int anzahlTage = 0;
+		
+		for (String s : dateMap.keySet()) {
+			if(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR) == dateMap.get(s).getTagAnfang().get(Calendar.WEEK_OF_YEAR))
+				anzahlTage++;
+		}
+		
+		return (getGesamtAZ() - ((anzahlTage * 8) * 3600000));
 	}
 
 	/*
