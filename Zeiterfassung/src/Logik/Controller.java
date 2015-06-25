@@ -52,15 +52,15 @@ public class Controller {
 	}
 
 	public void setTagAnfang(Calendar ta) {
-		if (!dateMap.containsKey(datumAktuell(Calendar.getInstance()))) {
-			dateMap.put(datumAktuell(Calendar.getInstance()), new Tag());
+		if (!dateMap.containsKey(getDatestringFromCalendar(Calendar.getInstance()))) {
+			dateMap.put(getDatestringFromCalendar(Calendar.getInstance()), new Tag());
 		}
 		getToday().setTagAnfang(ta);
 		schreibeInDatei();
 	}
 
 	public Tag getToday() {
-		return dateMap.get(datumAktuell(Calendar.getInstance()));
+		return dateMap.get(getDatestringFromCalendar(Calendar.getInstance()));
 	}
 
 	public Calendar getTagAnfang() {
@@ -93,7 +93,7 @@ public class Controller {
 	}
 
 	// Aktuelle Zeit abfragen
-	public String zeitAktuell(Calendar d) {
+	public String getTimestringFromCalendar(Calendar d) {
 		if (d == null)
 			return "";
 
@@ -102,7 +102,7 @@ public class Controller {
 	}
 
 	// Aktuelles/Heutiges Datum abfragen
-	public String datumAktuell(Calendar d) {
+	public String getDatestringFromCalendar(Calendar d) {
 		SimpleDateFormat da = new SimpleDateFormat("dd.MM.YYYY");
 		return da.format(d.getTime());
 	}
@@ -228,19 +228,19 @@ public class Controller {
 
 		if (getToday() != null) {
 			text += (prefixMap.get("TA")
-					+ zeitAktuell(getToday().getTagAnfang()) + "\n");
+					+ getTimestringFromCalendar(getToday().getTagAnfang()) + "\n");
 
 			for (Pause p : getToday().getPausenListe()) {
-				text += (prefixMap.get("PA") + zeitAktuell(p.getPauseStart()) + "\n");
-				text += (prefixMap.get("PE") + zeitAktuell(p.getPauseEnde()) + "\n");
+				text += (prefixMap.get("PA") + getTimestringFromCalendar(p.getPauseStart()) + "\n");
+				text += (prefixMap.get("PE") + getTimestringFromCalendar(p.getPauseEnde()) + "\n");
 			}
 			if (getToday().getTemp() != null)
 				text += (prefixMap.get("PA")
-						+ zeitAktuell(getToday().getTemp().getPauseStart()) + "\n");
+						+ getTimestringFromCalendar(getToday().getTemp().getPauseStart()) + "\n");
 
 			if (getToday().getTagEnde() != null)
 				text += (prefixMap.get("TE")
-						+ zeitAktuell(getToday().getTagEnde()) + "\n");
+						+ getTimestringFromCalendar(getToday().getTagEnde()) + "\n");
 		}
 
 		if (text.equals(""))
@@ -280,7 +280,7 @@ public class Controller {
 			}
 		}
 
-		return zeitAktuell(zp1);
+		return getTimestringFromCalendar(zp1);
 	}
 
 	public String getTimeForLabel(long ms) {
@@ -367,7 +367,7 @@ public class Controller {
 	}
 	
 	public void deleteToday() {
-		dateMap.remove(datumAktuell(Calendar.getInstance()));
+		dateMap.remove(getDatestringFromCalendar(Calendar.getInstance()));
 	}
 	
 	public String getAllData() {
@@ -376,19 +376,19 @@ public class Controller {
 		keys.addAll(dateMap.keySet());
 		java.util.Collections.sort(keys);
 		for(String s : keys) {
-			output +="Datum: " + datumAktuell(dateMap.get(s).getTagAnfang()) + "\n";
-			output +="Tag angefangen um\t" + zeitAktuell(dateMap.get(s).getTagAnfang()) + "\n";
+			output +="Datum: " + getDatestringFromCalendar(dateMap.get(s).getTagAnfang()) + "\n";
+			output +="Tag angefangen um\t" + getTimestringFromCalendar(dateMap.get(s).getTagAnfang()) + "\n";
 			for(Pause p : dateMap.get(s).getPausenListe()) {
-				output +="Pause angefangen um\t" + zeitAktuell(p.getPauseStart()) + "\n";
-				output +="Pause beendet um\t" + zeitAktuell(p.getPauseEnde()) + "\n";
+				output +="Pause angefangen um\t" + getTimestringFromCalendar(p.getPauseStart()) + "\n";
+				output +="Pause beendet um\t" + getTimestringFromCalendar(p.getPauseEnde()) + "\n";
 			}
 		
 			if(dateMap.get(s).getTemp() != null) {
-				output +="Pause angefangen um\t" + zeitAktuell(dateMap.get(s).getTemp().getPauseStart()) + "\n";
+				output +="Pause angefangen um\t" + getTimestringFromCalendar(dateMap.get(s).getTemp().getPauseStart()) + "\n";
 			}
 			
 			if(dateMap.get(s).getTagEnde() != null) {
-				output +="Tag beendet um\t" + zeitAktuell(dateMap.get(s).getTagEnde()) + "\n";
+				output +="Tag beendet um\t" + getTimestringFromCalendar(dateMap.get(s).getTagEnde()) + "\n";
 			}
 			output += "-------------------------\n";
 		}
