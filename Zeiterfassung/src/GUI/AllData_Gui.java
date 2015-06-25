@@ -59,10 +59,13 @@ public class AllData_Gui extends JFrame {
 		
 		ta_data.setText(Controller.getController().getAllData());
 		
-		JComboBox cB_Datum = new JComboBox();
+		JComboBox<String> cB_Datum = new JComboBox<String>();	
 		cB_Datum.setBounds(12, 13, 216, 22);
 		contentPane.add(cB_Datum);
-		System.out.println(Controller.getController().getDatum());
+		
+		for(String s : Controller.getController().getDateMap().keySet()) {
+			cB_Datum.addItem(s);
+		}
 		
 		JButton btn_Delete = new JButton("Delete");
 		btn_Delete.addActionListener(new ActionListener() {
