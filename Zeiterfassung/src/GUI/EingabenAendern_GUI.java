@@ -118,8 +118,8 @@ public class EingabenAendern_Gui extends JFrame {
 					} else {
 						day.setTagEnde(
 								Controller.getController()
-										.getCalFromZeitAktuell(
-												tF_TagBeenden.getText()));
+										.getCalFromZeit(
+												tF_TagBeenden.getText(), c_ta));
 					}
 					if (tF_TagBeenden.getText().isEmpty()
 							|| !Controller.getController().isTELast(c_te, day)) {
@@ -127,8 +127,8 @@ public class EingabenAendern_Gui extends JFrame {
 					} else {
 						day.setTagAnfang(
 								Controller.getController()
-										.getCalFromZeitAktuell(
-												tF_tagBeginnen.getText()));
+										.getCalFromZeit(
+												tF_tagBeginnen.getText(), c_te));
 					}
 
 					if(getSelectedPause() != null) {
@@ -346,7 +346,10 @@ public class EingabenAendern_Gui extends JFrame {
 
 		tF_tagBeginnen.setEnabled(false);
 		tF_TagBeenden.setEnabled(false);
-
+		
+		if(day == null)
+			return;
+		
 		if (day.getTagAnfang() != null) {
 			temp = Controller.getController().getTimestringFromCalendar(day.getTagAnfang());
 			tF_tagBeginnen.setText(temp);
