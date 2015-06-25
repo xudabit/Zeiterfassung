@@ -311,10 +311,10 @@ public class EingabenAendern_Gui extends JFrame {
 				cb_pause.addItem("Pause "
 						+ p.getPauseID()
 						+ " von "
-						+ Controller.getController().zeitAktuell(
+						+ Controller.getController().getTimestringFromCalendar(
 								p.getPauseStart())
 						+ " bis "
-						+ Controller.getController().zeitAktuell(
+						+ Controller.getController().getTimestringFromCalendar(
 								p.getPauseEnde()));
 			}
 		}
@@ -332,13 +332,13 @@ public class EingabenAendern_Gui extends JFrame {
 		tF_TagBeenden.setEnabled(false);
 
 		if (Controller.getController().getTagAnfang() != null) {
-			temp = Controller.getController().zeitAktuell(
+			temp = Controller.getController().getTimestringFromCalendar(
 					Controller.getController().getTagAnfang());
 			tF_tagBeginnen.setText(temp);
 			tF_tagBeginnen.setEnabled(!temp.isEmpty());
 		}
 		if (Controller.getController().getTagEnde() != null) {
-			temp = Controller.getController().zeitAktuell(
+			temp = Controller.getController().getTimestringFromCalendar(
 					Controller.getController().getTagEnde());
 			tF_TagBeenden.setText(temp);
 			tF_TagBeenden.setEnabled(!temp.isEmpty());

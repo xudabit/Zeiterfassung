@@ -396,7 +396,7 @@ public class Main_Gui extends JFrame {
 		lbl_AktuellesDatumRechtsbuendig
 				.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_AktuellesDatumRechtsbuendig.setText(Controller.getController()
-				.datumAktuell(Calendar.getInstance()));
+				.getDatestringFromCalendar(Calendar.getInstance()));
 		contentPane.add(lbl_AktuellesDatumRechtsbuendig);
 
 		// Anzeige Text: SAZnP = Summe Arbeitszeit nach Pause
