@@ -44,8 +44,6 @@ public class EingabenAendern_Gui extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField tF_tagBeginnen;
-	private JTextField tF_TagBeenden;
 	private JLabel lbl_TagBegonnenUm;
 	private JLabel lblTagBeendetUm;
 	private JButton btn_Abbrechen;
@@ -61,6 +59,10 @@ public class EingabenAendern_Gui extends JFrame {
 	private JButton btnNewButton;
 
 	private Tag day;
+	private JTextField tf_ta_m;
+	private JTextField tf_ta_h;
+	private JTextField tf_te_m;
+	private JTextField tf_te_h;
 
 	/**
 	 * @wbp.parser.constructor
@@ -99,15 +101,6 @@ public class EingabenAendern_Gui extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		tF_tagBeginnen = new JTextField();
-		tF_tagBeginnen.setBounds(177, 10, 116, 22);
-		contentPane.add(tF_tagBeginnen);
-		tF_tagBeginnen.setColumns(10);
-		tF_TagBeenden = new JTextField();
-		tF_TagBeenden.setBounds(177, 42, 116, 22);
-		contentPane.add(tF_TagBeenden);
-		tF_TagBeenden.setColumns(10);
-
 		JButton btn_Speichern = new JButton("Speichern");
 		btn_Speichern.addActionListener(new ActionListener() {
 			@Override
@@ -115,13 +108,13 @@ public class EingabenAendern_Gui extends JFrame {
 				boolean allTestsPassed = true;
 				Calendar c_pa = null, c_pe = null, c_ta = null, c_te = null;
 
-				if (!tF_tagBeginnen.getText().isEmpty()) {
+				if (!tf_ta_h.getText().isEmpty() && !tf_ta_m.getText().isEmpty()) {
 					c_ta = Controller.getController().getCalFromZeit(
-							tF_tagBeginnen.getText(), day.getTagAnfang());
+							tf_ta_h.getText() + ":" + tf_ta_m.getText(), day.getTagAnfang());
 				}
-				if (!tF_TagBeenden.getText().isEmpty()) {
+				if (!tf_te_h.getText().isEmpty() && !tf_te_m.getText().isEmpty()) {
 					c_te = Controller.getController().getCalFromZeit(
-							tF_TagBeenden.getText(), day.getTagEnde());
+							tf_te_h.getText() + ":" + tf_te_m.getText(), day.getTagEnde());
 				}
 
 				if (day != null) {
@@ -129,13 +122,13 @@ public class EingabenAendern_Gui extends JFrame {
 						allTestsPassed = false;
 					} else {
 						day.setTagAnfang(Controller.getController()
-								.getCalFromZeit(tF_tagBeginnen.getText(), c_ta));
+								.getCalFromZeit(tf_ta_h.getText() + ":" + tf_ta_m.getText(), c_ta));
 					}
 					if (!Controller.getController().isTELast(c_te, day)) {
 						allTestsPassed = false;
 					} else {
 						day.setTagEnde(Controller.getController()
-								.getCalFromZeit(tF_TagBeenden.getText(), c_te));
+								.getCalFromZeit(tf_te_h.getText() + ":" + tf_te_m.getText(), c_te));
 					}
 
 					if (getSelectedPause() != null) {
@@ -338,6 +331,38 @@ public class EingabenAendern_Gui extends JFrame {
 		});
 		btn_verwerfen.setBounds(277, 218, 97, 25);
 		contentPane.add(btn_verwerfen);
+		
+		tf_ta_m = new JTextField();
+		tf_ta_m.setEditable(false);
+		tf_ta_m.setColumns(10);
+		tf_ta_m.setBounds(204, 13, 35, 22);
+		contentPane.add(tf_ta_m);
+		
+		JLabel label_2 = new JLabel(":");
+		label_2.setBounds(195, 13, 5, 22);
+		contentPane.add(label_2);
+		
+		tf_ta_h = new JTextField();
+		tf_ta_h.setEditable(false);
+		tf_ta_h.setColumns(10);
+		tf_ta_h.setBounds(157, 13, 35, 22);
+		contentPane.add(tf_ta_h);
+		
+		tf_te_m = new JTextField();
+		tf_te_m.setEditable(false);
+		tf_te_m.setColumns(10);
+		tf_te_m.setBounds(204, 45, 35, 22);
+		contentPane.add(tf_te_m);
+		
+		JLabel label_3 = new JLabel(":");
+		label_3.setBounds(195, 45, 5, 22);
+		contentPane.add(label_3);
+		
+		tf_te_h = new JTextField();
+		tf_te_h.setEditable(false);
+		tf_te_h.setColumns(10);
+		tf_te_h.setBounds(157, 45, 35, 22);
+		contentPane.add(tf_te_h);
 
 		setAllFields();
 	}
@@ -368,25 +393,20 @@ public class EingabenAendern_Gui extends JFrame {
 	}
 
 	private void setAllFields() {
-		String temp = "";
-
-		tF_tagBeginnen.setEnabled(false);
-		tF_TagBeenden.setEnabled(false);
-
 		if (day == null)
 			return;
 
 		if (day.getTagAnfang() != null) {
-			temp = Controller.getController().getTimestringFromCalendar(
-					day.getTagAnfang());
-			tF_tagBeginnen.setText(temp);
-			tF_tagBeginnen.setEnabled(!temp.isEmpty());
+			tf_ta_h.setText(addZero(day.getTagAnfang().get(Calendar.HOUR_OF_DAY)));
+			tf_ta_m.setText(addZero(day.getTagAnfang().get(Calendar.MINUTE)));
+			tf_ta_h.setEditable(true);
+			tf_ta_m.setEditable(true);
 		}
 		if (day.getTagEnde() != null) {
-			temp = Controller.getController().getTimestringFromCalendar(
-					day.getTagEnde());
-			tF_TagBeenden.setText(temp);
-			tF_TagBeenden.setEnabled(!temp.isEmpty());
+			tf_te_h.setText(addZero(day.getTagEnde().get(Calendar.HOUR_OF_DAY)));
+			tf_te_m.setText(addZero(day.getTagEnde().get(Calendar.MINUTE)));
+			tf_te_h.setEditable(true);
+			tf_te_m.setEditable(true);
 		}
 		setPauseComboBox();
 	}
