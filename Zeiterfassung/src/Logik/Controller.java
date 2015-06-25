@@ -387,6 +387,7 @@ public class Controller {
 	
 	public String getAllData(Tag t) {
 		String output = "";
+		long summePausen = 0;
 		
 		output +="Tag angefangen um\t" + getTimestringFromCalendar(t.getTagAnfang()) + "\n";
 		for(Pause p : t.getPausenListe()) {
@@ -402,6 +403,12 @@ public class Controller {
 			output +="Tag beendet um\t" + getTimestringFromCalendar(t.getTagEnde()) + "\n";
 		}
 		output += "-------------------------\n";
+		output += "Arbeitszeit:\t\t" + getTimeForLabel(t.berechneArbeitszeitInMillis()) + "\n";
+		for(Pause p : t.getPausenListe()){
+			summePausen += p.berechnePauseInMillis();
+		}
+		
+		output += "Pausendauer:\t\t" + getTimeForLabel(summePausen);
 		
 		return output;
 	}
