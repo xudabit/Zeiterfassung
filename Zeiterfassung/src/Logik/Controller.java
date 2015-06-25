@@ -324,9 +324,8 @@ public class Controller {
 	}
 
 	public Calendar getCalFromZeit(String zeit, Calendar cal) {
-		//
-		//ABFANGEN
-		//
+		if(zeit.isEmpty() || cal == null)
+			return null;
 		cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(zeit.split(":")[0]));
 		cal.set(Calendar.MINUTE, Integer.parseInt(zeit.split(":")[1]));
 		return cal;
@@ -403,7 +402,7 @@ public class Controller {
 				if(p.getPauseStart().before(ta))
 					return false;
 			}
-			if(t.getTagEnde().before(ta))
+			if(t.getTagEnde() != null && t.getTagEnde().before(ta))
 				return false;
 		}
 		return true;
@@ -411,7 +410,7 @@ public class Controller {
 	
 	public boolean isTELast(Calendar te, Tag t) {
 		if(t != null) {
-			if(t.getTagAnfang().after(te))
+			if(t.getTagAnfang() != null && t.getTagAnfang().after(te))
 				return false;
 			for(Pause p : t.getPausenListe()) {
 				if(p.getPauseEnde().after(te))
