@@ -4,6 +4,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
@@ -59,6 +60,9 @@ public class EingabenAendern_Gui extends JFrame {
 
 	private Tag day;
 
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public EingabenAendern_Gui(Rectangle bounds) {
 		day = Controller.getController().getToday();
 		InitEingabenAendern_GUI();
@@ -199,7 +203,7 @@ public class EingabenAendern_Gui extends JFrame {
 				}
 			}
 		});
-		btn_Speichern.setBounds(277, 218, 97, 25);
+		btn_Speichern.setBounds(168, 218, 97, 25);
 		contentPane.add(btn_Speichern);
 
 		lbl_TagBegonnenUm = new JLabel("Tag begonnen um: ");
@@ -310,8 +314,20 @@ public class EingabenAendern_Gui extends JFrame {
 			System.err.println(ex.getMessage());
 		}
 		panel.add(label_1);
-
-		setPauseComboBox();
+		
+		JLabel lbl_Datum = new JLabel(Controller.getController().getDatestringFromCalendar(day.getTagAnfang()));
+		lbl_Datum.setBounds(350, 13, 133, 16);
+		lbl_Datum.setHorizontalAlignment(SwingConstants.RIGHT);
+		contentPane.add(lbl_Datum);
+		
+		JButton btn_verwerfen = new JButton("Verwerfen");
+		btn_verwerfen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setAllFields();
+			}
+		});
+		btn_verwerfen.setBounds(277, 218, 97, 25);
+		contentPane.add(btn_verwerfen);
 
 		setAllFields();
 	}
@@ -362,8 +378,7 @@ public class EingabenAendern_Gui extends JFrame {
 			tF_TagBeenden.setText(temp);
 			tF_TagBeenden.setEnabled(!temp.isEmpty());
 		}
-
-		setPauseFields(getSelectedPause());
+		setPauseComboBox();
 	}
 
 	private void setPauseFields(Pause p) {
