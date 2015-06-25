@@ -40,6 +40,7 @@ public class Options_Gui extends JFrame {
 	 * Create the frame.
 	 */
 	public Options_Gui(Rectangle bounds) {
+		SysTray.getSysTray(this);
 		setTitle("Optionen");
 		addWindowListener(new WindowAdapter() {
 			@Override

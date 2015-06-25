@@ -420,6 +420,7 @@ public class Main_Gui extends JFrame {
 	}
 
 	public void showWindow(Rectangle bounds) {
+		SysTray.getSysTray(this);
 		updateView();
 		setVisible(true);
 		setBounds(bounds);

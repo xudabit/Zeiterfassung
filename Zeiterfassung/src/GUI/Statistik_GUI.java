@@ -33,7 +33,7 @@ public class Statistik_Gui extends JFrame {
 	 * Create the frame.
 	 */
 	private void InitStatistik_GUI() {
-		
+		SysTray.getSysTray(this);
 		setResizable(false);
 		setTitle("Statistik");
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
