@@ -119,7 +119,8 @@ public class Main_Gui extends JFrame {
 			}
 		};
 
-		if (Config.getConfig().getValue(Config.boolConfigValues.WARNINGOLDDATA) && Controller.getController().hasOlder(3)) {
+		if (Config.getConfig().getValue(Config.boolConfigValues.WARNINGOLDDATA)
+				&& Controller.getController().hasOlder(3)) {
 
 			optionJaNein = JOptionPane.showOptionDialog(null,
 					"Moechten Sie die Daten aelter als 2 Monate l\u00F6schen?",
@@ -131,16 +132,14 @@ public class Main_Gui extends JFrame {
 					JOptionPane.showMessageDialog(null,
 							"Daten erfolgreich geloescht.");
 				} else {
-					JOptionPane
-							.showMessageDialog(null,
-									"Daten konnten nicht geloecht werden.",
-									"Fehler beim l\u00F6schen",
-									JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,
+							"Daten konnten nicht geloecht werden.",
+							"Fehler beim l\u00F6schen",
+							JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		}
 
-		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
@@ -188,8 +187,9 @@ public class Main_Gui extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 
 				JOptionPane.showMessageDialog(null, "Version: " + version
-						+ "\n\nErstellt von Marcel Knoth und Martha Klois" + "\nJuni 2015",
-						"Information", JOptionPane.INFORMATION_MESSAGE);
+						+ "\n\nErstellt von Marcel Knoth und Martha Klois"
+						+ "\nJuni 2015", "Information",
+						JOptionPane.INFORMATION_MESSAGE);
 
 			}
 		});
@@ -274,45 +274,53 @@ public class Main_Gui extends JFrame {
 				}
 			}
 		});
-		
+
 		JMenu mnStatistik = new JMenu("Statistik");
 		menuBar.add(mnStatistik);
-		
-				JMenuItem mn_Statistik = new JMenuItem("Statistik");
-				mnStatistik.add(mn_Statistik);
-				
-				JMenu mnGraphen = new JMenu("Graphen");
-				mnStatistik.add(mnGraphen);
-				
-				JMenuItem mntmArbeitszeitWoche = new JMenuItem("Arbeitszeit (1 Woche)");
-				mntmArbeitszeitWoche.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						new Graph("Arbeitszeit (1 Woche)" , 
-								"Datum", 
-								"Arbeitszeit",
-								Graph.getDatesetArbeitszeitErreicht(),
-								//Graph.getDatesetArbeitszeit(), 
-								getBounds());
-						setVisible(false);
-					}
-				});
-				mnGraphen.add(mntmArbeitszeitWoche);
-				mn_Statistik.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						if (!Controller.getController().getDateMap().isEmpty()) {
-							new Statistik_Gui(getBounds());
-							setVisible(false);
-						} else {
-							JOptionPane
-									.showMessageDialog(
-											null,
-											"Speichern Sie mindestens einen Arbeitstag, \n damit eine Statistik erzeugt werden kann.",
-											"Fehlende Daten",
-											JOptionPane.WARNING_MESSAGE);
-						}
-					}
-				});
+
+		JMenuItem mn_Statistik = new JMenuItem("Statistik");
+		mnStatistik.add(mn_Statistik);
+
+		JMenu mnGraphen = new JMenu("Graphen");
+		mnStatistik.add(mnGraphen);
+
+		JMenuItem mntmArbeitszeitWoche = new JMenuItem("Arbeitszeit (1 Woche)");
+		mntmArbeitszeitWoche.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new Graph("Arbeitszeit (1 Woche)", "Datum", "Arbeitszeit",
+						Graph.getDatesetArbeitszeit(), getBounds());
+				setVisible(false);
+			}
+		});
+		mnGraphen.add(mntmArbeitszeitWoche);
+
+		JMenuItem mn_Arbeitszeit = new JMenuItem("Arbeitszeit");
+		mn_Arbeitszeit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new Graph("Arbeitszeit", "Datum", "Arbeitszeit", Graph
+						.getDatesetArbeitszeitGesamt(), getBounds());
+				setVisible(false);
+			}
+		});
+
+		mnGraphen.add(mn_Arbeitszeit);
+
+		mn_Statistik.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (!Controller.getController().getDateMap().isEmpty()) {
+					new Statistik_Gui(getBounds());
+					setVisible(false);
+				} else {
+					JOptionPane
+							.showMessageDialog(
+									null,
+									"Speichern Sie mindestens einen Arbeitstag, \n damit eine Statistik erzeugt werden kann.",
+									"Fehlende Daten",
+									JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		});
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -409,7 +417,7 @@ public class Main_Gui extends JFrame {
 
 	private void enableButtons() {
 		for (String s : SysTray.getSysTray(this).getKeySet()) {
-			if(!s.equals("EXIT"))
+			if (!s.equals("EXIT"))
 				SysTray.getSysTray(this).setEnabled(s, false);
 		}
 
@@ -444,6 +452,7 @@ public class Main_Gui extends JFrame {
 		setVisible(true);
 		setBounds(bounds);
 	}
+
 	private static void addPopup(Component component, final JPopupMenu popup) {
 		component.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
@@ -451,11 +460,13 @@ public class Main_Gui extends JFrame {
 					showMenu(e);
 				}
 			}
+
 			public void mouseReleased(MouseEvent e) {
 				if (e.isPopupTrigger()) {
 					showMenu(e);
 				}
 			}
+
 			private void showMenu(MouseEvent e) {
 				popup.show(e.getComponent(), e.getX(), e.getY());
 			}

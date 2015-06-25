@@ -26,16 +26,17 @@ public class Graph extends JFrame {
 
 	/**
 	 * Create the frame.
-	 */	
-	public Graph(String title, String Xtitle, String Ytitle, DefaultCategoryDataset dateset, Rectangle bounds) {
+	 */
+	public Graph(String title, String Xtitle, String Ytitle,
+			DefaultCategoryDataset dateset, Rectangle bounds) {
 		setTitle(title);
-		
+
 		SysTray.getSysTray(this);
-		
+		setResizable(false);
 		setBounds(bounds);
-		
+
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		
+
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
@@ -43,29 +44,28 @@ public class Graph extends JFrame {
 				Main_Gui.getMainGui().showWindow(getBounds());
 			}
 		});
-		
+
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
+
+		JFreeChart lineChart = ChartFactory.createLineChart(title, Xtitle,
+				Ytitle, dateset, PlotOrientation.VERTICAL, true, true, false);
+		ChartPanel chartPanel = new ChartPanel(lineChart);
+		chartPanel.setPreferredSize(new java.awt.Dimension((int) getBounds()
+				.getWidth(), (int) getBounds().getHeight()));
+		setContentPane(chartPanel);
 		
-		
-		JFreeChart lineChart = ChartFactory.createLineChart(
-				title,
-		         Xtitle,Ytitle,
-		         dateset,
-		         PlotOrientation.VERTICAL,
-		         true,true,false);
-		ChartPanel chartPanel = new ChartPanel( lineChart );
-		//chartPanel.setPreferredSize( new java.awt.Dimension( 560 , 367 ) );
-		setContentPane( chartPanel );
-		
-		setVisible(true);
 	}
+
 	
-	public static DefaultCategoryDataset getDatesetArbeitszeit( ){
+	
+	
+
+	public static DefaultCategoryDataset getDatesetArbeitszeit() {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		
+
 		/*
 		 * Daten für Dateset
 		 */
@@ -74,38 +74,33 @@ public class Graph extends JFrame {
 					.berechneArbeitszeitInMillis() / 3600000;
 			dataset.addValue(stunden, "Arbeitszeit", s);
 		}
-		for (String s : Controller.getController().getSortedKeysForActualWeek()) {
-			long pausenSumme = 0;
-			for(Pause p : Controller.getController().getDateMap().get(s).getPausenListe()) {
-				pausenSumme += p.berechnePauseInMillis();
-			}
-			double stunden = pausenSumme / 60000;
-			dataset.addValue(stunden, "Pausendauer", s);
-		}
 		/*
 		 * ---
 		 */
-		
 		return dataset;
 	}
-	
-	public static DefaultCategoryDataset getDatesetArbeitszeitErreicht( ){
+
+	public static DefaultCategoryDataset getDatesetArbeitszeitGesamt() {
+		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+		for (String s : Controller.getController().getSortedKeysForDateMap()) {
+			double stunden = Controller.getController().getDateMap().get(s)
+					.berechneArbeitszeitInMillis() / 3600000;
+			dataset.addValue(stunden, "Arbeitszeit", s);
+		}
+		return dataset;
+	}
+
+	public static DefaultCategoryDataset getDatesetArbeitszeitErreicht() {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		int arbeitszeit = 40;
-		/*
-		 * Daten für Dateset
-		 */
+
 		for (String s : Controller.getController().getSortedKeysForActualWeek()) {
 			double stunden = Controller.getController().getDateMap().get(s)
 					.berechneArbeitszeitInMillis() / 3600000;
 			arbeitszeit -= stunden;
 			dataset.addValue(arbeitszeit, "Arbeitszeit", s);
 		}
-		/*
-		 * ---
-		 */
-		
 		return dataset;
 	}
-
 }
