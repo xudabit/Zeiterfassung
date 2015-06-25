@@ -53,9 +53,6 @@ public class Main_Gui extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private final double version = 1.0;
 
-	// Ja == 0; Nein == 1
-	private int optionJaNein;
-
 	private JPanel contentPane;
 	private JTextArea textArea;
 	private JLabel lbl_AusgabeSAZnP;
@@ -117,7 +114,7 @@ public class Main_Gui extends JFrame {
 
 		if (Config.getConfig().getValue(Config.boolConfigValues.WARNINGOLDDATA) && Controller.getController().hasOlder(3)) {
 
-			optionJaNein = JOptionPane.showOptionDialog(null,
+			int optionJaNein = JOptionPane.showOptionDialog(null,
 					"Moechten Sie die Daten aelter als 2 Monate l\u00F6schen?",
 					"Alte Daten l\u00F6schen?", JOptionPane.YES_NO_OPTION,
 					JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
