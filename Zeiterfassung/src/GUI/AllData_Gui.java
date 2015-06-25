@@ -36,6 +36,7 @@ public class AllData_Gui extends JFrame {
 	 * Create the frame.
 	 */
 	public AllData_Gui(Rectangle bounds) {
+		SysTray.getSysTray(this);
 		setResizable(false);
 		setTitle("Gespeicherte Daten");
 		

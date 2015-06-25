@@ -78,7 +78,8 @@ public class EingabenAendern_Gui extends JFrame {
 	 * Create the frame.
 	 */
 	public void InitEingabenAendern_GUI() {
-
+		SysTray.getSysTray(this);
+		
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 		setTitle("Eingaben \u00E4ndern");

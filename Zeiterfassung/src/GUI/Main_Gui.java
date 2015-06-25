@@ -59,7 +59,6 @@ public class Main_Gui extends JFrame {
 	private JPanel contentPane;
 	private JTextArea textArea;
 	private JLabel lbl_AusgabeSAZnP;
-	private HashMap<String, MenuItem> mi_map;
 
 	// Button
 	private JButton btn_taganfang, btn_pauseanfang, btn_pauseende, btn_tagende;
@@ -86,7 +85,6 @@ public class Main_Gui extends JFrame {
 	 */
 	private Main_Gui() {
 		setResizable(false);
-		mi_map = new HashMap<String, MenuItem>();
 		setTitle("Zeiterfassung");
 
 		Object[] options = { "Ja", "Nein" };
@@ -138,50 +136,7 @@ public class Main_Gui extends JFrame {
 			}
 		}
 
-		if (SystemTray.isSupported()) {
-			TrayIcon icon;
-			SystemTray tray = SystemTray.getSystemTray();
-			Image image = null;
-
-			try {
-				image = ImageIO.read(ClassLoader.getSystemResource(Config.getConfig().getValue(Config.stringConfigValues.ICONPFAD)));
-			} catch (IOException ex) {
-				System.out.println(ex.getMessage());
-			}
-
-			PopupMenu popup = new PopupMenu();
-
-			String[][] values = new String[][] { { "TA", "Tag anfangen" },
-					{ "PA", "Pause anfangen" }, { "PE", "Pause beenden" },
-					{ "TE", "Tag beenden" } };
-
-			for (String[] arr : values) {
-				MenuItem temp = new MenuItem(arr[1]);
-				temp.setActionCommand(arr[0]);
-				temp.addActionListener(btn_mi_al);
-				mi_map.put(arr[0], temp);
-				popup.add(temp);
-			}
-			ActionListener trayListener = new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					setVisible(!isVisible());
-				}
-			};
-			
-			if(image != null) {
-				icon = new TrayIcon(image, "Zeiterfassung", popup);
-				icon.setImageAutoSize(true);
-			
-				try {
-					icon.addActionListener(trayListener);
-					tray.add(icon);
-	
-				} catch (AWTException ex) {
-					System.err.println(ex.getMessage());
-				}
-			}
-		}
+		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
@@ -229,7 +184,7 @@ public class Main_Gui extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 
 				JOptionPane.showMessageDialog(null, "Version: " + version
-						+ "\n\nErstellt von Marcel Knoth" + "\nJuni 2015",
+						+ "\n\nErstellt von Marcel Knoth und Martha Klois" + "\nJuni 2015",
 						"Information", JOptionPane.INFORMATION_MESSAGE);
 
 			}
@@ -434,8 +389,9 @@ public class Main_Gui extends JFrame {
 	}
 
 	private void enableButtons() {
-		for (String s : mi_map.keySet()) {
-			mi_map.get(s).setEnabled(false);
+		for (String s : SysTray.getSysTray(this).getKeySet()) {
+			if(!s.equals("EXIT"))
+				SysTray.getSysTray(this).setEnabled(s, false);
 		}
 
 		btn_taganfang.setEnabled(false);
@@ -449,21 +405,22 @@ public class Main_Gui extends JFrame {
 		if (Controller.getController().getTagAnfang() == null) {
 			btn_taganfang.setEnabled(true);
 
-			mi_map.get("TA").setEnabled(true);
+			SysTray.getSysTray(this).setEnabled("TA", true);
 		} else if (Controller.getController().getToday().getTemp() == null) {
 			btn_pauseanfang.setEnabled(true);
 			btn_tagende.setEnabled(true);
 
-			mi_map.get("PA").setEnabled(true);
-			mi_map.get("TE").setEnabled(true);
+			SysTray.getSysTray(this).setEnabled("PA", true);
+			SysTray.getSysTray(this).setEnabled("TE", true);
 		} else {
 			btn_pauseende.setEnabled(true);
 
-			mi_map.get("PE").setEnabled(true);
+			SysTray.getSysTray(this).setEnabled("PE", true);
 		}
 	}
 
 	public void showWindow(Rectangle bounds) {
+		SysTray.getSysTray(this);
 		updateView();
 		setVisible(true);
 		setBounds(bounds);
