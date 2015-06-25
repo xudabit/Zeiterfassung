@@ -22,8 +22,6 @@ import java.awt.event.ItemEvent;
 import java.awt.image.BufferedImage;
 import java.awt.Color;
 
-
-
 import Logik.Config;
 import Logik.Controller;
 import Logik.Pause;
@@ -35,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.imageio.ImageIO;
-
 
 public class EingabenAendern_Gui extends JFrame {
 
@@ -61,13 +58,13 @@ public class EingabenAendern_Gui extends JFrame {
 	private JButton btnNewButton;
 
 	private Tag day;
-	
+
 	public EingabenAendern_Gui(Rectangle bounds) {
 		day = Controller.getController().getToday();
 		InitEingabenAendern_GUI();
 		setBounds(bounds);
 	}
-	
+
 	public EingabenAendern_Gui(Rectangle bounds, Tag t) {
 		day = t;
 		InitEingabenAendern_GUI();
@@ -79,7 +76,7 @@ public class EingabenAendern_Gui extends JFrame {
 	 */
 	public void InitEingabenAendern_GUI() {
 		SysTray.getSysTray(this);
-		
+
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 		setTitle("Eingaben \u00E4ndern");
@@ -103,36 +100,32 @@ public class EingabenAendern_Gui extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				boolean allTestsPassed = true;
-				Calendar c_pa = null, c_pe = null;
-				
-				
-				Calendar c_ta = Controller.getController()
-						.getCalFromZeit(tF_tagBeginnen.getText(), day.getTagAnfang());
-				Calendar c_te = Controller.getController()
-						.getCalFromZeit(tF_TagBeenden.getText(), day.getTagEnde());
+				Calendar c_pa = null, c_pe = null, c_ta = null, c_te = null;
+
+				if (!tF_tagBeginnen.getText().isEmpty()) {
+					c_ta = Controller.getController().getCalFromZeit(
+							tF_tagBeginnen.getText(), day.getTagAnfang());
+				}
+				if (!tF_TagBeenden.getText().isEmpty()) {
+					c_te = Controller.getController().getCalFromZeit(
+							tF_TagBeenden.getText(), day.getTagEnde());
+				}
 
 				if (day != null) {
-					if (tF_tagBeginnen.getText().isEmpty()
-							|| !Controller.getController().isTAFirst(c_ta, day)) {
-						allTestsPassed = false;
-
-					} else {
-						day.setTagEnde(
-								Controller.getController()
-										.getCalFromZeit(
-												tF_TagBeenden.getText(), c_ta));
-					}
-					if (tF_TagBeenden.getText().isEmpty()
-							|| !Controller.getController().isTELast(c_te, day)) {
+					if (!Controller.getController().isTAFirst(c_ta, day)) {
 						allTestsPassed = false;
 					} else {
-						day.setTagAnfang(
-								Controller.getController()
-										.getCalFromZeit(
-												tF_tagBeginnen.getText(), c_te));
+						day.setTagAnfang(Controller.getController()
+								.getCalFromZeit(tF_tagBeginnen.getText(), c_ta));
+					}
+					if (!Controller.getController().isTELast(c_te, day)) {
+						allTestsPassed = false;
+					} else {
+						day.setTagEnde(Controller.getController()
+								.getCalFromZeit(tF_TagBeenden.getText(), c_te));
 					}
 
-					if(getSelectedPause() != null) {
+					if (getSelectedPause() != null) {
 						c_pa = (Calendar) getSelectedPause().getPauseStart()
 								.clone();
 						c_pe = (Calendar) getSelectedPause().getPauseEnde()
@@ -144,7 +137,7 @@ public class EingabenAendern_Gui extends JFrame {
 							c_pa.set(Calendar.MINUTE,
 									Integer.parseInt(tf_pa_m.getText()));
 						}
-	
+
 						if (!tf_pe_h.getText().isEmpty()
 								&& !tf_pe_m.getText().isEmpty()) {
 							c_pe.set(Calendar.HOUR_OF_DAY,
@@ -152,26 +145,27 @@ public class EingabenAendern_Gui extends JFrame {
 							c_pe.set(Calendar.MINUTE,
 									Integer.parseInt(tf_pe_m.getText()));
 						}
-	
+
 						ArrayList<Boolean> testPassed = new ArrayList<Boolean>();
-	
-						testPassed.add(Controller.getController().getTagAnfang()
-								.before(c_pa));
-						testPassed.add(Controller.getController().getTagEnde()
-								.after(c_pe));
+
+						if(day.getTagAnfang() != null)
+							testPassed.add(day.getTagAnfang().before(c_pa));
+						if(day.getTagEnde() != null)
+							testPassed.add(day.getTagEnde().after(c_pe));
 						testPassed.add(c_pa.before(c_pe));
-	
-						for (Pause p : day
-								.getPausenListe()) {
+
+						for (Pause p : day.getPausenListe()) {
 							if (p.equals(getSelectedPause())) {
 								continue;
 							}
-							testPassed.add(!(p.getPauseStart().before(c_pa) && p
-									.getPauseEnde().after(c_pa)));
-							testPassed.add(!(p.getPauseStart().before(c_pe) && p
-									.getPauseEnde().after(c_pe)));
+							testPassed
+									.add(!(p.getPauseStart().before(c_pa) && p
+											.getPauseEnde().after(c_pa)));
+							testPassed
+									.add(!(p.getPauseStart().before(c_pe) && p
+											.getPauseEnde().after(c_pe)));
 						}
-	
+
 						for (Boolean b : testPassed) {
 							if (!b) {
 								allTestsPassed = false;
@@ -181,14 +175,13 @@ public class EingabenAendern_Gui extends JFrame {
 					}
 				}
 				if (allTestsPassed) {
-					if(getSelectedPause() != null) {
+					if (getSelectedPause() != null) {
 						getSelectedPause().setPauseStart(c_pa);
 						getSelectedPause().setPauseEnde(c_pe);
 					}
 
 					if (temp != null) {
-						day
-								.addPause(getSelectedPause());
+						day.addPause(getSelectedPause());
 						temp = null;
 					}
 
@@ -229,7 +222,10 @@ public class EingabenAendern_Gui extends JFrame {
 		contentPane.add(btn_Abbrechen);
 
 		JPanel panel = new JPanel();
-		panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Pausen", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel.setBorder(new TitledBorder(UIManager
+				.getBorder("TitledBorder.border"), "Pausen",
+				TitledBorder.LEADING, TitledBorder.TOP, null,
+				new Color(0, 0, 0)));
 		panel.setBounds(12, 77, 471, 128);
 		contentPane.add(panel);
 		panel.setLayout(null);
@@ -296,13 +292,17 @@ public class EingabenAendern_Gui extends JFrame {
 		});
 		btnNewButton.setBounds(300, 15, 159, 25);
 		panel.add(btnNewButton);
-		
+
 		JLabel label_1 = new JLabel("Bild");
 		label_1.setBounds(352, 48, 67, 67);
-		try{
-			BufferedImage image = ImageIO.read(ClassLoader.getSystemResource(Config.getConfig().getValue(Config.stringConfigValues.PAUSEIMAGE)));
-			Image icon = image.getScaledInstance((int)label_1.getBounds().getWidth(), (int)label_1.getBounds().getHeight(), Image.SCALE_SMOOTH);
-			if(icon != null) {
+		try {
+			BufferedImage image = ImageIO.read(ClassLoader
+					.getSystemResource(Config.getConfig().getValue(
+							Config.stringConfigValues.PAUSEIMAGE)));
+			Image icon = image.getScaledInstance((int) label_1.getBounds()
+					.getWidth(), (int) label_1.getBounds().getHeight(),
+					Image.SCALE_SMOOTH);
+			if (icon != null) {
 				label_1 = new JLabel(new ImageIcon(icon));
 				label_1.setBounds(300, 48, 161, 61);
 			}
@@ -322,8 +322,7 @@ public class EingabenAendern_Gui extends JFrame {
 		cb_pause.removeAllItems();
 
 		if (day != null) {
-			for (Pause p : day
-					.getPausenListe()) {
+			for (Pause p : day.getPausenListe()) {
 				empty = false;
 				cb_pause.addItem("Pause "
 						+ p.getPauseID()
@@ -347,17 +346,19 @@ public class EingabenAendern_Gui extends JFrame {
 
 		tF_tagBeginnen.setEnabled(false);
 		tF_TagBeenden.setEnabled(false);
-		
-		if(day == null)
+
+		if (day == null)
 			return;
-		
+
 		if (day.getTagAnfang() != null) {
-			temp = Controller.getController().getTimestringFromCalendar(day.getTagAnfang());
+			temp = Controller.getController().getTimestringFromCalendar(
+					day.getTagAnfang());
 			tF_tagBeginnen.setText(temp);
 			tF_tagBeginnen.setEnabled(!temp.isEmpty());
 		}
 		if (day.getTagEnde() != null) {
-			temp = Controller.getController().getTimestringFromCalendar(day.getTagEnde());
+			temp = Controller.getController().getTimestringFromCalendar(
+					day.getTagEnde());
 			tF_TagBeenden.setText(temp);
 			tF_TagBeenden.setEnabled(!temp.isEmpty());
 		}
@@ -398,8 +399,7 @@ public class EingabenAendern_Gui extends JFrame {
 
 		id = Integer.parseInt(cb_string.split(" ")[1]);
 		if (day != null) {
-			for (Pause p : day
-					.getPausenListe()) {
+			for (Pause p : day.getPausenListe()) {
 				if (p.getPauseID() == id) {
 					return p;
 				}
