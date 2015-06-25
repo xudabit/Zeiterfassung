@@ -189,7 +189,6 @@ public class Controller {
 			reader.close();
 			schreibeInDatei();
 			
-			
 		} catch (IOException ex) {
 			System.err.println(ex.getMessage());
 			return false;
@@ -204,7 +203,6 @@ public class Controller {
 	
 	@SuppressWarnings("unchecked")
 	public void readData() {
-		dateMap = new HashMap<String, Tag>();
 		try {
 			File f = new File(Config.getConfig().getValue(Config.stringConfigValues.AUSGABEPFAD));
 			if(f.getParentFile() != null)
@@ -212,8 +210,7 @@ public class Controller {
 			if(!f.exists())
 				return;
 			
-			FileInputStream fs = new FileInputStream(f);
-			ObjectInputStream i = new ObjectInputStream(fs);
+			ObjectInputStream i = new ObjectInputStream(new FileInputStream(f));
 
 			dateMap = (HashMap<String, Tag>)i.readObject();
 			
@@ -255,19 +252,7 @@ public class Controller {
 		long summeArbeitstage = 0;
 
 		for (String s : dateMap.keySet()) {
-			if (dateMap.get(s).getTagAnfang() == null
-					|| dateMap.get(s).getTagEnde() == null)
-				continue;
-
-			long summePausen = 0;
-			for (Pause p : dateMap.get(s).getPausenListe()) {
-				summePausen += p.berechnePauseInMillis();
-			}
-
-			summeArbeitstage += (dateMap.get(s).getTagEnde().getTimeInMillis() - dateMap
-					.get(s).getTagAnfang().getTimeInMillis())
-					- summePausen;
-
+			summeArbeitstage += dateMap.get(s).berechneArbeitszeitInMillis();
 		}
 		return summeArbeitstage;
 	}
@@ -276,17 +261,19 @@ public class Controller {
 		return (gesamtAZ() - ((dateMap.keySet().size() * 8) * 3600000));
 	}
 
+	/*
+	 * CLONE entfernt
+	 */
 	public String findefAZ() {
 
 		Calendar zp1 = null;
 
 		for (String s : dateMap.keySet()) {
 			if (zp1 == null) {
-				zp1 = (Calendar) dateMap.get(s).getTagAnfang().clone();
-				zp1.set(1, 1, 2000);
+				zp1 = (Calendar) dateMap.get(s).getTagAnfang();
 			} else {
 				Calendar zp2 = (Calendar) dateMap.get(s).getTagAnfang().clone();
-				zp2.set(1, 1, 2000);
+				zp2.set(zp1.get(Calendar.DAY_OF_MONTH), zp1.get(Calendar.MONTH), zp1.get(Calendar.YEAR));
 				if (zp1.getTimeInMillis() > zp2.getTimeInMillis()) {
 					zp1 = zp2;
 				}
@@ -337,13 +324,8 @@ public class Controller {
 	}
 
 	public Calendar getCalFromZeitAktuell(String zeit, Calendar cal) {
-		int stunden, minuten;
-		stunden = Integer.parseInt(zeit.split(":")[0]);
-		minuten = Integer.parseInt(zeit.split(":")[1]);
-
-		cal.set(Calendar.HOUR_OF_DAY, stunden);
-		cal.set(Calendar.MINUTE, minuten);
-
+		cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(zeit.split(":")[0]));
+		cal.set(Calendar.MINUTE, Integer.parseInt(zeit.split(":")[1]));
 		return cal;
 	}
 
