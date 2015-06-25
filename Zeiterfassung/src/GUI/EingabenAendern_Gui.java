@@ -20,6 +20,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.awt.Color;
 
@@ -82,6 +84,13 @@ public class EingabenAendern_Gui extends JFrame {
 		SysTray.getSysTray(this);
 
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				setVisible(false);
+				Main_Gui.getMainGui().showWindow(getBounds());
+			}
+		});
 
 		setTitle("Eingaben \u00E4ndern");
 		setBounds(100, 100, 513, 301);
@@ -152,9 +161,9 @@ public class EingabenAendern_Gui extends JFrame {
 
 						ArrayList<Boolean> testPassed = new ArrayList<Boolean>();
 
-						if(day.getTagAnfang() != null)
+						if (day.getTagAnfang() != null)
 							testPassed.add(day.getTagAnfang().before(c_pa));
-						if(day.getTagEnde() != null)
+						if (day.getTagEnde() != null)
 							testPassed.add(day.getTagEnde().after(c_pe));
 						testPassed.add(c_pa.before(c_pe));
 
@@ -314,12 +323,13 @@ public class EingabenAendern_Gui extends JFrame {
 			System.err.println(ex.getMessage());
 		}
 		panel.add(label_1);
-		
-		JLabel lbl_Datum = new JLabel(Controller.getController().getDatestringFromCalendar(day.getTagAnfang()));
+
+		JLabel lbl_Datum = new JLabel(Controller.getController()
+				.getDatestringFromCalendar(day.getTagAnfang()));
 		lbl_Datum.setBounds(350, 13, 133, 16);
 		lbl_Datum.setHorizontalAlignment(SwingConstants.RIGHT);
 		contentPane.add(lbl_Datum);
-		
+
 		JButton btn_verwerfen = new JButton("Verwerfen");
 		btn_verwerfen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -388,11 +398,17 @@ public class EingabenAendern_Gui extends JFrame {
 			tf_pe_h.setEditable(true);
 			tf_pe_m.setEditable(true);
 
-			tf_pa_h.setText("" + p.getPauseStart().get(Calendar.HOUR_OF_DAY));
-			tf_pa_m.setText("" + p.getPauseStart().get(Calendar.MINUTE));
-			tf_pe_h.setText("" + p.getPauseEnde().get(Calendar.HOUR_OF_DAY));
-			tf_pe_m.setText("" + p.getPauseEnde().get(Calendar.MINUTE));
+			tf_pa_h.setText(addZero(p.getPauseStart().get(Calendar.HOUR_OF_DAY)));
+			tf_pa_m.setText(addZero(p.getPauseStart().get(Calendar.MINUTE)));
+			tf_pe_h.setText(addZero(p.getPauseEnde().get(Calendar.HOUR_OF_DAY)));
+			tf_pe_m.setText(addZero(p.getPauseEnde().get(Calendar.MINUTE)));
 		}
+	}
+
+	private String addZero(int num) {
+
+		return ((num < 10 ? "0" : "") + num);
+
 	}
 
 	private Pause getSelectedPause() {
