@@ -270,10 +270,12 @@ public class Controller {
 
 		for (String s : dateMap.keySet()) {
 			if (zp1 == null) {
-				zp1 = (Calendar) dateMap.get(s).getTagAnfang();
+				zp1 = (Calendar) dateMap.get(s).getTagAnfang().clone();
+				zp1.set(1,0,2000);
 			} else {
 				Calendar zp2 = (Calendar) dateMap.get(s).getTagAnfang().clone();
 				zp2.set(zp1.get(Calendar.DAY_OF_MONTH), zp1.get(Calendar.MONTH), zp1.get(Calendar.YEAR));
+				zp2.set(1,0,2000);
 				if (zp1.getTimeInMillis() > zp2.getTimeInMillis()) {
 					zp1 = zp2;
 				}
