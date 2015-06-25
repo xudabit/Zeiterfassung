@@ -323,14 +323,14 @@ public class Controller {
 		return ((double) pausen / dateMap.size());
 	}
 
-	public Calendar getCalFromZeitAktuell(String zeit, Calendar cal) {
+	public Calendar getCalFromZeit(String zeit, Calendar cal) {
 		cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(zeit.split(":")[0]));
 		cal.set(Calendar.MINUTE, Integer.parseInt(zeit.split(":")[1]));
 		return cal;
 	}
 
 	public Calendar getCalFromZeitAktuell(String zeit) {
-		return getCalFromZeitAktuell(zeit, (Calendar) getToday().getTagAnfang()
+		return getCalFromZeit(zeit, (Calendar) getToday().getTagAnfang()
 				.clone());
 	}
 	
@@ -370,48 +370,44 @@ public class Controller {
 		dateMap.remove(getDatestringFromCalendar(Calendar.getInstance()));
 	}
 	
-	public String getAllData() {
+	public String getAllData(Tag t) {
 		String output = "";
-		ArrayList<String> keys = new ArrayList<String>();
-		keys.addAll(dateMap.keySet());
-		java.util.Collections.sort(keys);
-		for(String s : keys) {
-			output +="Datum: " + getDatestringFromCalendar(dateMap.get(s).getTagAnfang()) + "\n";
-			output +="Tag angefangen um\t" + getTimestringFromCalendar(dateMap.get(s).getTagAnfang()) + "\n";
-			for(Pause p : dateMap.get(s).getPausenListe()) {
-				output +="Pause angefangen um\t" + getTimestringFromCalendar(p.getPauseStart()) + "\n";
-				output +="Pause beendet um\t" + getTimestringFromCalendar(p.getPauseEnde()) + "\n";
-			}
 		
-			if(dateMap.get(s).getTemp() != null) {
-				output +="Pause angefangen um\t" + getTimestringFromCalendar(dateMap.get(s).getTemp().getPauseStart()) + "\n";
-			}
-			
-			if(dateMap.get(s).getTagEnde() != null) {
-				output +="Tag beendet um\t" + getTimestringFromCalendar(dateMap.get(s).getTagEnde()) + "\n";
-			}
-			output += "-------------------------\n";
+		output +="Tag angefangen um\t" + getTimestringFromCalendar(t.getTagAnfang()) + "\n";
+		for(Pause p : t.getPausenListe()) {
+			output +="Pause angefangen um\t" + getTimestringFromCalendar(p.getPauseStart()) + "\n";
+			output +="Pause beendet um\t" + getTimestringFromCalendar(p.getPauseEnde()) + "\n";
 		}
+	
+		if(t.getTemp() != null) {
+			output +="Pause angefangen um\t" + getTimestringFromCalendar(t.getTemp().getPauseStart()) + "\n";
+		}
+		
+		if(t.getTagEnde() != null) {
+			output +="Tag beendet um\t" + getTimestringFromCalendar(t.getTagEnde()) + "\n";
+		}
+		output += "-------------------------\n";
+		
 		return output;
 	}
 	
-	public boolean isTAFirst(Calendar ta) {
-		if(getToday() != null) {
-			for(Pause p : getToday().getPausenListe()) {
+	public boolean isTAFirst(Calendar ta, Tag t) {
+		if(t != null) {
+			for(Pause p : t.getPausenListe()) {
 				if(p.getPauseStart().before(ta))
 					return false;
 			}
-			if(getToday().getTagEnde().before(ta))
+			if(t.getTagEnde().before(ta))
 				return false;
 		}
 		return true;
 	}
 	
-	public boolean isTELast(Calendar te) {
-		if(getToday() != null) {
-			if(getToday().getTagAnfang().after(te))
+	public boolean isTELast(Calendar te, Tag t) {
+		if(t != null) {
+			if(t.getTagAnfang().after(te))
 				return false;
-			for(Pause p : getToday().getPausenListe()) {
+			for(Pause p : t.getPausenListe()) {
 				if(p.getPauseEnde().after(te))
 					return false;
 			}
