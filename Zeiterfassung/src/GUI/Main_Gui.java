@@ -36,6 +36,10 @@ import javax.imageio.ImageIO;
 
 import Logik.Controller;
 import Logik.Config;
+import javax.swing.JPopupMenu;
+import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Main_Gui extends JFrame {
 
@@ -258,24 +262,6 @@ public class Main_Gui extends JFrame {
 		});
 		mn_Bearbeiten.add(mntmOptionen);
 
-		JMenuItem mn_Statistik = new JMenuItem("Statistik");
-		mn_Statistik.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (!Controller.getController().getDateMap().isEmpty()) {
-					new Statistik_Gui(getBounds());
-					setVisible(false);
-				} else {
-					JOptionPane
-							.showMessageDialog(
-									null,
-									"Speichern Sie mindestens einen Arbeitstag, \n damit eine Statistik erzeugt werden kann.",
-									"Fehlende Daten",
-									JOptionPane.WARNING_MESSAGE);
-				}
-			}
-		});
-
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent arg0) {
@@ -288,7 +274,45 @@ public class Main_Gui extends JFrame {
 				}
 			}
 		});
-		menuBar.add(mn_Statistik);
+		
+		JMenu mnStatistik = new JMenu("Statistik");
+		menuBar.add(mnStatistik);
+		
+				JMenuItem mn_Statistik = new JMenuItem("Statistik");
+				mnStatistik.add(mn_Statistik);
+				
+				JMenu mnGraphen = new JMenu("Graphen");
+				mnStatistik.add(mnGraphen);
+				
+				JMenuItem mntmArbeitszeitWoche = new JMenuItem("Arbeitszeit (1 Woche)");
+				mntmArbeitszeitWoche.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						new Graph("Arbeitszeit (1 Woche)" , 
+								"Datum", 
+								"Arbeitszeit",
+								Graph.getDatesetArbeitszeitErreicht(),
+								//Graph.getDatesetArbeitszeit(), 
+								getBounds());
+						setVisible(false);
+					}
+				});
+				mnGraphen.add(mntmArbeitszeitWoche);
+				mn_Statistik.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						if (!Controller.getController().getDateMap().isEmpty()) {
+							new Statistik_Gui(getBounds());
+							setVisible(false);
+						} else {
+							JOptionPane
+									.showMessageDialog(
+											null,
+											"Speichern Sie mindestens einen Arbeitstag, \n damit eine Statistik erzeugt werden kann.",
+											"Fehlende Daten",
+											JOptionPane.WARNING_MESSAGE);
+						}
+					}
+				});
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -419,5 +443,22 @@ public class Main_Gui extends JFrame {
 		updateView();
 		setVisible(true);
 		setBounds(bounds);
+	}
+	private static void addPopup(Component component, final JPopupMenu popup) {
+		component.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			public void mouseReleased(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			private void showMenu(MouseEvent e) {
+				popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
 	}
 }
