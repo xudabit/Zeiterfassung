@@ -120,8 +120,8 @@ public class Main_Gui extends JFrame {
 		if (Config.getConfig().getValue(Config.boolConfigValues.WARNINGOLDDATA) && Controller.getController().hasOlder(3)) {
 
 			optionJaNein = JOptionPane.showOptionDialog(null,
-					"Moechten Sie die Daten aelter als 2 Monate loeschen?",
-					"Alte Daten loeschen?", JOptionPane.YES_NO_OPTION,
+					"Moechten Sie die Daten aelter als 2 Monate l\u00F6schen?",
+					"Alte Daten l\u00F6schen?", JOptionPane.YES_NO_OPTION,
 					JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
 
 			if (optionJaNein == 0) {
@@ -132,7 +132,7 @@ public class Main_Gui extends JFrame {
 					JOptionPane
 							.showMessageDialog(null,
 									"Daten konnten nicht geloecht werden.",
-									"Fehler beim loeschen",
+									"Fehler beim l\u00F6schen",
 									JOptionPane.WARNING_MESSAGE);
 				}
 			}

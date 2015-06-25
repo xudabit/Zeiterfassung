@@ -1,18 +1,23 @@
 package GUI;
 
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import Logik.Config;
+import Logik.Config.stringConfigValues;
 import Logik.Controller;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.Rectangle;
+
 import javax.swing.JComboBox;
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -57,6 +62,7 @@ public class AllData_Gui extends JFrame {
 		JComboBox cB_Datum = new JComboBox();
 		cB_Datum.setBounds(12, 13, 216, 22);
 		contentPane.add(cB_Datum);
+		System.out.println(Controller.getController().getDatum());
 		
 		JButton btn_Delete = new JButton("Delete");
 		btn_Delete.addActionListener(new ActionListener() {

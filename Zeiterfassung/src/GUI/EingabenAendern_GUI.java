@@ -138,14 +138,6 @@ public class EingabenAendern_Gui extends JFrame {
 								Integer.parseInt(tf_pe_m.getText()));
 					}
 
-					/*
-					 * Überprüfung
-					 * 
-					 * - Pauseanfang und Pauseende zwischen Taganfang und
-					 * Tagende - PauseAnfang und PauseEnde NICHT inerhalb von
-					 * anderen Pausen
-					 */
-
 					ArrayList<Boolean> testPassed = new ArrayList<Boolean>();
 
 					testPassed.add(Controller.getController().getTagAnfang()
