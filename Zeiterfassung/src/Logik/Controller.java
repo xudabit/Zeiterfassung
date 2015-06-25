@@ -248,17 +248,18 @@ public class Controller {
 		return text;
 	}
 
-	public long gesamtAZ() {
+	public long getGesamtAZ() {
 		long summeArbeitstage = 0;
 
 		for (String s : dateMap.keySet()) {
-			summeArbeitstage += dateMap.get(s).berechneArbeitszeitInMillis();
+			if(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR) == dateMap.get(s).getTagAnfang().get(Calendar.WEEK_OF_YEAR))
+				summeArbeitstage += dateMap.get(s).berechneArbeitszeitInMillis();
 		}
 		return summeArbeitstage;
 	}
 
-	public long ueberstunden() {
-		return (gesamtAZ() - ((dateMap.keySet().size() * 8) * 3600000));
+	public long getUeberstunden() {
+		return (getGesamtAZ() - ((dateMap.keySet().size() * 8) * 3600000));
 	}
 
 	/*

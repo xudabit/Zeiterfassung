@@ -6,6 +6,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 
+import Logik.Controller;
+
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -25,6 +27,7 @@ public class Statistik_Gui extends JFrame {
 	private JLabel lbl_fAB;
 	private JLabel lbl_AnzahlPausen;
 	private JLabel lbl_dAPausen;
+	private JLabel lbl_ueberstunden;
 	
 	public Statistik_Gui(Rectangle bounds){
 		InitStatistik_GUI();
@@ -94,22 +97,24 @@ public class Statistik_Gui extends JFrame {
 		label.setBounds(10, 42, 220, 16);
 		contentPane.add(label);
 		
-		JLabel label_1 = new JLabel("00:00");
-		label_1.setBounds(304, 42, 251, 16);
-		contentPane.add(label_1);
+		lbl_ueberstunden = new JLabel("00:00");
+		lbl_ueberstunden.setBounds(304, 42, 251, 16);
+		contentPane.add(lbl_ueberstunden);
+	
+		updateView();
+		setVisible(true);
+	}
+	
+	private void updateView() {
+		double avgPausendauer = Controller.getController().getDAPausen();
+		avgPausendauer = (double) Math.round(avgPausendauer * 100) / 100;
+		int maxAnzahlPausen = Controller.getController().getMaxAnzahlPausen();
 		
-	}
-
-	public void setLabel(String s) {
-		lbl_fAB.setText(s);
-	}
-
-	public void setPausen(int i) {
-		lbl_AnzahlPausen.setText(i + " Pause" + (i == 1 ? "" : "n"));
-	}
-
-	public void setDAPausen(double d) {
-		d = (double) Math.round(d * 100) / 100;
-		lbl_dAPausen.setText("" + d);
+		lbl_fAB.setText(Controller.getController().findefAZ());
+		lbl_AnzahlPausen.setText(maxAnzahlPausen + " Pause" + (maxAnzahlPausen == 1 ? "" : "n"));
+		lbl_dAPausen.setText("" + avgPausendauer);
+		lbl_GesamtAZAusgabe.setText(Controller.getController().getTimeForLabel(Controller.getController().getGesamtAZ()));
+		lbl_ueberstunden.setText(Controller.getController().getTimeForLabel(Controller.getController().getUeberstunden()));
+		
 	}
 }
