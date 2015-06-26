@@ -29,6 +29,7 @@ public class Config implements Serializable{
 	
 	private HashMap<boolConfigValues, Boolean> bool_conf;
 	private HashMap<stringConfigValues, String> string_conf;
+	private HashMap<intConfigValues, Integer> int_conf;
 	
 	/*
 	 * Festlegung der Konfigurationswerte
@@ -41,9 +42,14 @@ public class Config implements Serializable{
 		IMPORTPFAD, ICONPFAD, AUSGABEPFAD, PAUSEIMAGE
 	}
 	
+	public enum intConfigValues {
+		KWDIAGWOCHEN
+	}
+	
 	private Config(){
 		bool_conf = new HashMap<boolConfigValues, Boolean>();
 		string_conf = new HashMap<stringConfigValues, String>();
+		int_conf = new HashMap<intConfigValues, Integer>();
 	}
 	
 	public void setDefConfig() {
@@ -54,6 +60,8 @@ public class Config implements Serializable{
 		string_conf.putIfAbsent(stringConfigValues.AUSGABEPFAD, "data/timedata.ze");
 		string_conf.putIfAbsent(stringConfigValues.ICONPFAD, "icon/uhr.jpg");
 		string_conf.putIfAbsent(stringConfigValues.PAUSEIMAGE, "icon/pause.jpg");
+		
+		int_conf.putIfAbsent(intConfigValues.KWDIAGWOCHEN, 4);
 	}
 		
 	public void setValue(stringConfigValues key, String s) {
@@ -62,6 +70,10 @@ public class Config implements Serializable{
 	
 	public void setValue(boolConfigValues key, boolean b) {
 		bool_conf.put(key, b);
+	}
+	
+	public void setValue(intConfigValues key, int b) {
+		int_conf.put(key, b);
 	}
 	/*
 	 * Ausgabe der passenden Konfigurationswerte
@@ -72,6 +84,10 @@ public class Config implements Serializable{
 	
 	public boolean getValue(boolConfigValues key) {
 		return bool_conf.get(key);
+	}
+	
+	public int getValue(intConfigValues key) {
+		return int_conf.get(key);
 	}
 	
 	/*

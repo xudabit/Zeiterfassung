@@ -17,6 +17,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+import Logik.Config;
 import Logik.Controller;
 import Logik.Tag;
 
@@ -127,7 +128,7 @@ public class Graph extends JFrame {
 
 		int woy = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
 		
-		for(int x = woy-3; x <= woy; x++) {
+		for(int x = woy-(Config.getConfig().getValue(Config.intConfigValues.KWDIAGWOCHEN)); x < woy; x++) {
 			long arbeitszeit = 0;
 			for (Tag t : Controller.getController().getDateMap().values()) {
 				if (x == t.getTagAnfang().get(Calendar.WEEK_OF_YEAR)) {

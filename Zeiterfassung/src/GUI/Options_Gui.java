@@ -19,6 +19,12 @@ import java.awt.Rectangle;
 import java.awt.Color;
 
 import Logik.Config;
+import Logik.Config.boolConfigValues;
+import javax.swing.JSpinner;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 public class Options_Gui extends JFrame {
 
@@ -35,6 +41,8 @@ public class Options_Gui extends JFrame {
 	private JCheckBox chkbx_bool;
 	private JButton btnSet;
 	private JPanel panel_1;
+
+	private JComboBox<Config.intConfigValues> cb_int;
 
 	/**
 	 * Create the frame.
@@ -67,7 +75,7 @@ public class Options_Gui extends JFrame {
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel.setBounds(12, 107, 408, 83);
+		panel.setBounds(12, 66, 408, 83);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
@@ -97,6 +105,29 @@ public class Options_Gui extends JFrame {
 		chkbx_bool = new JCheckBox("");
 		chkbx_bool.setBounds(375, 16, 25, 25);
 		panel_1.add(chkbx_bool);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setLayout(null);
+		panel_2.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_2.setBounds(12, 148, 408, 54);
+		contentPane.add(panel_2);
+		
+		cb_int = new JComboBox<Config.intConfigValues>();
+		JSpinner sp_int = new JSpinner();
+		sp_int.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				Config.getConfig().setValue((Config.intConfigValues)cb_int.getSelectedItem(), (int)sp_int.getValue());
+			}
+		});
+		cb_int.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				sp_int.setValue(Config.getConfig().getValue((Config.intConfigValues)cb_int.getSelectedItem()));
+			}
+		});
+		cb_int.setBounds(12, 16, 342, 22);
+		panel_2.add(cb_int);
+		sp_int.setBounds(366, 16, 30, 22);
+		panel_2.add(sp_int);
 		chkbx_bool.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Config.getConfig().setValue((Config.boolConfigValues)cb_bool.getSelectedItem(), chkbx_bool.isSelected());
@@ -128,12 +159,20 @@ public class Options_Gui extends JFrame {
 	private void readConfig() {
 		//Config conf = Config.getConfig();
 		
+		cb_bool.removeAll();
+		cb_string.removeAll();
+		cb_int.removeAll();
+		
 		for(Config.boolConfigValues b : Config.boolConfigValues.values()) {
 			cb_bool.addItem(b);
 		}
 		
 		for(Config.stringConfigValues s : Config.stringConfigValues.values()) {
 			cb_string.addItem(s);
+		}
+		
+		for(Config.intConfigValues i : Config.intConfigValues.values()) {
+			cb_int.addItem(i);
 		}
 	}
 }
