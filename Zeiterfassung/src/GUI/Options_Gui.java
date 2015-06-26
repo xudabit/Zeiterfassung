@@ -8,6 +8,9 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.border.LineBorder;
+import javax.swing.JSpinner;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -15,16 +18,10 @@ import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import java.awt.Rectangle;
 import java.awt.Color;
-
 import Logik.Config;
-import Logik.Config.boolConfigValues;
-import javax.swing.JSpinner;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
 
 public class Options_Gui extends JFrame {
 
@@ -40,7 +37,7 @@ public class Options_Gui extends JFrame {
 	private JComboBox<Config.stringConfigValues> cb_string;
 	private JCheckBox chkbx_bool;
 	private JButton btnSet;
-	private JPanel panel_1;
+	private JPanel pl_bool;
 
 	private JComboBox<Config.intConfigValues> cb_int;
 
@@ -73,44 +70,44 @@ public class Options_Gui extends JFrame {
 		btnSpeichern.setBounds(323, 217, 97, 25);
 		contentPane.add(btnSpeichern);
 		
-		JPanel panel = new JPanel();
-		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel.setBounds(12, 66, 408, 83);
-		contentPane.add(panel);
-		panel.setLayout(null);
+		JPanel pl_string = new JPanel();
+		pl_string.setBorder(new LineBorder(new Color(0, 0, 0)));
+		pl_string.setBounds(12, 66, 408, 83);
+		contentPane.add(pl_string);
+		pl_string.setLayout(null);
 		
 		cb_string = new JComboBox<Config.stringConfigValues>();
 		cb_string.setBounds(12, 13, 384, 22);
-		panel.add(cb_string);
+		pl_string.add(cb_string);
 		
 		tf_string = new JTextField();
 		tf_string.setBounds(12, 48, 275, 22);
-		panel.add(tf_string);
+		pl_string.add(tf_string);
 		tf_string.setColumns(10);
 		
 		btnSet = new JButton("Set");
 		btnSet.setBounds(299, 48, 97, 25);
-		panel.add(btnSet);
+		pl_string.add(btnSet);
 		
-		panel_1 = new JPanel();
-		panel_1.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_1.setBounds(12, 13, 408, 54);
-		contentPane.add(panel_1);
-		panel_1.setLayout(null);
+		pl_bool = new JPanel();
+		pl_bool.setBorder(new LineBorder(new Color(0, 0, 0)));
+		pl_bool.setBounds(12, 13, 408, 54);
+		contentPane.add(pl_bool);
+		pl_bool.setLayout(null);
 		
 		cb_bool = new JComboBox<Config.boolConfigValues>();
 		cb_bool.setBounds(12, 16, 355, 22);
-		panel_1.add(cb_bool);
+		pl_bool.add(cb_bool);
 		
 		chkbx_bool = new JCheckBox("");
 		chkbx_bool.setBounds(375, 16, 25, 25);
-		panel_1.add(chkbx_bool);
+		pl_bool.add(chkbx_bool);
 		
-		JPanel panel_2 = new JPanel();
-		panel_2.setLayout(null);
-		panel_2.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_2.setBounds(12, 148, 408, 54);
-		contentPane.add(panel_2);
+		JPanel pl_int = new JPanel();
+		pl_int.setLayout(null);
+		pl_int.setBorder(new LineBorder(new Color(0, 0, 0)));
+		pl_int.setBounds(12, 148, 408, 54);
+		contentPane.add(pl_int);
 		
 		cb_int = new JComboBox<Config.intConfigValues>();
 		JSpinner sp_int = new JSpinner();
@@ -125,9 +122,9 @@ public class Options_Gui extends JFrame {
 			}
 		});
 		cb_int.setBounds(12, 16, 342, 22);
-		panel_2.add(cb_int);
+		pl_int.add(cb_int);
 		sp_int.setBounds(366, 16, 30, 22);
-		panel_2.add(sp_int);
+		pl_int.add(sp_int);
 		chkbx_bool.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Config.getConfig().setValue((Config.boolConfigValues)cb_bool.getSelectedItem(), chkbx_bool.isSelected());

@@ -45,7 +45,6 @@ public class EingabenAendern_Gui extends JFrame {
 	private JPanel contentPane;
 	private JLabel lbl_TagBegonnenUm;
 	private JLabel lblTagBeendetUm;
-	private JLabel lbl_Datum;
 	private JButton btn_Abbrechen;
 	private JTextField tf_pa_h;
 	private JTextField tf_pa_m;
@@ -157,14 +156,14 @@ public class EingabenAendern_Gui extends JFrame {
 		btn_Abbrechen.setBounds(386, 218, 97, 25);
 		contentPane.add(btn_Abbrechen);
 
-		JPanel panel = new JPanel();
-		panel.setBorder(new TitledBorder(UIManager
+		JPanel pl_Pausen = new JPanel();
+		pl_Pausen.setBorder(new TitledBorder(UIManager
 				.getBorder("TitledBorder.border"), "Pausen",
 				TitledBorder.LEADING, TitledBorder.TOP, null,
 				new Color(0, 0, 0)));
-		panel.setBounds(12, 77, 471, 128);
-		contentPane.add(panel);
-		panel.setLayout(null);
+		pl_Pausen.setBounds(12, 77, 471, 128);
+		contentPane.add(pl_Pausen);
+		pl_Pausen.setLayout(null);
 
 		cb_pause = new JComboBox<String>();
 		cb_pause.addItemListener(new ItemListener() {
@@ -173,47 +172,47 @@ public class EingabenAendern_Gui extends JFrame {
 			}
 		});
 		cb_pause.setBounds(12, 16, 276, 22);
-		panel.add(cb_pause);
+		pl_Pausen.add(cb_pause);
 
 		tf_pa_h = new JTextField();
 		tf_pa_h.setEditable(false);
 		tf_pa_h.setBounds(137, 48, 35, 22);
-		panel.add(tf_pa_h);
+		pl_Pausen.add(tf_pa_h);
 		tf_pa_h.setColumns(10);
 
 		tf_pa_m = new JTextField();
 		tf_pa_m.setEditable(false);
 		tf_pa_m.setColumns(10);
 		tf_pa_m.setBounds(184, 48, 35, 22);
-		panel.add(tf_pa_m);
+		pl_Pausen.add(tf_pa_m);
 
 		JLabel lblNewLabel = new JLabel(":");
 		lblNewLabel.setBounds(175, 48, 5, 22);
-		panel.add(lblNewLabel);
+		pl_Pausen.add(lblNewLabel);
 
 		tf_pe_h = new JTextField();
 		tf_pe_h.setEditable(false);
 		tf_pe_h.setColumns(10);
 		tf_pe_h.setBounds(137, 87, 35, 22);
-		panel.add(tf_pe_h);
+		pl_Pausen.add(tf_pe_h);
 
 		JLabel label = new JLabel(":");
 		label.setBounds(175, 87, 5, 22);
-		panel.add(label);
+		pl_Pausen.add(label);
 
 		tf_pe_m = new JTextField();
 		tf_pe_m.setEditable(false);
 		tf_pe_m.setColumns(10);
 		tf_pe_m.setBounds(184, 87, 35, 22);
-		panel.add(tf_pe_m);
+		pl_Pausen.add(tf_pe_m);
 
 		lblPauseanfang = new JLabel("Anfang der Pause");
 		lblPauseanfang.setBounds(12, 48, 113, 22);
-		panel.add(lblPauseanfang);
+		pl_Pausen.add(lblPauseanfang);
 
 		lblPauseended = new JLabel("Ende der Pause");
 		lblPauseended.setBounds(12, 90, 113, 22);
-		panel.add(lblPauseended);
+		pl_Pausen.add(lblPauseended);
 
 		btnNewButton = new JButton("Pause l\u00F6schen");
 		btnNewButton.addActionListener(new ActionListener() {
@@ -227,43 +226,43 @@ public class EingabenAendern_Gui extends JFrame {
 			}
 		});
 		btnNewButton.setBounds(310, 15, 149, 25);
-		panel.add(btnNewButton);
+		pl_Pausen.add(btnNewButton);
 
-		JLabel label_1 = new JLabel("Bild");
-		label_1.setBounds(231, 48, 67, 67);
+		JLabel lbl_bild = new JLabel("Bild");
+		lbl_bild.setBounds(231, 48, 67, 67);
 		
 		int x,y,h,w;
-		x=(int)label_1.getBounds().getX();
-		y=(int)label_1.getBounds().getY();
-		h=(int)label_1.getBounds().getHeight();
-		w=(int)label_1.getBounds().getWidth();
+		x=(int)lbl_bild.getBounds().getX();
+		y=(int)lbl_bild.getBounds().getY();
+		h=(int)lbl_bild.getBounds().getHeight();
+		w=(int)lbl_bild.getBounds().getWidth();
 		
 		try {
 			BufferedImage image = ImageIO.read(ClassLoader
 					.getSystemResource(Config.getConfig().getValue(
 							Config.stringConfigValues.PAUSEIMAGE)));
-			Image icon = image.getScaledInstance((int) label_1.getBounds()
-					.getWidth(), (int) label_1.getBounds().getHeight(),
+			Image icon = image.getScaledInstance((int) lbl_bild.getBounds()
+					.getWidth(), (int) lbl_bild.getBounds().getHeight(),
 					Image.SCALE_SMOOTH);
 			if (icon != null) {
-				label_1 = new JLabel(new ImageIcon(icon));
-				label_1.setBounds(x, y, w, h);
+				lbl_bild = new JLabel(new ImageIcon(icon));
+				lbl_bild.setBounds(x, y, w, h);
 			}
 		} catch (IOException ex) {
 			System.err.println(ex.getMessage());
 		}
-		panel.add(label_1);
+		pl_Pausen.add(lbl_bild);
 		
 		JButton btn_savePause = new JButton("Pause speichern");
 		btn_savePause.addActionListener(listener);
 		btn_savePause.setActionCommand("PAUSE");
 		btn_savePause.setBounds(310, 69, 149, 25);
-		panel.add(btn_savePause);
+		pl_Pausen.add(btn_savePause);
 
 		JLabel lbl_Datum = new JLabel(Controller.getController()
 				.getDatestringFromCalendar(day.getTagAnfang()));
 		
-		lbl_Datum.setBounds(350, 13, 133, 16);
+		lbl_Datum.setBounds(343, 12, 133, 16);
 		lbl_Datum.setHorizontalAlignment(SwingConstants.RIGHT);
 		contentPane.add(lbl_Datum);
 

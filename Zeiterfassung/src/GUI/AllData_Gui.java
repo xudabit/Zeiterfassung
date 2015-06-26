@@ -85,15 +85,15 @@ public class AllData_Gui extends JFrame {
 		btn_Delete.setBounds(354, 12, 129, 25);
 		contentPane.add(btn_Delete);
 		
-		JButton btnBearbeiten = new JButton("Bearbeiten");
-		btnBearbeiten.addActionListener(new ActionListener() {
+		JButton btn_Bearbeiten = new JButton("Bearbeiten");
+		btn_Bearbeiten.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				(new EingabenAendern_Gui(getBounds(), Controller.getController().getDateMap().get((String)cB_Datum.getSelectedItem()))).setVisible(true);
 				setVisible(false);
 			}
 		});
-		btnBearbeiten.setBounds(354, 60, 129, 25);
-		contentPane.add(btnBearbeiten);
+		btn_Bearbeiten.setBounds(354, 60, 129, 25);
+		contentPane.add(btn_Bearbeiten);
 		updateView();
 		setVisible(true);
 	}

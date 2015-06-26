@@ -61,7 +61,7 @@ public class Statistik_Gui extends JFrame {
 
 		lbl_GesamtAZAusgabe = new JLabel("00:00");
 		// Ausgabe Gesamtarbeitszeit seit Datei erzeugt wurde
-		lbl_GesamtAZAusgabe.setBounds(304, 13, 251, 16);
+		lbl_GesamtAZAusgabe.setBounds(304, 13, 191, 16);
 		contentPane.add(lbl_GesamtAZAusgabe);
 		// lbl_GesamtAZAusgabe.setText(Controller.getController().getTimeForLabel(Controller.getController().gesamtAZ()));
 
@@ -78,7 +78,7 @@ public class Statistik_Gui extends JFrame {
 		contentPane.add(lbl_AnzahlPausenText);
 
 		lbl_AnzahlPausen = new JLabel("Pausen");
-		lbl_AnzahlPausen.setBounds(304, 210, 251, 16);
+		lbl_AnzahlPausen.setBounds(304, 210, 191, 16);
 		contentPane.add(lbl_AnzahlPausen);
 
 		JLabel lbl_dAnzahlPausenText = new JLabel(
@@ -87,7 +87,7 @@ public class Statistik_Gui extends JFrame {
 		contentPane.add(lbl_dAnzahlPausenText);
 
 		lbl_dAPausen = new JLabel("Anzahl Pausen");
-		lbl_dAPausen.setBounds(304, 239, 251, 16);
+		lbl_dAPausen.setBounds(304, 239, 191, 16);
 		contentPane.add(lbl_dAPausen);
 		
 		JLabel label = new JLabel("\u00DCberstunden in der aktuellen Woche:");
@@ -95,7 +95,7 @@ public class Statistik_Gui extends JFrame {
 		contentPane.add(label);
 		
 		lbl_ueberstunden = new JLabel("00:00");
-		lbl_ueberstunden.setBounds(304, 42, 251, 16);
+		lbl_ueberstunden.setBounds(304, 42, 191, 16);
 		contentPane.add(lbl_ueberstunden);
 		
 		updateView();

@@ -4,7 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
+
 import java.util.Calendar;
 
 import javax.swing.JFrame;

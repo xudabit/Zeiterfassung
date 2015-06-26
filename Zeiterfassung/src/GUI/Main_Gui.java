@@ -41,15 +41,15 @@ public class Main_Gui extends JFrame {
 	private final double version = 1.0;
 
 	private JPanel contentPane;
-	private JTextArea textArea;
+	private JTextArea ta_data;
 	private JLabel lbl_AusgabeSAZnP;
 
 	// Button
 	private JButton btn_taganfang, btn_pauseanfang, btn_pauseende, btn_tagende;
-	private JMenuItem mntmZeitenndern;
+	private JMenuItem mn_ZeitenAendern;
 	private JMenuItem mn_AlleDatenAnzeigen;
 	private JMenuItem mn_Statistik;
-	private JMenu mnStatistik;
+	private JMenu mn_StatistikM;
 
 	/**
 	 * Launch the application.
@@ -127,8 +127,8 @@ public class Main_Gui extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
-		JMenu mnNewMenu = new JMenu("Datei");
-		menuBar.add(mnNewMenu);
+		JMenu mn_Datei = new JMenu("Datei");
+		menuBar.add(mn_Datei);
 
 		JMenuItem mn_Beenden = new JMenuItem("Beenden");
 		mn_Beenden.addActionListener(new ActionListener() {
@@ -144,10 +144,10 @@ public class Main_Gui extends JFrame {
 				Controller.getController().schreibeInDatei();
 			}
 		});
-		mnNewMenu.add(mn_Speichern);
+		mn_Datei.add(mn_Speichern);
 
 		JMenuItem mn_Import = new JMenuItem("Import");
-		mnNewMenu.add(mn_Import);
+		mn_Datei.add(mn_Import);
 		mn_Import.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Controller.getController().importData();
@@ -162,11 +162,11 @@ public class Main_Gui extends JFrame {
 				setVisible(false);
 			}
 		});
-		mnNewMenu.add(mn_AlleDatenAnzeigen);
-		mnNewMenu.addSeparator();
+		mn_Datei.add(mn_AlleDatenAnzeigen);
+		mn_Datei.addSeparator();
 
 		JMenuItem mn_Info = new JMenuItem("Info");
-		mnNewMenu.add(mn_Info);
+		mn_Datei.add(mn_Info);
 		mn_Info.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
@@ -177,14 +177,14 @@ public class Main_Gui extends JFrame {
 
 			}
 		});
-		mnNewMenu.addSeparator();
-		mnNewMenu.add(mn_Beenden);
+		mn_Datei.addSeparator();
+		mn_Datei.add(mn_Beenden);
 
 		JMenu mn_Bearbeiten = new JMenu("Bearbeiten");
 		menuBar.add(mn_Bearbeiten);
 
-		mntmZeitenndern = new JMenuItem("Zeiten \u00E4ndern");
-		mntmZeitenndern.addActionListener(new ActionListener() {
+		mn_ZeitenAendern = new JMenuItem("Zeiten \u00E4ndern");
+		mn_ZeitenAendern.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				EingabenAendern_Gui eA = new EingabenAendern_Gui(getBounds());
@@ -192,13 +192,13 @@ public class Main_Gui extends JFrame {
 				setVisible(false);
 			}
 		});
-		mn_Bearbeiten.add(mntmZeitenndern);
+		mn_Bearbeiten.add(mn_ZeitenAendern);
 
-		JMenu mnNewMenu_1 = new JMenu("Daten l\u00F6schen");
-		mn_Bearbeiten.add(mnNewMenu_1);
+		JMenu mn_DatenLoeschen = new JMenu("Daten l\u00F6schen");
+		mn_Bearbeiten.add(mn_DatenLoeschen);
 
-		JMenuItem mntmWochen = new JMenuItem("> 1 Monat");
-		mntmWochen.addActionListener(new ActionListener() {
+		JMenuItem mn_1Monat = new JMenuItem("> 1 Monat");
+		mn_1Monat.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Controller.getController().deleteOlder(1);
@@ -206,45 +206,45 @@ public class Main_Gui extends JFrame {
 			}
 		});
 
-		JMenuItem mntmHeute = new JMenuItem("Heute");
-		mntmHeute.addActionListener(new ActionListener() {
+		JMenuItem mn_Heute = new JMenuItem("Heute");
+		mn_Heute.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Controller.getController().deleteToday();
 				updateView();
 			}
 		});
-		mnNewMenu_1.add(mntmHeute);
-		mnNewMenu_1.add(mntmWochen);
+		mn_DatenLoeschen.add(mn_Heute);
+		mn_DatenLoeschen.add(mn_1Monat);
 
-		JMenuItem mntmWochen_1 = new JMenuItem("> 2 Monate");
-		mntmWochen_1.addActionListener(new ActionListener() {
+		JMenuItem mn_2Monate = new JMenuItem("> 2 Monate");
+		mn_2Monate.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Controller.getController().deleteOlder(2);
 				updateView();
 			}
 		});
-		mnNewMenu_1.add(mntmWochen_1);
+		mn_DatenLoeschen.add(mn_2Monate);
 
-		JMenuItem mntmAllesLschen = new JMenuItem("Alle");
-		mntmAllesLschen.addActionListener(new ActionListener() {
+		JMenuItem mn_AlleLoeschen = new JMenuItem("Alle");
+		mn_AlleLoeschen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Controller.getController().deleteAll();
 				updateView();
 			}
 		});
-		mnNewMenu_1.add(mntmAllesLschen);
+		mn_DatenLoeschen.add(mn_AlleLoeschen);
 
-		JMenuItem mntmOptionen = new JMenuItem("Optionen");
-		mntmOptionen.addActionListener(new ActionListener() {
+		JMenuItem mn_Optionen = new JMenuItem("Optionen");
+		mn_Optionen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				new Options_Gui(getBounds());
 				setVisible(false);
 			}
 		});
-		mn_Bearbeiten.add(mntmOptionen);
+		mn_Bearbeiten.add(mn_Optionen);
 
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -259,17 +259,17 @@ public class Main_Gui extends JFrame {
 			}
 		});
 
-		mnStatistik = new JMenu("Statistik");
-		menuBar.add(mnStatistik);
+		mn_StatistikM = new JMenu("Statistik");
+		menuBar.add(mn_StatistikM);
 
 		mn_Statistik = new JMenuItem("Statistik");
-		mnStatistik.add(mn_Statistik);
+		mn_StatistikM.add(mn_Statistik);
 
-		JMenu mnGraphen = new JMenu("Graphen");
-		mnStatistik.add(mnGraphen);
+		JMenu mn_Graphen = new JMenu("Graphen");
+		mn_StatistikM.add(mn_Graphen);
 
-		JMenuItem mntmArbeitszeitWoche = new JMenuItem("Arbeitszeit (1 Woche)");
-		mntmArbeitszeitWoche.addActionListener(new ActionListener() {
+		JMenuItem mn_ArbeitszeitWoche = new JMenuItem("Arbeitszeit (1 Woche)");
+		mn_ArbeitszeitWoche.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				new Graph(getBounds()).createLineChart("Arbeitszeit (1 Woche)", "Datum", "Arbeitszeit",
 						Graph.getDatesetArbeitszeit());
@@ -277,7 +277,7 @@ public class Main_Gui extends JFrame {
 				setVisible(false);
 			}
 		});
-		mnGraphen.add(mntmArbeitszeitWoche);
+		mn_Graphen.add(mn_ArbeitszeitWoche);
 
 		JMenuItem mn_Arbeitszeit = new JMenuItem("Arbeitszeit");
 		mn_Arbeitszeit.addActionListener(new ActionListener() {
@@ -287,16 +287,16 @@ public class Main_Gui extends JFrame {
 				setVisible(false);
 			}
 		});
-		mnGraphen.add(mn_Arbeitszeit);
+		mn_Graphen.add(mn_Arbeitszeit);
 		
-		JMenuItem mntmBalkendiagramm = new JMenuItem("Arbeitszeit/KW");
-		mntmBalkendiagramm.addActionListener(new ActionListener() {
+		JMenuItem mn_AZKW = new JMenuItem("Arbeitszeit/KW");
+		mn_AZKW.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new Graph(getBounds()).createBarChart("Arbeitszeit/KW", "KW", "Stunden", Graph.getDatesetBalkenDiagramm());
+				new Graph(getBounds()).createBarChart("Arbeitszeit/KW", "Kalenderwochen", "Stunden", Graph.getDatesetBalkenDiagramm());
 				setVisible(false);
 			}
 		});
-		mnGraphen.add(mntmBalkendiagramm);
+		mn_Graphen.add(mn_AZKW);
 
 		mn_Statistik.addActionListener(new ActionListener() {
 			@Override
@@ -323,7 +323,7 @@ public class Main_Gui extends JFrame {
 		lbl_AusgabeSAZnP = new JLabel();
 
 		// Text
-		textArea = new JTextArea();
+		ta_data = new JTextArea();
 
 		// Tag beginnen
 		btn_taganfang.setActionCommand("TA");
@@ -378,24 +378,24 @@ public class Main_Gui extends JFrame {
 		// Button aktivieren/deaktivieren wenn Datum in Datei
 		String textForTextArea = Controller.getController().getTextForToday();
 		if (textForTextArea != null) {
-			textArea.setText(textForTextArea);
+			ta_data.setText(textForTextArea);
 		}
 
 		// ScrollPane
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(201, 42, 294, 141);
 		contentPane.add(scrollPane);
-		scrollPane.setViewportView(textArea);
+		scrollPane.setViewportView(ta_data);
 
 		updateView();
 	}
 
 	public void updateView() {
-		mntmZeitenndern.setEnabled(Controller.getController().getToday() != null);
+		mn_ZeitenAendern.setEnabled(Controller.getController().getToday() != null);
 		mn_AlleDatenAnzeigen.setEnabled(Controller.getController().getDateMap().size()>0);
-		mnStatistik.setEnabled(Controller.getController().getDateMap().size()>0);
+		mn_StatistikM.setEnabled(Controller.getController().getDateMap().size()>0);
 		
-		textArea.setText(Controller.getController().getTextForToday());
+		ta_data.setText(Controller.getController().getTextForToday());
 
 		lbl_AusgabeSAZnP.setText(Controller.getController().getTimeForLabel(
 				Controller.getController().getArbeitszeit()));
