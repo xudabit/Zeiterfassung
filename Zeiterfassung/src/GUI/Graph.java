@@ -127,15 +127,17 @@ public class Graph extends JFrame {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
 		int woy = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
+		int maxWeeks = (Config.getConfig().getValue(Config.intConfigValues.KWDIAGWOCHEN))%53;
 		
-		for(int x = woy-(Config.getConfig().getValue(Config.intConfigValues.KWDIAGWOCHEN)); x < woy; x++) {
+		for(int x = woy-maxWeeks; x < woy; x++) {
+			int week = x + (x < 0?53:1);
 			long arbeitszeit = 0;
 			for (Tag t : Controller.getController().getDateMap().values()) {
-				if (x == t.getTagAnfang().get(Calendar.WEEK_OF_YEAR)) {
+				if (week == t.getTagAnfang().get(Calendar.WEEK_OF_YEAR)) {
 					arbeitszeit += t.berechneArbeitszeitInMillis();
 				}
 			}
-			dataset.addValue((double)(arbeitszeit / 3600000), "Arbeitszeit", "KW "+x);
+				dataset.addValue((double)(arbeitszeit / 3600000), "Arbeitszeit", "KW "+week);
 		}
 		
 
