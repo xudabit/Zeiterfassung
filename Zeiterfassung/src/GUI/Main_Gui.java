@@ -288,8 +288,17 @@ public class Main_Gui extends JFrame {
 				setVisible(false);
 			}
 		});
-
 		mnGraphen.add(mn_Arbeitszeit);
+		
+		JMenuItem mntmBalkendiagramm = new JMenuItem("Balkendiagramm");
+		mntmBalkendiagramm.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new Graph("XXX", "Datum", "YYY", Graph
+						.getDatesetBalkenDiagramm(), getBounds());
+				setVisible(false);
+			}
+		});
+		mnGraphen.add(mntmBalkendiagramm);
 
 		mn_Statistik.addActionListener(new ActionListener() {
 			@Override

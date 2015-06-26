@@ -51,6 +51,8 @@ public class Graph extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 
+		// true, true, false
+		// legend, tooltips, urls
 		JFreeChart lineChart = ChartFactory.createLineChart(title, Xtitle,
 				Ytitle, dateset, PlotOrientation.VERTICAL, true, true, false);
 		ChartPanel chartPanel = new ChartPanel(lineChart);
@@ -103,6 +105,13 @@ public class Graph extends JFrame {
 			arbeitszeit -= stunden;
 			dataset.addValue(arbeitszeit, "Arbeitszeit", s);
 		}
+		return dataset;
+	}
+	
+	
+	public static DefaultCategoryDataset getDatesetBalkenDiagramm() {
+		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
 		return dataset;
 	}
 }
