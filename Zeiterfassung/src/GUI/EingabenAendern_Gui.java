@@ -102,11 +102,16 @@ public class EingabenAendern_Gui extends JFrame {
 									"Daten konnten nicht gespeichert werden.\nBitte überprüfen Sie ihre Eingaben.",
 									"Fehler beim speichern",
 									JOptionPane.WARNING_MESSAGE);
-					setAllFields();
+					if(arg0.getActionCommand().equals("PAUSE")) {
+						setPauseFields(getSelectedPause());
+					}
+					if(arg0.getActionCommand().equals("TAG")) {
+						setTagFields();
+					}
 				} else {
 					Controller.getController().schreibeInDatei();
-					setVisible(false);
-					Main_Gui.getMainGui().showWindow(getBounds());
+					//setVisible(false);
+					//Main_Gui.getMainGui().showWindow(getBounds());
 				}
 			}
 		};
@@ -423,6 +428,11 @@ public class EingabenAendern_Gui extends JFrame {
 	}
 
 	private void setAllFields() {
+		setTagFields();
+		setPauseComboBox();
+	}
+
+	private void setTagFields() {
 		if (day == null)
 			return;
 
@@ -438,9 +448,8 @@ public class EingabenAendern_Gui extends JFrame {
 			tf_te_h.setEditable(true);
 			tf_te_m.setEditable(true);
 		}
-		setPauseComboBox();
 	}
-
+	
 	private void setPauseFields(Pause p) {
 		if (p != null) {
 			tf_pa_h.setEditable(true);
