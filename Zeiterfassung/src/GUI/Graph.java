@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,6 +18,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import Logik.Controller;
+import Logik.Tag;
 
 public class Graph extends JFrame {
 
@@ -28,9 +31,8 @@ public class Graph extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Graph(String title, String Xtitle, String Ytitle,
-			DefaultCategoryDataset dateset, Rectangle bounds) {
-		setTitle(title);
+	public Graph(Rectangle bounds) {
+		setTitle("Graph");
 
 		SysTray.getSysTray(this);
 		setResizable(false);
@@ -51,6 +53,10 @@ public class Graph extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 
+	}
+
+	public void createLineChart(String title, String Xtitle, String Ytitle,
+			DefaultCategoryDataset dateset) {
 		// true, true, false
 		// legend, tooltips, urls
 		JFreeChart lineChart = ChartFactory.createLineChart(title, Xtitle,
@@ -59,13 +65,21 @@ public class Graph extends JFrame {
 		chartPanel.setPreferredSize(new java.awt.Dimension((int) getBounds()
 				.getWidth(), (int) getBounds().getHeight()));
 		setContentPane(chartPanel);
-		
 		setVisible(true);
 	}
 
-	
-	
-	
+	public void createBarChart(String title, String Xtitle, String Ytitle,
+			DefaultCategoryDataset dateset) {
+		// true, true, false
+		// legend, tooltips, urls
+		JFreeChart barChart = ChartFactory.createBarChart(title, Xtitle,
+				Ytitle, dateset, PlotOrientation.VERTICAL, false, true, false);
+		ChartPanel chartPanel = new ChartPanel(barChart);
+		chartPanel.setPreferredSize(new java.awt.Dimension((int) getBounds()
+				.getWidth(), (int) getBounds().getHeight()));
+		setContentPane(chartPanel);
+		setVisible(true);
+	}
 
 	public static DefaultCategoryDataset getDatesetArbeitszeit() {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
@@ -107,10 +121,22 @@ public class Graph extends JFrame {
 		}
 		return dataset;
 	}
-	
-	
+
 	public static DefaultCategoryDataset getDatesetBalkenDiagramm() {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+		int woy = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
+		
+		for(int x = woy-3; x <= woy; x++) {
+			long arbeitszeit = 0;
+			for (Tag t : Controller.getController().getDateMap().values()) {
+				if (x == t.getTagAnfang().get(Calendar.WEEK_OF_YEAR)) {
+					arbeitszeit += t.berechneArbeitszeitInMillis();
+				}
+			}
+			dataset.addValue((double)(arbeitszeit / 3600000), "Arbeitszeit", "KW "+x);
+		}
+		
 
 		return dataset;
 	}

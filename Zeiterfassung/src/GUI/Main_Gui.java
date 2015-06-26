@@ -24,12 +24,6 @@ import java.util.Calendar;
 import Logik.Config;
 import Logik.Controller;
 
-import javax.swing.JPopupMenu;
-
-import java.awt.Component;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
 public class Main_Gui extends JFrame {
 
 	private static Main_Gui singleton;
@@ -273,8 +267,9 @@ public class Main_Gui extends JFrame {
 		JMenuItem mntmArbeitszeitWoche = new JMenuItem("Arbeitszeit (1 Woche)");
 		mntmArbeitszeitWoche.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new Graph("Arbeitszeit (1 Woche)", "Datum", "Arbeitszeit",
-						Graph.getDatesetArbeitszeit(), getBounds());
+				new Graph(getBounds()).createLineChart("Arbeitszeit (1 Woche)", "Datum", "Arbeitszeit",
+						Graph.getDatesetArbeitszeit());
+				
 				setVisible(false);
 			}
 		});
@@ -283,18 +278,17 @@ public class Main_Gui extends JFrame {
 		JMenuItem mn_Arbeitszeit = new JMenuItem("Arbeitszeit");
 		mn_Arbeitszeit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new Graph("Arbeitszeit", "Datum", "Arbeitszeit", Graph
-						.getDatesetArbeitszeitGesamt(), getBounds());
+				new Graph(getBounds()).createLineChart("Arbeitszeit", "Datum", "Arbeitszeit", Graph
+						.getDatesetArbeitszeitGesamt());
 				setVisible(false);
 			}
 		});
 		mnGraphen.add(mn_Arbeitszeit);
 		
-		JMenuItem mntmBalkendiagramm = new JMenuItem("Balkendiagramm");
+		JMenuItem mntmBalkendiagramm = new JMenuItem("Arbeitszeit/KW");
 		mntmBalkendiagramm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new Graph("XXX", "Datum", "YYY", Graph
-						.getDatesetBalkenDiagramm(), getBounds());
+				new Graph(getBounds()).createBarChart("Arbeitszeit/KW", "KW", "Stunden", Graph.getDatesetBalkenDiagramm());
 				setVisible(false);
 			}
 		});
@@ -446,25 +440,5 @@ public class Main_Gui extends JFrame {
 		updateView();
 		setVisible(true);
 		setBounds(bounds);
-	}
-
-	private static void addPopup(Component component, final JPopupMenu popup) {
-		component.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					showMenu(e);
-				}
-			}
-
-			public void mouseReleased(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					showMenu(e);
-				}
-			}
-
-			private void showMenu(MouseEvent e) {
-				popup.show(e.getComponent(), e.getX(), e.getY());
-			}
-		});
 	}
 }

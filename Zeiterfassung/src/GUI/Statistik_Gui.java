@@ -5,8 +5,6 @@ import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 
-import org.jfree.data.category.DefaultCategoryDataset;
-
 import Logik.Controller;
 
 import java.awt.Rectangle;
@@ -104,15 +102,15 @@ public class Statistik_Gui extends JFrame {
 		setVisible(true);
 	}
 	
-	private DefaultCategoryDataset createDataset( ) {
-		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		for (String s : Controller.getController().getSortedKeysForDateMap()) {
-			double stunden = Controller.getController().getDateMap().get(s)
-					.berechneArbeitszeitInMillis() / 3600000;
-			dataset.addValue(stunden, "arbeitszeit", s);
-		}
-		return dataset;
-	}
+//	private DefaultCategoryDataset createDataset( ) {
+//		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+//		for (String s : Controller.getController().getSortedKeysForDateMap()) {
+//			double stunden = Controller.getController().getDateMap().get(s)
+//					.berechneArbeitszeitInMillis() / 3600000;
+//			dataset.addValue(stunden, "arbeitszeit", s);
+//		}
+//		return dataset;
+//	}
 	
 	private void updateView() {
 		double avgPausendauer = Controller.getController().getDAPausen();
