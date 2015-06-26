@@ -157,12 +157,6 @@ public class Options_Gui extends JFrame {
 	}
 	
 	private void readConfig() {
-		//Config conf = Config.getConfig();
-		
-		cb_bool.removeAll();
-		cb_string.removeAll();
-		cb_int.removeAll();
-		
 		for(Config.boolConfigValues b : Config.boolConfigValues.values()) {
 			cb_bool.addItem(b);
 		}

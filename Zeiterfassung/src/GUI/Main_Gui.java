@@ -46,6 +46,10 @@ public class Main_Gui extends JFrame {
 
 	// Button
 	private JButton btn_taganfang, btn_pauseanfang, btn_pauseende, btn_tagende;
+	private JMenuItem mntmZeitenndern;
+	private JMenuItem mn_AlleDatenAnzeigen;
+	private JMenuItem mn_Statistik;
+	private JMenu mnStatistik;
 
 	/**
 	 * Launch the application.
@@ -151,7 +155,7 @@ public class Main_Gui extends JFrame {
 			}
 		});
 
-		JMenuItem mn_AlleDatenAnzeigen = new JMenuItem("Alle Daten anzeigen");
+		mn_AlleDatenAnzeigen = new JMenuItem("Alle Daten anzeigen");
 		mn_AlleDatenAnzeigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				new AllData_Gui(getBounds());
@@ -179,7 +183,7 @@ public class Main_Gui extends JFrame {
 		JMenu mn_Bearbeiten = new JMenu("Bearbeiten");
 		menuBar.add(mn_Bearbeiten);
 
-		JMenuItem mntmZeitenndern = new JMenuItem("Zeiten \u00E4ndern");
+		mntmZeitenndern = new JMenuItem("Zeiten \u00E4ndern");
 		mntmZeitenndern.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -255,10 +259,10 @@ public class Main_Gui extends JFrame {
 			}
 		});
 
-		JMenu mnStatistik = new JMenu("Statistik");
+		mnStatistik = new JMenu("Statistik");
 		menuBar.add(mnStatistik);
 
-		JMenuItem mn_Statistik = new JMenuItem("Statistik");
+		mn_Statistik = new JMenuItem("Statistik");
 		mnStatistik.add(mn_Statistik);
 
 		JMenu mnGraphen = new JMenu("Graphen");
@@ -297,17 +301,8 @@ public class Main_Gui extends JFrame {
 		mn_Statistik.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!Controller.getController().getDateMap().isEmpty()) {
-					new Statistik_Gui(getBounds());
-					setVisible(false);
-				} else {
-					JOptionPane
-							.showMessageDialog(
-									null,
-									"Speichern Sie mindestens einen Arbeitstag, \n damit eine Statistik erzeugt werden kann.",
-									"Fehlende Daten",
-									JOptionPane.WARNING_MESSAGE);
-				}
+				new Statistik_Gui(getBounds());
+				setVisible(false);
 			}
 		});
 		contentPane = new JPanel();
@@ -396,6 +391,10 @@ public class Main_Gui extends JFrame {
 	}
 
 	public void updateView() {
+		mntmZeitenndern.setEnabled(Controller.getController().getToday() != null);
+		mn_AlleDatenAnzeigen.setEnabled(Controller.getController().getDateMap().size()>0);
+		mnStatistik.setEnabled(Controller.getController().getDateMap().size()>0);
+		
 		textArea.setText(Controller.getController().getTextForToday());
 
 		lbl_AusgabeSAZnP.setText(Controller.getController().getTimeForLabel(

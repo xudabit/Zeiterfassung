@@ -126,7 +126,7 @@ public class EingabenAendern_Gui extends JFrame {
 		});
 
 		setTitle("Eingaben \u00E4ndern");
-		setBounds(100, 100, 513, 301);
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -137,7 +137,6 @@ public class EingabenAendern_Gui extends JFrame {
 		btn_saveTATE.setActionCommand("TAG");
 		btn_saveTATE.setBounds(251, 41, 232, 25);
 		contentPane.add(btn_saveTATE);
-						&& !tf_ta_m.getText().isEmpty()) {
 
 		lbl_TagBegonnenUm = new JLabel("Tag begonnen um: ");
 		lbl_TagBegonnenUm.setBounds(12, 13, 133, 16);
@@ -263,6 +262,7 @@ public class EingabenAendern_Gui extends JFrame {
 
 		JLabel lbl_Datum = new JLabel(Controller.getController()
 				.getDatestringFromCalendar(day.getTagAnfang()));
+		
 		lbl_Datum.setBounds(350, 13, 133, 16);
 		lbl_Datum.setHorizontalAlignment(SwingConstants.RIGHT);
 		contentPane.add(lbl_Datum);
