@@ -1,17 +1,10 @@
 package GUI;
 
-import java.awt.AWTException;
 import java.awt.EventQueue;
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
 import java.awt.Rectangle;
-import java.awt.Image;
-import java.awt.SystemTray;
-import java.awt.TrayIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
-import java.net.URL;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -27,16 +20,10 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 import java.util.Calendar;
-import java.util.HashMap;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import Logik.Config;
 import Logik.Controller;
 
-//import Logik.Config;
 import javax.swing.JPopupMenu;
 
 import java.awt.Component;

@@ -1,11 +1,9 @@
 package GUI;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Calendar;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -18,10 +16,13 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import Logik.Controller;
-import Logik.Pause;
 
 public class Graph extends JFrame {
 
+	/**
+	 * Graph
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
 	/**
@@ -57,6 +58,7 @@ public class Graph extends JFrame {
 				.getWidth(), (int) getBounds().getHeight()));
 		setContentPane(chartPanel);
 		
+		setVisible(true);
 	}
 
 	
