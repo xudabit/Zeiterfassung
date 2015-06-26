@@ -236,7 +236,7 @@ public class Main_Gui extends JFrame {
 			}
 		});
 		mn_DatenLoeschen.add(mn_AlleLoeschen);
-
+		mn_Bearbeiten.addSeparator();
 		JMenuItem mn_Optionen = new JMenuItem("Optionen");
 		mn_Optionen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
