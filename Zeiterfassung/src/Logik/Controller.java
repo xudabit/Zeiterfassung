@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import javax.swing.JOptionPane;
+
 public class Controller {
 	private static Controller singleton = null;
 
@@ -130,6 +132,8 @@ public class Controller {
 		int tag = 0, monat = 0, jahr = 0;
 		String[] zeit = new String[0], datum = new String[0];
 		String zeile;
+		int n_top = 1;
+		int n = 0;
 
 		try {
 			if (!file.exists())
@@ -149,8 +153,22 @@ public class Controller {
 					monat = Integer.parseInt(datum[2]);
 					jahr = Integer.parseInt(datum[3]);
 
-					dateMap.put(datum[1] + "." + datum[2] + "." + datum[3],
-							new Tag());
+					if(!(n_top == 0) && dateMap.containsKey(datum[1] + "." + datum[2] + "." + datum[3])) {
+						String[] options = new String[] {"Ja", "Nein", "Ja (merken)"};
+						n = JOptionPane.showOptionDialog(null,
+								"Sollen die Daten vom " + tag + "." + monat + "." + jahr + " ueberschrieben werden?",
+								"Alte Daten l\u00F6schen?", JOptionPane.YES_NO_CANCEL_OPTION,
+								JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+						
+						if(n == 2) {
+							n_top = 0;
+						}
+					}
+					
+					if(n_top == 0 || n == 0) {
+						dateMap.put(datum[1] + "." + datum[2] + "." + datum[3],
+								new Tag());
+					}
 
 				}
 				zeit = zeile.split(";");
@@ -322,7 +340,7 @@ public class Controller {
 		return ((double) pausen / dateMap.size());
 	}
 
-	public Calendar getCalFromZeit(String zeit, Calendar cal) {
+	public Calendar setCalFromZeit(String zeit, Calendar cal) {
 		if(zeit.isEmpty() || cal == null)
 			return null;
 		cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(zeit.split(":")[0]));
@@ -332,7 +350,7 @@ public class Controller {
 
 	public Calendar getCalFromZeitAktuell(String zeit) {
 		if(getToday() != null) {
-			return getCalFromZeit(zeit, (Calendar) getToday().getTagAnfang().clone());
+			return setCalFromZeit(zeit, (Calendar) getToday().getTagAnfang().clone());
 		} else {
 			return null;
 		}
