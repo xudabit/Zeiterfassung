@@ -323,7 +323,7 @@ public class Controller {
 		return ((double) pausen / dateMap.size());
 	}
 
-	public Calendar getCalFromZeit(String zeit, Calendar cal) {
+	public Calendar setCalFromZeit(String zeit, Calendar cal) {
 		if(zeit.isEmpty() || cal == null)
 			return null;
 		cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(zeit.split(":")[0]));
@@ -333,7 +333,7 @@ public class Controller {
 
 	public Calendar getCalFromZeitAktuell(String zeit) {
 		if(getToday() != null) {
-			return getCalFromZeit(zeit, (Calendar) getToday().getTagAnfang().clone());
+			return setCalFromZeit(zeit, (Calendar) getToday().getTagAnfang().clone());
 		} else {
 			return null;
 		}
