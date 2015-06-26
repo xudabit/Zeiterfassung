@@ -6,6 +6,12 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+
 import Logik.Controller;
 
 import java.awt.Rectangle;
@@ -77,20 +83,20 @@ public class Statistik_Gui extends JFrame {
 		contentPane.add(lbl_fAB);
 
 		JLabel lbl_AnzahlPausenText = new JLabel("Meisten Pausen an einem Tag:");
-		lbl_AnzahlPausenText.setBounds(10, 171, 218, 16);
+		lbl_AnzahlPausenText.setBounds(10, 210, 218, 16);
 		contentPane.add(lbl_AnzahlPausenText);
 
 		lbl_AnzahlPausen = new JLabel("Pausen");
-		lbl_AnzahlPausen.setBounds(304, 171, 251, 16);
+		lbl_AnzahlPausen.setBounds(304, 210, 251, 16);
 		contentPane.add(lbl_AnzahlPausen);
 
 		JLabel lbl_dAnzahlPausenText = new JLabel(
 				"Durchschnittliche Anzahl Pausen:");
-		lbl_dAnzahlPausenText.setBounds(10, 200, 218, 16);
+		lbl_dAnzahlPausenText.setBounds(10, 239, 218, 16);
 		contentPane.add(lbl_dAnzahlPausenText);
 
 		lbl_dAPausen = new JLabel("Anzahl Pausen");
-		lbl_dAPausen.setBounds(304, 200, 251, 16);
+		lbl_dAPausen.setBounds(304, 239, 251, 16);
 		contentPane.add(lbl_dAPausen);
 		
 		JLabel label = new JLabel("\u00DCberstunden:");
@@ -100,9 +106,19 @@ public class Statistik_Gui extends JFrame {
 		lbl_ueberstunden = new JLabel("00:00");
 		lbl_ueberstunden.setBounds(304, 42, 251, 16);
 		contentPane.add(lbl_ueberstunden);
-	
+		
 		updateView();
 		setVisible(true);
+	}
+	
+	private DefaultCategoryDataset createDataset( ) {
+		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+		for (String s : Controller.getController().getSortedKeysForDateMap()) {
+			double stunden = Controller.getController().getDateMap().get(s)
+					.berechneArbeitszeitInMillis() / 3600000;
+			dataset.addValue(stunden, "arbeitszeit", s);
+		}
+		return dataset;
 	}
 	
 	private void updateView() {

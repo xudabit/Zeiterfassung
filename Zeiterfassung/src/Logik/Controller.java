@@ -1,7 +1,6 @@
 package Logik;
 
 import java.io.BufferedReader;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -9,12 +8,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
 import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Set;
 
 public class Controller {
 	private static Controller singleton = null;
@@ -251,22 +249,14 @@ public class Controller {
 	public long getGesamtAZ() {
 		long summeArbeitstage = 0;
 
-		for (String s : dateMap.keySet()) {
-			if(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR) == dateMap.get(s).getTagAnfang().get(Calendar.WEEK_OF_YEAR))
-				summeArbeitstage += dateMap.get(s).berechneArbeitszeitInMillis();
+		for (String s : getSortedKeysForActualWeek()) {
+			summeArbeitstage += dateMap.get(s).berechneArbeitszeitInMillis();
 		}
 		return summeArbeitstage;
 	}
 
 	public long getUeberstunden() {
-		int anzahlTage = 0;
-		
-		for (String s : dateMap.keySet()) {
-			if(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR) == dateMap.get(s).getTagAnfang().get(Calendar.WEEK_OF_YEAR))
-				anzahlTage++;
-		}
-		
-		return (getGesamtAZ() - ((anzahlTage * 8) * 3600000));
+		return (getGesamtAZ() - ((getSortedKeysForActualWeek().size() * 8) * 3600000));
 	}
 
 	/*
@@ -435,6 +425,25 @@ public class Controller {
 			}
 		}
 		return true;
+	}
+	
+	public ArrayList<String> getSortedKeysForDateMap() {
+		ArrayList<String> keys = new ArrayList<String>();
+		keys.addAll(Controller.getController().getDateMap().keySet());
+		java.util.Collections.sort(keys);
+		return keys;
+	}
+	
+	public ArrayList<String> getSortedKeysForActualWeek() {
+		ArrayList<String> keys = new ArrayList<String>();
+		
+		for(String s : dateMap.keySet()) {
+			if(dateMap.get(s).getTagAnfang().get(Calendar.WEEK_OF_YEAR) == Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)) {
+				keys.add(s);
+			}
+		}
+		java.util.Collections.sort(keys);
+		return keys;
 	}
 	
 
