@@ -20,6 +20,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -35,6 +36,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.imageio.ImageIO;
+
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class EingabenAendern_Gui extends JFrame {
 
@@ -84,9 +88,60 @@ public class EingabenAendern_Gui extends JFrame {
 	public void InitEingabenAendern_GUI() {
 		SysTray.getSysTray(this);
 		
+		KeyAdapter keyListener = new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				if(	arg0.getKeyCode() == KeyEvent.VK_ENTER){
+					if (!saveAll()) {
+						JOptionPane
+								.showMessageDialog(
+										null,
+										"Daten konnten nicht gespeichert werden.\nBitte überprüfen Sie ihre Eingaben.",
+										"Fehler beim speichern",
+										JOptionPane.WARNING_MESSAGE);
+							setTagFields();
+					} else {
+						System.out.println("Daten gespeichert");
+						Controller.getController().schreibeInDatei();
+						setVisible(false);
+						Main_Gui.getMainGui().showWindow(getBounds());
+					}
+				}
+			}
+		};
+		
+		KeyAdapter pauseListener = new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				if(	arg0.getKeyCode() == KeyEvent.VK_ENTER){
+					if (!savePause()) {
+						JOptionPane
+								.showMessageDialog(
+										null,
+										"Daten konnten nicht gespeichert werden.\nBitte überprüfen Sie ihre Eingaben.",
+										"Fehler beim speichern",
+										JOptionPane.WARNING_MESSAGE);
+							setPauseFields(getSelectedPause());
+					} else {
+						System.out.println("Daten gespeichert");
+						Controller.getController().schreibeInDatei();
+						setVisible(false);
+						Main_Gui.getMainGui().showWindow(getBounds());
+					}
+				}
+			}
+		};
+		
 		ActionListener listener = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				boolean value = false;
+				
+				/*
+				 * 
+				 * SAVEALLDAY
+				 * 
+				 */
+				
 				if(arg0.getActionCommand().equals("PAUSE")) {
 					value = savePause();
 				}
@@ -109,8 +164,8 @@ public class EingabenAendern_Gui extends JFrame {
 					}
 				} else {
 					Controller.getController().schreibeInDatei();
-					//setVisible(false);
-					//Main_Gui.getMainGui().showWindow(getBounds());
+					setVisible(false);
+					Main_Gui.getMainGui().showWindow(getBounds());
 				}
 			}
 		};
@@ -175,12 +230,14 @@ public class EingabenAendern_Gui extends JFrame {
 		pl_Pausen.add(cb_pause);
 
 		tf_pa_h = new JTextField();
+		tf_pa_h.addKeyListener(keyListener);
 		tf_pa_h.setEditable(false);
 		tf_pa_h.setBounds(137, 48, 35, 22);
 		pl_Pausen.add(tf_pa_h);
 		tf_pa_h.setColumns(10);
 
 		tf_pa_m = new JTextField();
+		tf_pa_m.addKeyListener(keyListener);
 		tf_pa_m.setEditable(false);
 		tf_pa_m.setColumns(10);
 		tf_pa_m.setBounds(184, 48, 35, 22);
@@ -191,6 +248,7 @@ public class EingabenAendern_Gui extends JFrame {
 		pl_Pausen.add(lblNewLabel);
 
 		tf_pe_h = new JTextField();
+		tf_pe_h.addKeyListener(keyListener);
 		tf_pe_h.setEditable(false);
 		tf_pe_h.setColumns(10);
 		tf_pe_h.setBounds(137, 87, 35, 22);
@@ -201,6 +259,7 @@ public class EingabenAendern_Gui extends JFrame {
 		pl_Pausen.add(label);
 
 		tf_pe_m = new JTextField();
+		tf_pe_m.addKeyListener(keyListener);
 		tf_pe_m.setEditable(false);
 		tf_pe_m.setColumns(10);
 		tf_pe_m.setBounds(184, 87, 35, 22);
@@ -276,6 +335,7 @@ public class EingabenAendern_Gui extends JFrame {
 		contentPane.add(btn_verwerfen);
 
 		tf_ta_m = new JTextField();
+		tf_ta_m.addKeyListener(keyListener);
 		tf_ta_m.setEditable(false);
 		tf_ta_m.setColumns(10);
 		tf_ta_m.setBounds(204, 13, 35, 22);
@@ -286,12 +346,14 @@ public class EingabenAendern_Gui extends JFrame {
 		contentPane.add(label_2);
 
 		tf_ta_h = new JTextField();
+		tf_ta_h.addKeyListener(keyListener);
 		tf_ta_h.setEditable(false);
 		tf_ta_h.setColumns(10);
 		tf_ta_h.setBounds(157, 13, 35, 22);
 		contentPane.add(tf_ta_h);
 
 		tf_te_m = new JTextField();
+		tf_te_m.addKeyListener(keyListener);
 		tf_te_m.setEditable(false);
 		tf_te_m.setColumns(10);
 		tf_te_m.setBounds(204, 45, 35, 22);
@@ -302,12 +364,17 @@ public class EingabenAendern_Gui extends JFrame {
 		contentPane.add(label_3);
 
 		tf_te_h = new JTextField();
+		tf_te_h.addKeyListener(keyListener);
 		tf_te_h.setEditable(false);
 		tf_te_h.setColumns(10);
 		tf_te_h.setBounds(157, 45, 35, 22);
 		contentPane.add(tf_te_h);
 
 		setAllFields();
+	}
+	
+	private boolean saveAll() {
+		return (saveDay() && savePause());
 	}
 	
 	private boolean saveDay() {

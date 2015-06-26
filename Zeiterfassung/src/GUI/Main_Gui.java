@@ -1,5 +1,6 @@
 package GUI;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
@@ -10,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.basic.BasicProgressBarUI;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
@@ -23,6 +25,8 @@ import java.util.Calendar;
 
 import Logik.Config;
 import Logik.Controller;
+
+import javax.swing.JProgressBar;
 
 public class Main_Gui extends JFrame {
 
@@ -50,6 +54,8 @@ public class Main_Gui extends JFrame {
 	private JMenuItem mn_AlleDatenAnzeigen;
 	private JMenuItem mn_Statistik;
 	private JMenu mn_StatistikM;
+	private JProgressBar progressBar;
+	private JProgressBar progressBarUeberstunden;
 
 	/**
 	 * Launch the application.
@@ -74,7 +80,7 @@ public class Main_Gui extends JFrame {
 	private Main_Gui() {
 		setResizable(false);
 		setTitle("Zeiterfassung");
-
+		
 		Object[] options = { "Ja", "Nein" };
 
 		setBounds(100, 100, 513, 301);
@@ -271,9 +277,9 @@ public class Main_Gui extends JFrame {
 		JMenuItem mn_ArbeitszeitWoche = new JMenuItem("Arbeitszeit (1 Woche)");
 		mn_ArbeitszeitWoche.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new Graph(getBounds()).createLineChart("Arbeitszeit (1 Woche)", "Datum", "Arbeitszeit",
-						Graph.getDatesetArbeitszeit());
-				
+				new Graph(getBounds()).createLineChart("Arbeitszeit (1 Woche)",
+						"Datum", "Arbeitszeit", Graph.getDatesetArbeitszeit());
+
 				setVisible(false);
 			}
 		});
@@ -282,17 +288,19 @@ public class Main_Gui extends JFrame {
 		JMenuItem mn_Arbeitszeit = new JMenuItem("Arbeitszeit");
 		mn_Arbeitszeit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new Graph(getBounds()).createLineChart("Arbeitszeit", "Datum", "Arbeitszeit", Graph
-						.getDatesetArbeitszeitGesamt());
+				new Graph(getBounds()).createLineChart("Arbeitszeit", "Datum",
+						"Arbeitszeit", Graph.getDatesetArbeitszeitGesamt());
 				setVisible(false);
 			}
 		});
 		mn_Graphen.add(mn_Arbeitszeit);
-		
+
 		JMenuItem mn_AZKW = new JMenuItem("Arbeitszeit/KW");
 		mn_AZKW.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new Graph(getBounds()).createBarChart("Arbeitszeit/KW", "Kalenderwochen", "Stunden", Graph.getDatesetBalkenDiagramm());
+				new Graph(getBounds()).createBarChart("Arbeitszeit/KW",
+						"Kalenderwochen", "Stunden",
+						Graph.getDatesetBalkenDiagramm());
 				setVisible(false);
 			}
 		});
@@ -321,9 +329,6 @@ public class Main_Gui extends JFrame {
 		JLabel lbl_AktuellesDatumRechtsbuendig = new JLabel();
 		JLabel lbl_TextSAZnP = new JLabel("Summe Arbeitszeit:");
 		lbl_AusgabeSAZnP = new JLabel();
-
-		// Text
-		ta_data = new JTextArea();
 
 		// Tag beginnen
 		btn_taganfang.setActionCommand("TA");
@@ -375,30 +380,54 @@ public class Main_Gui extends JFrame {
 		lbl_AusgabeSAZnP.setBounds(201, 196, 294, 16);
 		contentPane.add(lbl_AusgabeSAZnP);
 
-		// Button aktivieren/deaktivieren wenn Datum in Datei
-		String textForTextArea = Controller.getController().getTextForToday();
-		if (textForTextArea != null) {
-			ta_data.setText(textForTextArea);
-		}
+		// Text
+		ta_data = new JTextArea();
+		ta_data.setEditable(false);
 
 		// ScrollPane
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(201, 42, 294, 141);
+		scrollPane.setBounds(201, 42, 294, 114);
 		contentPane.add(scrollPane);
 		scrollPane.setViewportView(ta_data);
+
+		progressBar = new JProgressBar();
+		progressBar.setBounds(201, 164, 200, 14);
+		contentPane.add(progressBar);
+
+		progressBarUeberstunden = new JProgressBar();
+		progressBarUeberstunden.setBounds(400, 164, 95, 14);
+		contentPane.add(progressBarUeberstunden);
+
+		new Thread() {
+			@Override
+			public void run() {
+				// super.run();
+				try {
+					while (true) {
+						updateView();
+						sleep(60 * 1000);
+					}
+				} catch (InterruptedException ex) {
+					System.err.println(ex.getMessage());
+				}
+			}
+		}.start();
 
 		updateView();
 	}
 
 	public void updateView() {
-		mn_ZeitenAendern.setEnabled(Controller.getController().getToday() != null);
-		mn_AlleDatenAnzeigen.setEnabled(Controller.getController().getDateMap().size()>0);
-		mn_StatistikM.setEnabled(Controller.getController().getDateMap().size()>0);
-		
+		mn_ZeitenAendern
+				.setEnabled(Controller.getController().getToday() != null);
+		mn_AlleDatenAnzeigen.setEnabled(Controller.getController().getDateMap()
+				.size() > 0);
+		mn_StatistikM
+				.setEnabled(Controller.getController().getDateMap().size() > 0);
 		ta_data.setText(Controller.getController().getTextForToday());
-
 		lbl_AusgabeSAZnP.setText(Controller.getController().getTimeForLabel(
 				Controller.getController().getArbeitszeit()));
+
+		updateProgressBar();
 
 		enableButtons();
 	}
@@ -439,5 +468,40 @@ public class Main_Gui extends JFrame {
 		updateView();
 		setVisible(true);
 		setBounds(bounds);
+	}
+
+	public void updateProgressBar() {
+
+		if (Controller.getController().getToday() != null) {
+			int prozent = (int) ((double) (Controller.getController()
+					.getToday().berechneArbeitszeitInMillis() / 3600000) / 8 * 100);
+			if (prozent <= 80) {
+				progressBar.setForeground(Color.orange);
+				progressBarUeberstunden.setForeground(Color.orange);
+			} else if (prozent > 80 && prozent <= 112) {
+				progressBar.setForeground(Color.green);
+				progressBarUeberstunden.setForeground(Color.green);
+			} else if (prozent > 112 && prozent <= 125) {
+				progressBar.setForeground(Color.orange);
+				progressBarUeberstunden.setForeground(Color.orange);
+			} else if (prozent > 125) {
+				progressBar.setForeground(Color.red);
+				progressBarUeberstunden.setForeground(Color.red);
+			}
+
+			progressBar.setValue(prozent);
+			progressBar.setStringPainted(true);
+			
+			progressBar.setString(((double)prozent/100*8) + " Stunden");
+			
+			progressBar.setUI(new BasicProgressBarUI() {
+			      protected Color getSelectionBackground() { return Color.black; }
+			      protected Color getSelectionForeground() { return Color.black; }
+			    });
+
+			progressBarUeberstunden.setValue((prozent - 100) * 2);
+		} else {
+			progressBar.setValue(progressBar.getMinimum());
+		}
 	}
 }

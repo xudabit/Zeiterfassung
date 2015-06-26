@@ -37,6 +37,7 @@ public class SysTray {
 	private HashMap<String, MenuItem> mi_map;
 	
 	private void initialize() {
+
 		mi_map = new HashMap<String, MenuItem>();
 		ActionListener btn_mi_al = new ActionListener() {
 			@Override
