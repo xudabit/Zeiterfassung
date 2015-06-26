@@ -64,8 +64,8 @@ public class Statistik_Gui extends JFrame {
 		contentPane.setLayout(null);
 
 		// Gesamtarbeitszeit seit Datei erzeugt wurde
-		JLabel lbl_GesamtAZText = new JLabel("Gesamtarbeitszeit der letzten Tage:");
-		lbl_GesamtAZText.setBounds(10, 13, 220, 16);
+		JLabel lbl_GesamtAZText = new JLabel("Gesamtarbeitszeit der aktuellen Woche:");
+		lbl_GesamtAZText.setBounds(10, 13, 282, 16);
 		contentPane.add(lbl_GesamtAZText);
 
 		lbl_GesamtAZAusgabe = new JLabel("00:00");
@@ -99,8 +99,8 @@ public class Statistik_Gui extends JFrame {
 		lbl_dAPausen.setBounds(304, 239, 251, 16);
 		contentPane.add(lbl_dAPausen);
 		
-		JLabel label = new JLabel("\u00DCberstunden:");
-		label.setBounds(10, 42, 220, 16);
+		JLabel label = new JLabel("\u00DCberstunden in der aktuellen Woche:");
+		label.setBounds(10, 42, 282, 16);
 		contentPane.add(label);
 		
 		lbl_ueberstunden = new JLabel("00:00");
