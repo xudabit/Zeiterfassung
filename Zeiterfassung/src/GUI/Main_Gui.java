@@ -28,15 +28,17 @@ import javax.swing.JMenuItem;
 
 import java.util.Calendar;
 import java.util.HashMap;
-
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import Logik.Controller;
 import Logik.Config;
+import Logik.Controller;
+
+//import Logik.Config;
 import javax.swing.JPopupMenu;
+
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
