@@ -409,19 +409,22 @@ public class EingabenAendern_Gui extends JFrame {
 
 			if (selP == null
 					|| !c_pa.before(c_pe)
-					|| !(day.getTagAnfang() != null && day.getTagAnfang().before(c_pa))
-					|| !(day.getTagEnde() != null && day.getTagEnde().after(c_pe))){
+					|| !(day.getTagAnfang() != null && day.getTagAnfang()
+							.before(c_pa))
+					|| !(day.getTagEnde() != null && day.getTagEnde().after(
+							c_pe))) {
 				return false;
 			}
-				
 
 			for (Pause p : day.getPausenListe()) {
 				if (p.equals(selP)) {
 					continue;
 				}
 
-				if ((p.getPauseStart().before(c_pa) && p.getPauseEnde().after(c_pa))
-						|| (p.getPauseStart().before(c_pe) && p.getPauseEnde().after(c_pe))) {
+				if ((p.getPauseStart().before(c_pa) && p.getPauseEnde().after(
+						c_pa))
+						|| (p.getPauseStart().before(c_pe) && p.getPauseEnde()
+								.after(c_pe))) {
 					return false;
 				}
 			}

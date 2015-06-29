@@ -91,7 +91,6 @@ public class Controller {
 		schreibeInDatei();
 	}
 
-	// Aktuelle Zeit abfragen
 	public String getTimestringFromCalendar(Calendar d) {
 		if (d == null)
 			return "";
@@ -100,7 +99,6 @@ public class Controller {
 		return df.format(d.getTime());
 	}
 
-	// Aktuelles/Heutiges Datum abfragen
 	public String getDatestringFromCalendar(Calendar d) {
 		SimpleDateFormat da = new SimpleDateFormat("dd.MM.YYYY");
 		return da.format(d.getTime());
@@ -217,7 +215,7 @@ public class Controller {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void readData() {
+	private void readData() {
 		try {
 			File f = new File(Config.getConfig().getValue(Config.stringConfigValues.AUSGABEPFAD));
 			if(f.getParentFile() != null)
@@ -319,7 +317,7 @@ public class Controller {
 
 	// Tag mit den meisten Pausen bestimmen
 	public int getMaxAnzahlPausen() {
-		int temp = 0; // Zwischenspeicher fuer Vergleich
+		int temp = 0;
 
 		for (String s : dateMap.keySet()) {
 			int pausen = getAnzahlPausen(s);
@@ -348,13 +346,13 @@ public class Controller {
 		return cal;
 	}
 
-	public Calendar getCalFromZeitAktuell(String zeit) {
-		if(getToday() != null) {
-			return setCalFromZeit(zeit, (Calendar) getToday().getTagAnfang().clone());
-		} else {
-			return null;
-		}
-	}
+//	public Calendar getCalFromZeitAktuell(String zeit) {
+//		if(getToday() != null) {
+//			return setCalFromZeit(zeit, (Calendar) getToday().getTagAnfang().clone());
+//		} else {
+//			return null;
+//		}
+//	}
 	
 	public boolean deleteAll(){
 		dateMap.clear();
@@ -462,6 +460,4 @@ public class Controller {
 		java.util.Collections.sort(keys);
 		return keys;
 	}
-	
-
 }

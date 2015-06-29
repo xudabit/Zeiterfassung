@@ -71,9 +71,7 @@ public class AllData_Gui extends JFrame {
 		});
 		cB_Datum.setBounds(12, 13, 216, 22);
 		contentPane.add(cB_Datum);
-		
-		
-		
+				
 		JButton btn_Delete = new JButton("Delete");
 		btn_Delete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
