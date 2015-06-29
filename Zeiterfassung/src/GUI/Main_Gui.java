@@ -397,7 +397,9 @@ public class Main_Gui extends JFrame {
 		progressBarUeberstunden = new JProgressBar();
 		progressBarUeberstunden.setBounds(400, 164, 95, 14);
 		contentPane.add(progressBarUeberstunden);
-
+		
+		updateView();
+		
 		new Thread() {
 			@Override
 			public void run() {
@@ -412,8 +414,6 @@ public class Main_Gui extends JFrame {
 				}
 			}
 		}.start();
-
-		updateView();
 	}
 
 	public void updateView() {
@@ -473,8 +473,7 @@ public class Main_Gui extends JFrame {
 	public void updateProgressBar() {
 
 		if (Controller.getController().getToday() != null) {
-			int prozent = (int) ((double) (Controller.getController()
-					.getToday().berechneArbeitszeitInMillis() / 3600000) / 8 * 100);
+			int prozent = (int) (((double) Controller.getController().getToday().berechneArbeitszeitInMillis()/ 3600000) / 8 * 100);
 			if (prozent <= 80) {
 				progressBar.setForeground(Color.orange);
 				progressBarUeberstunden.setForeground(Color.orange);
@@ -492,7 +491,7 @@ public class Main_Gui extends JFrame {
 			progressBar.setValue(prozent);
 			progressBar.setStringPainted(true);
 			
-			progressBar.setString(((double)prozent/100*8) + " Stunden");
+			progressBar.setString(((double)prozent / 100 * 8) + " Stunden");
 			
 			progressBar.setUI(new BasicProgressBarUI() {
 			      protected Color getSelectionBackground() { return Color.black; }

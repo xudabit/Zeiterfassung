@@ -20,11 +20,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import Logik.Config;
 import Logik.Controller;
@@ -32,13 +33,9 @@ import Logik.Pause;
 import Logik.Tag;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.imageio.ImageIO;
-
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 public class EingabenAendern_Gui extends JFrame {
 
@@ -87,11 +84,11 @@ public class EingabenAendern_Gui extends JFrame {
 	 */
 	public void InitEingabenAendern_GUI() {
 		SysTray.getSysTray(this);
-		
+
 		KeyAdapter keyListener = new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
-				if(	arg0.getKeyCode() == KeyEvent.VK_ENTER){
+				if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
 					if (!saveAll()) {
 						JOptionPane
 								.showMessageDialog(
@@ -99,7 +96,7 @@ public class EingabenAendern_Gui extends JFrame {
 										"Daten konnten nicht gespeichert werden.\nBitte überprüfen Sie ihre Eingaben.",
 										"Fehler beim speichern",
 										JOptionPane.WARNING_MESSAGE);
-							setTagFields();
+						setTagFields();
 					} else {
 						System.out.println("Daten gespeichert");
 						Controller.getController().schreibeInDatei();
@@ -109,46 +106,23 @@ public class EingabenAendern_Gui extends JFrame {
 				}
 			}
 		};
-		
-		KeyAdapter pauseListener = new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent arg0) {
-				if(	arg0.getKeyCode() == KeyEvent.VK_ENTER){
-					if (!savePause()) {
-						JOptionPane
-								.showMessageDialog(
-										null,
-										"Daten konnten nicht gespeichert werden.\nBitte überprüfen Sie ihre Eingaben.",
-										"Fehler beim speichern",
-										JOptionPane.WARNING_MESSAGE);
-							setPauseFields(getSelectedPause());
-					} else {
-						System.out.println("Daten gespeichert");
-						Controller.getController().schreibeInDatei();
-						setVisible(false);
-						Main_Gui.getMainGui().showWindow(getBounds());
-					}
-				}
-			}
-		};
-		
+
 		ActionListener listener = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				boolean value = false;
-				
+
 				/*
 				 * 
 				 * SAVEALLDAY
-				 * 
 				 */
-				
-				if(arg0.getActionCommand().equals("PAUSE")) {
+
+				if (arg0.getActionCommand().equals("PAUSE")) {
 					value = savePause();
 				}
-				if(arg0.getActionCommand().equals("TAG")) {
+				if (arg0.getActionCommand().equals("TAG")) {
 					value = saveDay();
 				}
-				
+
 				if (!value) {
 					JOptionPane
 							.showMessageDialog(
@@ -156,10 +130,10 @@ public class EingabenAendern_Gui extends JFrame {
 									"Daten konnten nicht gespeichert werden.\nBitte überprüfen Sie ihre Eingaben.",
 									"Fehler beim speichern",
 									JOptionPane.WARNING_MESSAGE);
-					if(arg0.getActionCommand().equals("PAUSE")) {
+					if (arg0.getActionCommand().equals("PAUSE")) {
 						setPauseFields(getSelectedPause());
 					}
-					if(arg0.getActionCommand().equals("TAG")) {
+					if (arg0.getActionCommand().equals("TAG")) {
 						setTagFields();
 					}
 				} else {
@@ -180,7 +154,7 @@ public class EingabenAendern_Gui extends JFrame {
 		});
 
 		setTitle("Eingaben \u00E4ndern");
-		
+
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -289,13 +263,13 @@ public class EingabenAendern_Gui extends JFrame {
 
 		JLabel lbl_bild = new JLabel("Bild");
 		lbl_bild.setBounds(231, 48, 67, 67);
-		
-		int x,y,h,w;
-		x=(int)lbl_bild.getBounds().getX();
-		y=(int)lbl_bild.getBounds().getY();
-		h=(int)lbl_bild.getBounds().getHeight();
-		w=(int)lbl_bild.getBounds().getWidth();
-		
+
+		int x, y, h, w;
+		x = (int) lbl_bild.getBounds().getX();
+		y = (int) lbl_bild.getBounds().getY();
+		h = (int) lbl_bild.getBounds().getHeight();
+		w = (int) lbl_bild.getBounds().getWidth();
+
 		try {
 			BufferedImage image = ImageIO.read(ClassLoader
 					.getSystemResource(Config.getConfig().getValue(
@@ -311,7 +285,7 @@ public class EingabenAendern_Gui extends JFrame {
 			System.err.println(ex.getMessage());
 		}
 		pl_Pausen.add(lbl_bild);
-		
+
 		JButton btn_savePause = new JButton("Pause speichern");
 		btn_savePause.addActionListener(listener);
 		btn_savePause.setActionCommand("PAUSE");
@@ -320,7 +294,7 @@ public class EingabenAendern_Gui extends JFrame {
 
 		JLabel lbl_Datum = new JLabel(Controller.getController()
 				.getDatestringFromCalendar(day.getTagAnfang()));
-		
+
 		lbl_Datum.setBounds(343, 12, 133, 16);
 		lbl_Datum.setHorizontalAlignment(SwingConstants.RIGHT);
 		contentPane.add(lbl_Datum);
@@ -372,32 +346,38 @@ public class EingabenAendern_Gui extends JFrame {
 
 		setAllFields();
 	}
-	
+
 	private boolean saveAll() {
 		return (saveDay() && savePause());
 	}
-	
+
 	private boolean saveDay() {
 		Calendar c_ta = null, c_te = null;
 
 		if (day != null) {
 			if (!tf_ta_h.getText().isEmpty() && !tf_ta_m.getText().isEmpty()) {
-				c_ta = Controller.getController().setCalFromZeit(tf_ta_h.getText() + ":" + tf_ta_m.getText(), (Calendar)day.getTagAnfang().clone());
-				
-				if (c_ta == null || !Controller.getController().isTAFirst(c_ta, day)) {
+				c_ta = Controller.getController().setCalFromZeit(
+						tf_ta_h.getText() + ":" + tf_ta_m.getText(),
+						(Calendar) day.getTagAnfang().clone());
+
+				if (c_ta == null
+						|| !Controller.getController().isTAFirst(c_ta, day)) {
 					return false;
 				} else {
 					day.setTagAnfang(c_ta);
 				}
 			}
-			
-			if(c_ta == null)
+
+			if (c_ta == null)
 				return false;
-			
+
 			if (!tf_te_h.getText().isEmpty() && !tf_te_m.getText().isEmpty()) {
-				c_te = Controller.getController().setCalFromZeit(tf_te_h.getText() + ":" + tf_te_m.getText(), (Calendar)day.getTagEnde().clone());
-				
-				if (c_te == null || !Controller.getController().isTELast(c_te, day)) {
+				c_te = Controller.getController().setCalFromZeit(
+						tf_te_h.getText() + ":" + tf_te_m.getText(),
+						(Calendar) day.getTagEnde().clone());
+
+				if (c_te == null
+						|| !Controller.getController().isTELast(c_te, day)) {
 					return false;
 				} else {
 					day.setTagEnde(c_te);
@@ -408,67 +388,55 @@ public class EingabenAendern_Gui extends JFrame {
 	}
 
 	private boolean savePause() {
-		boolean allTestsPassed = true;
 		Calendar c_pa = null, c_pe = null;
-		ArrayList<Boolean> testPassed = new ArrayList<Boolean>();
-		Pause selP = getSelectedPause(); 
+		// ArrayList<Boolean> testPassed = new ArrayList<Boolean>();
+		Pause selP = getSelectedPause();
 		if (selP != null) {
 			c_pa = (Calendar) selP.getPauseStart().clone();
 			c_pe = (Calendar) selP.getPauseEnde().clone();
-			
+
 			if (!tf_pa_h.getText().isEmpty() && !tf_pa_m.getText().isEmpty()) {
-				c_pa.set(Calendar.HOUR_OF_DAY,Integer.parseInt(tf_pa_h.getText()));
-				c_pa.set(Calendar.MINUTE,Integer.parseInt(tf_pa_m.getText()));
+				c_pa.set(Calendar.HOUR_OF_DAY,
+						Integer.parseInt(tf_pa_h.getText()));
+				c_pa.set(Calendar.MINUTE, Integer.parseInt(tf_pa_m.getText()));
 			}
 
 			if (!tf_pe_h.getText().isEmpty() && !tf_pe_m.getText().isEmpty()) {
-				c_pe.set(Calendar.HOUR_OF_DAY,Integer.parseInt(tf_pe_h.getText()));
-				c_pe.set(Calendar.MINUTE,Integer.parseInt(tf_pe_m.getText()));
+				c_pe.set(Calendar.HOUR_OF_DAY,
+						Integer.parseInt(tf_pe_h.getText()));
+				c_pe.set(Calendar.MINUTE, Integer.parseInt(tf_pe_m.getText()));
 			}
-			
-			testPassed.add(selP != null);
 
-			testPassed.add(c_pa.before(c_pe));
-			
-			if (day.getTagAnfang() != null)
-				testPassed.add(day.getTagAnfang().before(c_pa));
-			if (day.getTagEnde() != null)
-				testPassed.add(day.getTagEnde().after(c_pe));
+			if (selP == null
+					|| !c_pa.before(c_pe)
+					|| !(day.getTagAnfang() != null && day.getTagAnfang().before(c_pa))
+					|| !(day.getTagEnde() != null && day.getTagEnde().after(c_pe))){
+				return false;
+			}
+				
 
 			for (Pause p : day.getPausenListe()) {
 				if (p.equals(selP)) {
 					continue;
 				}
-				testPassed
-						.add(!(p.getPauseStart().before(c_pa) && p
-								.getPauseEnde().after(c_pa)));
-				testPassed
-						.add(!(p.getPauseStart().before(c_pe) && p
-								.getPauseEnde().after(c_pe)));
-			}
 
-			for (Boolean b : testPassed) {
-				if (!b) {
-					allTestsPassed = false;
-					break;
+				if ((p.getPauseStart().before(c_pa) && p.getPauseEnde().after(c_pa))
+						|| (p.getPauseStart().before(c_pe) && p.getPauseEnde().after(c_pe))) {
+					return false;
 				}
 			}
-		}
-		if (allTestsPassed) {
+
 			selP.setPauseStart(c_pa);
 			selP.setPauseEnde(c_pe);
-			
+
 			if (temp != null) {
 				day.addPause(getSelectedPause());
 				temp = null;
 			}
-			
-			return true;
 		}
-		
-		return false;
+		return true;
 	}
-	
+
 	private void setPauseComboBox() {
 		boolean empty = true;
 
@@ -517,7 +485,7 @@ public class EingabenAendern_Gui extends JFrame {
 			tf_te_m.setEditable(true);
 		}
 	}
-	
+
 	private void setPauseFields(Pause p) {
 		if (p != null) {
 			tf_pa_h.setEditable(true);
