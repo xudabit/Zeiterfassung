@@ -53,15 +53,15 @@ public class Config implements Serializable{
 	}
 	
 	public void setDefConfig() {
-		bool_conf.putIfAbsent(boolConfigValues.MINIMIZETOTRAY, true);
-		bool_conf.putIfAbsent(boolConfigValues.WARNINGOLDDATA, true);
+		bool_conf.put(boolConfigValues.MINIMIZETOTRAY, true);
+		bool_conf.put(boolConfigValues.WARNINGOLDDATA, true);
 		
-		string_conf.putIfAbsent(stringConfigValues.IMPORTPFAD, "Zeiterfassung.imp");
-		string_conf.putIfAbsent(stringConfigValues.AUSGABEPFAD, "data/timedata.ze");
-		string_conf.putIfAbsent(stringConfigValues.ICONPFAD, "icon/uhr.jpg");
-		string_conf.putIfAbsent(stringConfigValues.PAUSEIMAGE, "icon/pause.jpg");
+		string_conf.put(stringConfigValues.IMPORTPFAD, "Zeiterfassung.imp");
+		string_conf.put(stringConfigValues.AUSGABEPFAD, "data/timedata.ze");
+		string_conf.put(stringConfigValues.ICONPFAD, "icon/uhr.jpg");
+		string_conf.put(stringConfigValues.PAUSEIMAGE, "icon/pause.jpg");
 		
-		int_conf.putIfAbsent(intConfigValues.KWDIAGWOCHEN, 4);
+		int_conf.put(intConfigValues.KWDIAGWOCHEN, 4);
 	}
 		
 	public void setValue(stringConfigValues key, String s) {

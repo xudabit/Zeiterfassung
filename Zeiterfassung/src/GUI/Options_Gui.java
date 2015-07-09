@@ -41,6 +41,8 @@ public class Options_Gui extends JFrame {
 
 	private JComboBox<Config.intConfigValues> cb_int;
 
+	private JSpinner sp_int;
+
 	/**
 	 * Create the frame.
 	 */
@@ -110,7 +112,7 @@ public class Options_Gui extends JFrame {
 		contentPane.add(pl_int);
 		
 		cb_int = new JComboBox<Config.intConfigValues>();
-		JSpinner sp_int = new JSpinner();
+		sp_int = new JSpinner();
 		sp_int.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				Config.getConfig().setValue((Config.intConfigValues)cb_int.getSelectedItem(), (int)sp_int.getValue());
