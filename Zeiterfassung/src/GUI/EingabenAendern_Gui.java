@@ -411,8 +411,7 @@ public class EingabenAendern_Gui extends JFrame {
 					|| !c_pa.before(c_pe)
 					|| !(day.getTagAnfang() != null && day.getTagAnfang()
 							.before(c_pa))
-					|| !(day.getTagEnde() != null && day.getTagEnde().after(
-							c_pe))) {
+					|| (day.getTagEnde() != null && !day.getTagEnde().after(c_pe))) {
 				return false;
 			}
 
