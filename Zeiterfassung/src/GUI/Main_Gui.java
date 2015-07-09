@@ -480,19 +480,23 @@ public class Main_Gui extends JFrame {
 	public void updateProgressBar() {
 
 		if (Controller.getController().getToday() != null) {
-			double x = (((double) Controller.getController().getToday().berechneArbeitszeitInMillis()/ 3600000) / 8 * 100);
-			//x = Math.round(x*100)/100.0;
-			int prozent = (int) x;
-			if (prozent <= 80) {
+			
+			double stunden = ((double)Controller.getController().getToday().berechneArbeitszeitInMillis()/ 3600000);
+			
+			int prozent = (int) (stunden / 8 * 100);
+			
+			
+			
+			if (stunden <= 6.5) {
 				progressBar.setForeground(Color.orange);
 				progressBarUeberstunden.setForeground(Color.orange);
-			} else if (prozent > 80 && prozent <= 112) {
+			} else if (stunden > 6.5 && stunden <= 8.5) {
 				progressBar.setForeground(Color.green);
 				progressBarUeberstunden.setForeground(Color.green);
-			} else if (prozent > 112 && prozent <= 125) {
+			} else if (stunden > 8.5 && stunden <= 9.5) {
 				progressBar.setForeground(Color.orange);
 				progressBarUeberstunden.setForeground(Color.orange);
-			} else if (prozent > 125) {
+			} else if (stunden > 9.5) {
 				progressBar.setForeground(Color.red);
 				progressBarUeberstunden.setForeground(Color.red);
 			}
