@@ -77,12 +77,14 @@ public class Main_Gui extends JFrame {
 	 * Create the frame.
 	 */
 	private Main_Gui() {
+		setBounds(100, 100, 510, 300);
+		
 		setResizable(false);
 		setTitle("Zeiterfassung");
 		
 		Object[] options = { "Ja", "Nein" };
 
-		setBounds(100, 100, 513, 301);
+		
 
 		ActionListener btn_mi_al = new ActionListener() {
 			@Override
@@ -469,12 +471,12 @@ public class Main_Gui extends JFrame {
 			SysTray.getSysTray(this).setEnabled("PE", true);
 		}
 	}
-
-	public void showWindow(Rectangle bounds) {
+	
+	public void showWindow(int x, int y) {
 		SysTray.getSysTray(this);
 		updateView();
 		setVisible(true);
-		setBounds(bounds);
+		setBounds(x, y, (int)getBounds().getWidth(), (int)getBounds().getHeight());
 	}
 
 	public void updateProgressBar() {

@@ -44,7 +44,7 @@ public class Statistik_Gui extends JFrame {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
 				setVisible(false);
-				Main_Gui.getMainGui().showWindow(getBounds());
+				Main_Gui.getMainGui().showWindow((int)getBounds().getX(), (int)getBounds().getY());
 			}
 		});
 

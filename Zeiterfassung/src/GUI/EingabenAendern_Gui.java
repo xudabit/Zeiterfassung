@@ -101,7 +101,7 @@ public class EingabenAendern_Gui extends JFrame {
 						System.out.println("Daten gespeichert");
 						Controller.getController().schreibeInDatei();
 						setVisible(false);
-						Main_Gui.getMainGui().showWindow(getBounds());
+						Main_Gui.getMainGui().showWindow((int)getBounds().getX(), (int)getBounds().getY());
 					}
 				}
 			}
@@ -139,7 +139,7 @@ public class EingabenAendern_Gui extends JFrame {
 				} else {
 					Controller.getController().schreibeInDatei();
 					setVisible(false);
-					Main_Gui.getMainGui().showWindow(getBounds());
+					Main_Gui.getMainGui().showWindow((int)getBounds().getX(), (int)getBounds().getY());
 				}
 			}
 		};
@@ -149,7 +149,7 @@ public class EingabenAendern_Gui extends JFrame {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
 				setVisible(false);
-				Main_Gui.getMainGui().showWindow(getBounds());
+				Main_Gui.getMainGui().showWindow((int)getBounds().getX(), (int)getBounds().getY());
 			}
 		});
 
@@ -179,7 +179,7 @@ public class EingabenAendern_Gui extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				setVisible(false);
-				Main_Gui.getMainGui().showWindow(getBounds());
+				Main_Gui.getMainGui().showWindow((int)getBounds().getX(), (int)getBounds().getY());
 			}
 		});
 		btn_Abbrechen.setBounds(386, 218, 97, 25);

@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.Rectangle;
 import java.awt.Color;
 import Logik.Config;
+import javax.swing.border.TitledBorder;
 
 public class Options_Gui extends JFrame {
 
@@ -47,17 +48,17 @@ public class Options_Gui extends JFrame {
 	 * Create the frame.
 	 */
 	public Options_Gui(Rectangle bounds) {
+		setBounds((int)bounds.getX(), (int)bounds.getY(), 450, 350);
 		SysTray.getSysTray(this);
 		setTitle("Optionen");
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
 				setVisible(false);
-				Main_Gui.getMainGui().showWindow(getBounds());
+				Main_Gui.getMainGui().showWindow((int)getBounds().getX(), (int)getBounds().getY());
 			}
 		});
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(bounds);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -69,46 +70,47 @@ public class Options_Gui extends JFrame {
 				Config.getConfig().saveThisConfig();
 			}
 		});
-		btnSpeichern.setBounds(323, 217, 97, 25);
+		
+		btnSpeichern.setBounds(323, 268, 97, 25);
 		contentPane.add(btnSpeichern);
 		
 		JPanel pl_string = new JPanel();
-		pl_string.setBorder(new LineBorder(new Color(0, 0, 0)));
-		pl_string.setBounds(12, 66, 408, 83);
+		pl_string.setBorder(new TitledBorder(null, "String", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		pl_string.setBounds(12, 87, 408, 94);
 		contentPane.add(pl_string);
 		pl_string.setLayout(null);
 		
 		cb_string = new JComboBox<Config.stringConfigValues>();
-		cb_string.setBounds(12, 13, 384, 22);
+		cb_string.setBounds(12, 21, 384, 22);
 		pl_string.add(cb_string);
 		
 		tf_string = new JTextField();
-		tf_string.setBounds(12, 48, 275, 22);
+		tf_string.setBounds(12, 56, 275, 22);
 		pl_string.add(tf_string);
 		tf_string.setColumns(10);
 		
 		btnSet = new JButton("Set");
-		btnSet.setBounds(299, 48, 97, 25);
+		btnSet.setBounds(299, 56, 97, 25);
 		pl_string.add(btnSet);
 		
 		pl_bool = new JPanel();
-		pl_bool.setBorder(new LineBorder(new Color(0, 0, 0)));
-		pl_bool.setBounds(12, 13, 408, 54);
+		pl_bool.setBorder(new TitledBorder(null, "Boolean", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		pl_bool.setBounds(12, 13, 408, 61);
 		contentPane.add(pl_bool);
 		pl_bool.setLayout(null);
 		
 		cb_bool = new JComboBox<Config.boolConfigValues>();
-		cb_bool.setBounds(12, 16, 355, 22);
+		cb_bool.setBounds(12, 26, 355, 22);
 		pl_bool.add(cb_bool);
 		
 		chkbx_bool = new JCheckBox("");
-		chkbx_bool.setBounds(375, 16, 25, 25);
+		chkbx_bool.setBounds(375, 23, 25, 25);
 		pl_bool.add(chkbx_bool);
 		
 		JPanel pl_int = new JPanel();
 		pl_int.setLayout(null);
-		pl_int.setBorder(new LineBorder(new Color(0, 0, 0)));
-		pl_int.setBounds(12, 148, 408, 54);
+		pl_int.setBorder(new TitledBorder(null, "Integer", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		pl_int.setBounds(12, 194, 408, 61);
 		contentPane.add(pl_int);
 		
 		cb_int = new JComboBox<Config.intConfigValues>();
@@ -123,9 +125,9 @@ public class Options_Gui extends JFrame {
 				sp_int.setValue(Config.getConfig().getValue((Config.intConfigValues)cb_int.getSelectedItem()));
 			}
 		});
-		cb_int.setBounds(12, 16, 342, 22);
+		cb_int.setBounds(12, 26, 342, 22);
 		pl_int.add(cb_int);
-		sp_int.setBounds(366, 16, 30, 22);
+		sp_int.setBounds(366, 26, 30, 22);
 		pl_int.add(sp_int);
 		chkbx_bool.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
