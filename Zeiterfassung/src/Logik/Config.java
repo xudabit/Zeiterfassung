@@ -43,7 +43,7 @@ public class Config implements Serializable{
 	}
 	
 	public enum intConfigValues {
-		KWDIAGWOCHEN
+		KWDIAGWOCHEN, REFRESHTIME
 	}
 	
 	private Config(){
@@ -62,6 +62,7 @@ public class Config implements Serializable{
 		string_conf.put(stringConfigValues.PAUSEIMAGE, "icon/pause.jpg");
 		
 		int_conf.put(intConfigValues.KWDIAGWOCHEN, 4);
+		int_conf.put(intConfigValues.REFRESHTIME, 10);
 	}
 		
 	public void setValue(stringConfigValues key, String s) {

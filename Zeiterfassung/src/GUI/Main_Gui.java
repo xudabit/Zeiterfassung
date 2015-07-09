@@ -415,7 +415,8 @@ public class Main_Gui extends JFrame {
 				try {
 					while (true) {
 						updateView();
-						sleep(60 * 1000);
+						//sleep(60 * 1000);
+						sleep(Config.getConfig().getValue(Config.intConfigValues.REFRESHTIME) * 1000);
 					}
 				} catch (InterruptedException ex) {
 					System.err.println(ex.getMessage());
