@@ -46,7 +46,6 @@ public class Main_Gui extends JFrame {
 
 	private JPanel contentPane;
 	private JTextArea ta_data;
-	private JLabel lbl_AusgabeSAZnP;
 
 	// Button
 	private JButton btn_taganfang, btn_pauseanfang, btn_pauseende, btn_tagende;
@@ -273,13 +272,7 @@ public class Main_Gui extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent arg0) {
-
-				if (Config.getConfig().getValue(
-						Config.boolConfigValues.MINIMIZETOTRAY)) {
-					setVisible(false);
-				} else {
-					System.exit(0);
-				}
+				exit();
 			}
 		});
 
@@ -345,8 +338,6 @@ public class Main_Gui extends JFrame {
 		// Labels
 		JLabel lbl_Aktuellesdatum = new JLabel();
 		JLabel lbl_AktuellesDatumRechtsbuendig = new JLabel();
-		JLabel lbl_TextSAZnP = new JLabel("Summe Arbeitszeit:");
-		lbl_AusgabeSAZnP = new JLabel();
 
 		// Tag beginnen
 		btn_taganfang.setActionCommand("TA");
@@ -388,33 +379,32 @@ public class Main_Gui extends JFrame {
 				.getDatestringFromCalendar(Calendar.getInstance()));
 		contentPane.add(lbl_AktuellesDatumRechtsbuendig);
 
-		// Anzeige Text: SAZnP = Summe Arbeitszeit nach Pause
-
-		lbl_TextSAZnP.setBounds(12, 196, 146, 16);
-		contentPane.add(lbl_TextSAZnP);
-
-		// Anzeige SAZnP = Summe Arbeitszeit nach Pause
-
-		lbl_AusgabeSAZnP.setBounds(201, 196, 294, 16);
-		contentPane.add(lbl_AusgabeSAZnP);
-
 		// Text
 		ta_data = new JTextArea();
 		ta_data.setEditable(false);
 
 		// ScrollPane
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(201, 42, 294, 114);
+		scrollPane.setBounds(201, 42, 294, 160);
 		contentPane.add(scrollPane);
 		scrollPane.setViewportView(ta_data);
 
 		progressBar = new JProgressBar();
-		progressBar.setBounds(201, 164, 200, 14);
+		progressBar.setBounds(201, 215, 200, 14);
 		contentPane.add(progressBar);
 
 		progressBarUeberstunden = new JProgressBar();
-		progressBarUeberstunden.setBounds(400, 164, 95, 14);
+		progressBarUeberstunden.setBounds(400, 215, 95, 14);
 		contentPane.add(progressBarUeberstunden);
+		
+		JButton btn_exit = new JButton("Exit");
+		btn_exit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				exit();
+			}
+		});
+		btn_exit.setBounds(12, 204, 146, 25);
+		contentPane.add(btn_exit);
 		
 		updateView();
 		
@@ -442,8 +432,6 @@ public class Main_Gui extends JFrame {
 		mn_StatistikM
 				.setEnabled(Controller.getController().getDateMap().size() > 0);
 		ta_data.setText(Controller.getController().getTextForToday());
-		lbl_AusgabeSAZnP.setText(Controller.getController().getTimeForLabel(
-				Controller.getController().getArbeitszeit()));
 
 		updateProgressBar();
 
@@ -511,7 +499,7 @@ public class Main_Gui extends JFrame {
 			progressBar.setValue(prozent);
 			progressBar.setStringPainted(true);
 			
-			progressBar.setString(((double)prozent / 100 * 8) + " Stunden");
+			progressBar.setString(Controller.getController().getTimeForLabel(Controller.getController().getArbeitszeit()));
 			
 			progressBar.setUI(new BasicProgressBarUI() {
 			      protected Color getSelectionBackground() { return Color.black; }
@@ -521,6 +509,15 @@ public class Main_Gui extends JFrame {
 			progressBarUeberstunden.setValue((prozent - 100) * 2);
 		} else {
 			progressBar.setValue(progressBar.getMinimum());
+		}
+	}
+	
+	private void exit() {
+		if (Config.getConfig().getValue(
+				Config.boolConfigValues.MINIMIZETOTRAY)) {
+			setVisible(false);
+		} else {
+			System.exit(0);
 		}
 	}
 }
