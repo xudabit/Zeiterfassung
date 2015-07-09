@@ -392,11 +392,11 @@ public class Main_Gui extends JFrame {
 		scrollPane.setViewportView(ta_data);
 
 		progressBar = new JProgressBar();
-		progressBar.setBounds(201, 215, 200, 14);
+		progressBar.setBounds(201, 215, 240, 14);
 		contentPane.add(progressBar);
 
 		progressBarUeberstunden = new JProgressBar();
-		progressBarUeberstunden.setBounds(400, 215, 95, 14);
+		progressBarUeberstunden.setBounds(440, 215, 55, 14);
 		contentPane.add(progressBarUeberstunden);
 		
 		JButton btn_exit = new JButton("Exit");
@@ -513,7 +513,7 @@ public class Main_Gui extends JFrame {
 			      protected Color getSelectionForeground() { return Color.black; }
 			    });
 
-			progressBarUeberstunden.setValue((prozent - 100) * 2);
+			progressBarUeberstunden.setValue((prozent - 100) * 4);
 		} else {
 			progressBar.setValue(progressBar.getMinimum());
 		}
