@@ -55,7 +55,7 @@ public class Statistik_Gui extends JFrame {
 		contentPane.setLayout(null);
 
 		// Gesamtarbeitszeit seit Datei erzeugt wurde
-		JLabel lbl_GesamtAZText = new JLabel("Gesamtarbeitszeit der aktuellen Woche:");
+		JLabel lbl_GesamtAZText = new JLabel("Gesamtarbeitszeit aktueller Monat (exkl. Heute):");
 		lbl_GesamtAZText.setBounds(10, 13, 282, 16);
 		contentPane.add(lbl_GesamtAZText);
 
@@ -91,7 +91,7 @@ public class Statistik_Gui extends JFrame {
 		contentPane.add(lbl_dAPausen);
 		
 		//JLabel label = new JLabel("\u00DCberstunden in der aktuellen Woche:");
-		JLabel label = new JLabel("\u00DCberstunden im aktuellen Monat:");
+		JLabel label = new JLabel("\u00DCberstunden aktueller Monat (exkl. Heute):");
 		label.setBounds(10, 42, 282, 16);
 		contentPane.add(label);
 		
@@ -121,7 +121,7 @@ public class Statistik_Gui extends JFrame {
 		lbl_fAB.setText(Controller.getController().findefAZ());
 		lbl_AnzahlPausen.setText(maxAnzahlPausen + " Pause" + (maxAnzahlPausen == 1 ? "" : "n"));
 		lbl_dAPausen.setText("" + avgPausendauer);
-		lbl_GesamtAZAusgabe.setText(Controller.getController().getTimeForLabel(Controller.getController().getGesamtAZ()));
+		lbl_GesamtAZAusgabe.setText(Controller.getController().getTimeForLabel(Controller.getController().getGesamtMonatAZ()));
 		lbl_ueberstunden.setText(Controller.getController().getTimeForLabel(Controller.getController().getUeberstunden()));
 		
 	}
