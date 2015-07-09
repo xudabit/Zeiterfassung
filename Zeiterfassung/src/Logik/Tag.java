@@ -125,4 +125,8 @@ public class Tag implements Serializable {
 		}
 		return false;
 	}
+	
+	public void delTagEnde() {
+		tagEnde = null;
+	}
 }

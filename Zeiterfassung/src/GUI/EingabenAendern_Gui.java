@@ -163,7 +163,7 @@ public class EingabenAendern_Gui extends JFrame {
 		JButton btn_saveTATE = new JButton("Anfang und Ende speichern");
 		btn_saveTATE.addActionListener(listener);
 		btn_saveTATE.setActionCommand("TAG");
-		btn_saveTATE.setBounds(251, 41, 232, 25);
+		btn_saveTATE.setBounds(177, 218, 197, 25);
 		contentPane.add(btn_saveTATE);
 
 		lbl_TagBegonnenUm = new JLabel("Tag begonnen um: ");
@@ -343,6 +343,16 @@ public class EingabenAendern_Gui extends JFrame {
 		tf_te_h.setColumns(10);
 		tf_te_h.setBounds(157, 45, 35, 22);
 		contentPane.add(tf_te_h);
+		
+		JButton btn_del_tagende = new JButton("Tageende l\u00F6schen");
+		btn_del_tagende.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				day.delTagEnde();
+				setAllFields();
+			}
+		});
+		btn_del_tagende.setBounds(251, 41, 169, 25);
+		contentPane.add(btn_del_tagende);
 
 		setAllFields();
 	}
@@ -470,6 +480,16 @@ public class EingabenAendern_Gui extends JFrame {
 	}
 
 	private void setTagFields() {
+		tf_ta_h.setText("");
+		tf_ta_m.setText("");
+		tf_te_h.setText("");
+		tf_te_m.setText("");
+		
+		tf_ta_h.setEditable(false);
+		tf_ta_m.setEditable(false);
+		tf_te_h.setEditable(false);
+		tf_te_m.setEditable(false);
+		
 		if (day == null)
 			return;
 
@@ -485,6 +505,7 @@ public class EingabenAendern_Gui extends JFrame {
 			tf_te_m.setText(addZero(day.getTagEnde().get(Calendar.MINUTE)));
 			tf_te_h.setEditable(true);
 			tf_te_m.setEditable(true);
+		} else {
 		}
 	}
 
