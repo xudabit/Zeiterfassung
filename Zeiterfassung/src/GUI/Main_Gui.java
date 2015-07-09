@@ -152,15 +152,6 @@ public class Main_Gui extends JFrame {
 		});
 		mn_Datei.add(mn_Speichern);
 
-		JMenuItem mn_Import = new JMenuItem("Import");
-		mn_Datei.add(mn_Import);
-		mn_Import.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				Controller.getController().importData();
-				updateView();
-			}
-		});
-
 		mn_AlleDatenAnzeigen = new JMenuItem("Alle Daten anzeigen");
 		mn_AlleDatenAnzeigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -168,6 +159,33 @@ public class Main_Gui extends JFrame {
 				setVisible(false);
 			}
 		});
+		
+		JMenu mnImport = new JMenu("Import");
+		mn_Datei.add(mnImport);
+				
+				JMenuItem mntmInformationenZumImport = new JMenuItem("Informationen zum Import");
+				mntmInformationenZumImport.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						JOptionPane.showMessageDialog(null, "Aufbau der Import-Datei:\n"
+								+ "DA_25_06_2015\n"
+								+ "TA;08;40\n"
+								+ "PA;10;45\n"
+								+ "PE;11;15\n"
+								+ "TE;17;00\n"
+								, "Information",
+								JOptionPane.INFORMATION_MESSAGE);
+					}
+				});
+				mnImport.add(mntmInformationenZumImport);
+		
+				JMenuItem mn_Import = new JMenuItem("Daten importieren");
+				mnImport.add(mn_Import);
+				mn_Import.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						Controller.getController().importData();
+						updateView();
+					}
+				});
 		mn_Datei.add(mn_AlleDatenAnzeigen);
 		mn_Datei.addSeparator();
 
