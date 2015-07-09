@@ -271,7 +271,8 @@ public class Controller {
 	}
 
 	public long getUeberstunden() {
-		return (getGesamtAZ() - ((getSortedKeysForActualWeek().size() * 8) * 3600000));
+		//return (getGesamtAZ() - ((getSortedKeysForActualWeek().size() * 8) * 3600000));
+		return (getGesamtAZ() - ((getSortedKeysForActualMonth().size() * 8) * 3600000));
 	}
 
 	/*
@@ -454,6 +455,18 @@ public class Controller {
 		
 		for(String s : dateMap.keySet()) {
 			if(dateMap.get(s).getTagAnfang().get(Calendar.WEEK_OF_YEAR) == Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)) {
+				keys.add(s);
+			}
+		}
+		java.util.Collections.sort(keys);
+		return keys;
+	}
+	
+	public ArrayList<String> getSortedKeysForActualMonth() {
+		ArrayList<String> keys = new ArrayList<String>();
+		
+		for(String s : dateMap.keySet()) {
+			if(dateMap.get(s).getTagAnfang().get(Calendar.MONTH) == Calendar.getInstance().get(Calendar.MONTH)) {
 				keys.add(s);
 			}
 		}
