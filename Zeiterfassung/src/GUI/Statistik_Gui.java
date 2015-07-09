@@ -90,7 +90,8 @@ public class Statistik_Gui extends JFrame {
 		lbl_dAPausen.setBounds(304, 239, 191, 16);
 		contentPane.add(lbl_dAPausen);
 		
-		JLabel label = new JLabel("\u00DCberstunden in der aktuellen Woche:");
+		//JLabel label = new JLabel("\u00DCberstunden in der aktuellen Woche:");
+		JLabel label = new JLabel("\u00DCberstunden im aktuellen Monat:");
 		label.setBounds(10, 42, 282, 16);
 		contentPane.add(label);
 		
