@@ -36,6 +36,9 @@ import java.io.IOException;
 import java.util.Calendar;
 
 import javax.imageio.ImageIO;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 public class EingabenAendern_Gui extends JFrame {
 
@@ -46,7 +49,6 @@ public class EingabenAendern_Gui extends JFrame {
 	private JPanel contentPane;
 	private JLabel lbl_TagBegonnenUm;
 	private JLabel lblTagBeendetUm;
-	private JButton btn_Abbrechen;
 	private JTextField tf_pa_h;
 	private JTextField tf_pa_m;
 	private JTextField tf_pe_h;
@@ -56,7 +58,6 @@ public class EingabenAendern_Gui extends JFrame {
 	private JComboBox<String> cb_pause;
 
 	private Pause temp;
-	private JButton btnNewButton;
 
 	private Tag day;
 	private JTextField tf_ta_m;
@@ -69,21 +70,21 @@ public class EingabenAendern_Gui extends JFrame {
 	 */
 	public EingabenAendern_Gui(Rectangle bounds) {
 		day = Controller.getController().getToday();
-		InitEingabenAendern_GUI();
-		setBounds(bounds);
+		InitEingabenAendern_GUI(bounds);
 	}
 
 	public EingabenAendern_Gui(Rectangle bounds, Tag t) {
 		day = t;
-		InitEingabenAendern_GUI();
-		setBounds(bounds);
+		InitEingabenAendern_GUI(bounds);
 	}
 
 	/**
 	 * Create the frame.
 	 */
-	public void InitEingabenAendern_GUI() {
+	public void InitEingabenAendern_GUI(Rectangle bounds) {
 		SysTray.getSysTray(this);
+		
+		setBounds((int)bounds.getX(), (int)bounds.getY(), 382, 284);
 
 		KeyAdapter keyListener = new KeyAdapter() {
 			@Override
@@ -154,17 +155,72 @@ public class EingabenAendern_Gui extends JFrame {
 		});
 
 		setTitle("Eingaben \u00E4ndern");
+		
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		JMenu mnSpeichern = new JMenu("Datei");
+		menuBar.add(mnSpeichern);
+		
+		JMenu mnSpeichern_1 = new JMenu("Speichern");
+		mnSpeichern.add(mnSpeichern_1);
+		
+		JMenuItem mntmTagAnfangendeSpeichern = new JMenuItem("Tag Anfang/Ende Speichern");
+		mntmTagAnfangendeSpeichern.setActionCommand("TAG");
+		mntmTagAnfangendeSpeichern.addActionListener(listener);
+		mnSpeichern_1.add(mntmTagAnfangendeSpeichern);
+		
+		JMenuItem mntmPauseSpeichern = new JMenuItem("Pause Speichern");
+		mntmPauseSpeichern.setActionCommand("PAUSE");
+		mntmPauseSpeichern.addActionListener(listener);
+		mnSpeichern_1.add(mntmPauseSpeichern);
+		
+		JMenuItem mntmAbbrechen = new JMenuItem("Abbrechen");
+		mntmAbbrechen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setVisible(false);
+				Main_Gui.getMainGui().showWindow((int)getBounds().getX(), (int)getBounds().getY());
+			}
+		});
+		mnSpeichern.add(mntmAbbrechen);
+		
+		JMenu mnBearbeiten = new JMenu("Bearbeiten");
+		menuBar.add(mnBearbeiten);
+		
+		JMenuItem mntmTagendeLschen = new JMenuItem("Tagende l\u00F6schen");
+		mntmTagendeLschen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				day.delTagEnde();
+				setAllFields();
+			}
+		});
+		mnBearbeiten.add(mntmTagendeLschen);
+		
+		JMenuItem mntmPauseLschen = new JMenuItem("Pause l\u00F6schen");
+		mntmPauseLschen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Pause p = getSelectedPause();
+				if (p != null) {
+					day.deletePause(p);
+					setPauseComboBox();
+					Controller.getController().schreibeInDatei();
+				}
+			}
+		});
+		mnBearbeiten.add(mntmPauseLschen);
+		
+		JMenuItem mntmZurcksetzen = new JMenuItem("Zur\u00FCcksetzen");
+		mnBearbeiten.add(mntmZurcksetzen);
+		mntmZurcksetzen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setAllFields();
+			}
+		});
 
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
-		JButton btn_saveTATE = new JButton("Anfang und Ende speichern");
-		btn_saveTATE.addActionListener(listener);
-		btn_saveTATE.setActionCommand("TAG");
-		btn_saveTATE.setBounds(177, 218, 197, 25);
-		contentPane.add(btn_saveTATE);
 
 		lbl_TagBegonnenUm = new JLabel("Tag begonnen um: ");
 		lbl_TagBegonnenUm.setBounds(12, 13, 133, 16);
@@ -173,24 +229,14 @@ public class EingabenAendern_Gui extends JFrame {
 		lblTagBeendetUm = new JLabel("Tag beendet um:");
 		lblTagBeendetUm.setBounds(12, 45, 133, 16);
 		contentPane.add(lblTagBeendetUm);
-
-		btn_Abbrechen = new JButton("Abbrechen");
-		btn_Abbrechen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				setVisible(false);
-				Main_Gui.getMainGui().showWindow((int)getBounds().getX(), (int)getBounds().getY());
-			}
-		});
-		btn_Abbrechen.setBounds(386, 218, 97, 25);
-		contentPane.add(btn_Abbrechen);
+		
 
 		JPanel pl_Pausen = new JPanel();
 		pl_Pausen.setBorder(new TitledBorder(UIManager
 				.getBorder("TitledBorder.border"), "Pausen",
 				TitledBorder.LEADING, TitledBorder.TOP, null,
 				new Color(0, 0, 0)));
-		pl_Pausen.setBounds(12, 77, 471, 128);
+		pl_Pausen.setBounds(12, 77, 345, 128);
 		contentPane.add(pl_Pausen);
 		pl_Pausen.setLayout(null);
 
@@ -200,7 +246,7 @@ public class EingabenAendern_Gui extends JFrame {
 				setPauseFields(getSelectedPause());
 			}
 		});
-		cb_pause.setBounds(12, 16, 276, 22);
+		cb_pause.setBounds(12, 16, 321, 22);
 		pl_Pausen.add(cb_pause);
 
 		tf_pa_h = new JTextField();
@@ -247,20 +293,6 @@ public class EingabenAendern_Gui extends JFrame {
 		lblPauseended.setBounds(12, 90, 113, 22);
 		pl_Pausen.add(lblPauseended);
 
-		btnNewButton = new JButton("Pause l\u00F6schen");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				Pause p = getSelectedPause();
-				if (p != null) {
-					day.deletePause(p);
-					setPauseComboBox();
-					Controller.getController().schreibeInDatei();
-				}
-			}
-		});
-		btnNewButton.setBounds(310, 15, 149, 25);
-		pl_Pausen.add(btnNewButton);
-
 		JLabel lbl_bild = new JLabel("Bild");
 		lbl_bild.setBounds(231, 48, 67, 67);
 
@@ -286,27 +318,12 @@ public class EingabenAendern_Gui extends JFrame {
 		}
 		pl_Pausen.add(lbl_bild);
 
-		JButton btn_savePause = new JButton("Pause speichern");
-		btn_savePause.addActionListener(listener);
-		btn_savePause.setActionCommand("PAUSE");
-		btn_savePause.setBounds(310, 69, 149, 25);
-		pl_Pausen.add(btn_savePause);
-
 		JLabel lbl_Datum = new JLabel(Controller.getController()
 				.getDatestringFromCalendar(day.getTagAnfang()));
 
-		lbl_Datum.setBounds(343, 12, 133, 16);
+		lbl_Datum.setBounds(251, 13, 106, 16);
 		lbl_Datum.setHorizontalAlignment(SwingConstants.RIGHT);
 		contentPane.add(lbl_Datum);
-
-		JButton btn_verwerfen = new JButton("Alle Daten verwerfen");
-		btn_verwerfen.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				setAllFields();
-			}
-		});
-		btn_verwerfen.setBounds(12, 218, 153, 25);
-		contentPane.add(btn_verwerfen);
 
 		tf_ta_m = new JTextField();
 		tf_ta_m.addKeyListener(keyListener);
@@ -343,16 +360,6 @@ public class EingabenAendern_Gui extends JFrame {
 		tf_te_h.setColumns(10);
 		tf_te_h.setBounds(157, 45, 35, 22);
 		contentPane.add(tf_te_h);
-		
-		JButton btn_del_tagende = new JButton("Tageende l\u00F6schen");
-		btn_del_tagende.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				day.delTagEnde();
-				setAllFields();
-			}
-		});
-		btn_del_tagende.setBounds(251, 41, 169, 25);
-		contentPane.add(btn_del_tagende);
 
 		setAllFields();
 	}

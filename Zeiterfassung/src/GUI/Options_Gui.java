@@ -125,9 +125,9 @@ public class Options_Gui extends JFrame {
 				sp_int.setValue(Config.getConfig().getValue((Config.intConfigValues)cb_int.getSelectedItem()));
 			}
 		});
-		cb_int.setBounds(12, 26, 342, 22);
+		cb_int.setBounds(12, 26, 312, 22);
 		pl_int.add(cb_int);
-		sp_int.setBounds(366, 26, 30, 22);
+		sp_int.setBounds(336, 26, 60, 22);
 		pl_int.add(sp_int);
 		chkbx_bool.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
