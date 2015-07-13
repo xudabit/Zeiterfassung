@@ -78,9 +78,19 @@ public class Tag implements Serializable {
 		if (tagAnfang == null)
 			return 0;
 
-		long arbeitstag = (tagEnde == null ? Calendar.getInstance()
-				.getTimeInMillis() : tagEnde.getTimeInMillis())
-				- tagAnfang.getTimeInMillis();
+		Calendar end;
+		
+		if(tagEnde == null) {
+			if(temp_pausenAnfang == null) {
+				end = Calendar.getInstance();
+			} else {
+				end = temp_pausenAnfang.getPauseStart();
+			}
+		} else {
+			end = tagEnde;
+		}
+		
+		long arbeitstag = end.getTimeInMillis() - tagAnfang.getTimeInMillis();
 
 		for (Pause p : pausenListe) {
 			arbeitstag -= p.berechnePauseInMillis();
