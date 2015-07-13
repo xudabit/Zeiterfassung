@@ -18,6 +18,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.WindowAdapter;
@@ -39,6 +40,9 @@ import javax.imageio.ImageIO;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class EingabenAendern_Gui extends JFrame {
 
@@ -108,6 +112,13 @@ public class EingabenAendern_Gui extends JFrame {
 			}
 		};
 
+		FocusListener focListener = new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				((JTextField)arg0.getSource()).selectAll();
+			}
+		};
+		
 		ActionListener listener = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				boolean value = false;
@@ -250,6 +261,7 @@ public class EingabenAendern_Gui extends JFrame {
 		pl_Pausen.add(cb_pause);
 
 		tf_pa_h = new JTextField();
+		tf_pa_h.addFocusListener(focListener);
 		tf_pa_h.addKeyListener(keyListener);
 		tf_pa_h.setEditable(false);
 		tf_pa_h.setBounds(137, 48, 35, 22);
@@ -257,6 +269,7 @@ public class EingabenAendern_Gui extends JFrame {
 		tf_pa_h.setColumns(10);
 
 		tf_pa_m = new JTextField();
+		tf_pa_m.addFocusListener(focListener);
 		tf_pa_m.addKeyListener(keyListener);
 		tf_pa_m.setEditable(false);
 		tf_pa_m.setColumns(10);
@@ -268,6 +281,7 @@ public class EingabenAendern_Gui extends JFrame {
 		pl_Pausen.add(lblNewLabel);
 
 		tf_pe_h = new JTextField();
+		tf_pe_h.addFocusListener(focListener);
 		tf_pe_h.addKeyListener(keyListener);
 		tf_pe_h.setEditable(false);
 		tf_pe_h.setColumns(10);
@@ -279,6 +293,7 @@ public class EingabenAendern_Gui extends JFrame {
 		pl_Pausen.add(label);
 
 		tf_pe_m = new JTextField();
+		tf_pe_m.addFocusListener(focListener);
 		tf_pe_m.addKeyListener(keyListener);
 		tf_pe_m.setEditable(false);
 		tf_pe_m.setColumns(10);
@@ -326,6 +341,7 @@ public class EingabenAendern_Gui extends JFrame {
 		contentPane.add(lbl_Datum);
 
 		tf_ta_m = new JTextField();
+		tf_ta_m.addFocusListener(focListener);
 		tf_ta_m.addKeyListener(keyListener);
 		tf_ta_m.setEditable(false);
 		tf_ta_m.setColumns(10);
@@ -337,6 +353,8 @@ public class EingabenAendern_Gui extends JFrame {
 		contentPane.add(label_2);
 
 		tf_ta_h = new JTextField();
+		tf_ta_h.addFocusListener(focListener);
+		tf_ta_h.addFocusListener(focListener);
 		tf_ta_h.addKeyListener(keyListener);
 		tf_ta_h.setEditable(false);
 		tf_ta_h.setColumns(10);
@@ -344,6 +362,7 @@ public class EingabenAendern_Gui extends JFrame {
 		contentPane.add(tf_ta_h);
 
 		tf_te_m = new JTextField();
+		tf_te_m.addFocusListener(focListener);
 		tf_te_m.addKeyListener(keyListener);
 		tf_te_m.setEditable(false);
 		tf_te_m.setColumns(10);
@@ -355,6 +374,7 @@ public class EingabenAendern_Gui extends JFrame {
 		contentPane.add(label_3);
 
 		tf_te_h = new JTextField();
+		tf_te_h.addFocusListener(focListener);
 		tf_te_h.addKeyListener(keyListener);
 		tf_te_h.setEditable(false);
 		tf_te_h.setColumns(10);
