@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 
@@ -279,7 +280,17 @@ public class Controller {
 		return summeArbeitstage;
 	}
 
-	public long getUeberstunden() {
+	public long getUeberstundenWoche() {
+		//return (getGesamtAZ() - ((getSortedKeysForActualWeek().size() * 8) * 3600000));
+		long AZw = getGesamtWocheAZ();
+		ArrayList<String> keys = getSortedKeysForActualWeek();
+		
+		long test = (AZw - ((keys.size() * 8) * 3600000));
+		return test;
+		//return (getGesamtWocheAZ() - ((getSortedKeysForActualWeek().size() * 8) * 3600000));
+	}
+	
+	public long getUeberstundenMonat() {
 		//return (getGesamtAZ() - ((getSortedKeysForActualWeek().size() * 8) * 3600000));
 		return (getGesamtMonatAZ() - ((getSortedKeysForActualMonth().size() * 8) * 3600000));
 	}
@@ -464,7 +475,7 @@ public class Controller {
 		
 		for(String s : dateMap.keySet()) {
 			if(dateMap.get(s).getTagAnfang().get(Calendar.WEEK_OF_YEAR) == Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)) {
-				if(!dateMap.get(s).equals(getToday()))
+				if(dateMap.get(s).getTagEnde() != null)
 					keys.add(s);
 			}
 		}
@@ -477,7 +488,7 @@ public class Controller {
 		
 		for(String s : dateMap.keySet()) {
 			if(dateMap.get(s).getTagAnfang().get(Calendar.MONTH) == Calendar.getInstance().get(Calendar.MONTH)) {
-				if(!dateMap.get(s).equals(getToday()))
+				if(dateMap.get(s).getTagEnde() != null)
 					keys.add(s);
 			}
 		}

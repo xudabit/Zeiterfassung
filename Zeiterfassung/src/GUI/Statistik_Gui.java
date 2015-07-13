@@ -24,7 +24,9 @@ public class Statistik_Gui extends JFrame {
 	private JLabel lbl_fAB;
 	private JLabel lbl_AnzahlPausen;
 	private JLabel lbl_dAPausen;
-	private JLabel lbl_ueberstunden;
+	private JLabel lbl_ueberstunden_monat;
+
+	private JLabel lbl_ueberstunden_woche;
 	
 	public Statistik_Gui(Rectangle bounds){
 		InitStatistik_GUI();
@@ -66,11 +68,11 @@ public class Statistik_Gui extends JFrame {
 		// lbl_GesamtAZAusgabe.setText(Controller.getController().getTimeForLabel(Controller.getController().gesamtAZ()));
 
 		JLabel lbl_fABText = new JLabel("Fr\u00FChester Arbeitsbeginn:");
-		lbl_fABText.setBounds(10, 71, 218, 16);
+		lbl_fABText.setBounds(12, 181, 218, 16);
 		contentPane.add(lbl_fABText);
 
 		lbl_fAB = new JLabel("Keine Daten");
-		lbl_fAB.setBounds(304, 71, 251, 16);
+		lbl_fAB.setBounds(306, 181, 251, 16);
 		contentPane.add(lbl_fAB);
 
 		JLabel lbl_AnzahlPausenText = new JLabel("Meisten Pausen an einem Tag:");
@@ -95,9 +97,17 @@ public class Statistik_Gui extends JFrame {
 		label.setBounds(10, 42, 282, 16);
 		contentPane.add(label);
 		
-		lbl_ueberstunden = new JLabel("00:00");
-		lbl_ueberstunden.setBounds(304, 42, 191, 16);
-		contentPane.add(lbl_ueberstunden);
+		lbl_ueberstunden_monat = new JLabel("00:00");
+		lbl_ueberstunden_monat.setBounds(304, 42, 191, 16);
+		contentPane.add(lbl_ueberstunden_monat);
+		
+		JLabel lblberstundenAktuelleWoche = new JLabel("\u00DCberstunden aktuelle Woche (exkl. Heute):");
+		lblberstundenAktuelleWoche.setBounds(10, 71, 282, 16);
+		contentPane.add(lblberstundenAktuelleWoche);
+		
+		lbl_ueberstunden_woche = new JLabel((String) null);
+		lbl_ueberstunden_woche.setBounds(304, 71, 191, 16);
+		contentPane.add(lbl_ueberstunden_woche);
 		
 		updateView();
 		setVisible(true);
@@ -122,7 +132,8 @@ public class Statistik_Gui extends JFrame {
 		lbl_AnzahlPausen.setText(maxAnzahlPausen + " Pause" + (maxAnzahlPausen == 1 ? "" : "n"));
 		lbl_dAPausen.setText("" + avgPausendauer);
 		lbl_GesamtAZAusgabe.setText(Controller.getController().getTimeForLabel(Controller.getController().getGesamtMonatAZ()));
-		lbl_ueberstunden.setText(Controller.getController().getTimeForLabel(Controller.getController().getUeberstunden()));
+		lbl_ueberstunden_monat.setText(Controller.getController().getTimeForLabel(Controller.getController().getUeberstundenMonat()));
+		lbl_ueberstunden_woche.setText(Controller.getController().getTimeForLabel(Controller.getController().getUeberstundenWoche()));
 		
 	}
 }
