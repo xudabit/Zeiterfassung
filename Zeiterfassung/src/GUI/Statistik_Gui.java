@@ -10,6 +10,9 @@ import Logik.Controller;
 import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
 
 public class Statistik_Gui extends JFrame {
 
@@ -74,28 +77,28 @@ public class Statistik_Gui extends JFrame {
 		// lbl_GesamtAZAusgabe.setText(Controller.getController().getTimeForLabel(Controller.getController().gesamtAZ()));
 
 		JLabel lbl_fABText = new JLabel("Fr\u00FChester Arbeitsbeginn:");
-		lbl_fABText.setBounds(12, 181, 218, 16);
+		lbl_fABText.setBounds(12, 94, 218, 16);
 		contentPane.add(lbl_fABText);
 
 		lbl_fAB = new JLabel("Keine Daten");
-		lbl_fAB.setBounds(306, 181, 251, 16);
+		lbl_fAB.setBounds(308, 94, 251, 16);
 		contentPane.add(lbl_fAB);
 
 		JLabel lbl_AnzahlPausenText = new JLabel("Meisten Pausen an einem Tag:");
-		lbl_AnzahlPausenText.setBounds(10, 210, 218, 16);
+		lbl_AnzahlPausenText.setBounds(10, 123, 218, 16);
 		contentPane.add(lbl_AnzahlPausenText);
 
 		lbl_AnzahlPausen = new JLabel("Pausen");
-		lbl_AnzahlPausen.setBounds(304, 210, 191, 16);
+		lbl_AnzahlPausen.setBounds(306, 123, 191, 16);
 		contentPane.add(lbl_AnzahlPausen);
 
 		JLabel lbl_dAnzahlPausenText = new JLabel(
 				"Durchschnittliche Anzahl Pausen:");
-		lbl_dAnzahlPausenText.setBounds(10, 239, 218, 16);
+		lbl_dAnzahlPausenText.setBounds(10, 152, 218, 16);
 		contentPane.add(lbl_dAnzahlPausenText);
 
 		lbl_dAPausen = new JLabel("Anzahl Pausen");
-		lbl_dAPausen.setBounds(304, 239, 191, 16);
+		lbl_dAPausen.setBounds(306, 152, 191, 16);
 		contentPane.add(lbl_dAPausen);
 		
 		//JLabel label = new JLabel("\u00DCberstunden in der aktuellen Woche:");
@@ -115,21 +118,27 @@ public class Statistik_Gui extends JFrame {
 		lbl_ueberstunden_woche.setBounds(304, 71, 191, 16);
 		contentPane.add(lbl_ueberstunden_woche);
 		
-		JLabel lblArbeitsende = new JLabel("Arbeitsende (min. 1/2 Stunde Pause):");
-		lblArbeitsende.setBounds(10, 110, 282, 16);
-		contentPane.add(lblArbeitsende);
-		
-		lbl_arbeitsende = new JLabel("00:00");
-		lbl_arbeitsende.setBounds(304, 110, 191, 16);
-		contentPane.add(lbl_arbeitsende);
+		JPanel panel = new JPanel();
+		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel.setBounds(10, 187, 485, 68);
+		contentPane.add(panel);
+		panel.setLayout(null);
 		
 		JLabel lblArbeitsendeohnePause = new JLabel("Arbeitsende (ohne Pause):");
-		lblArbeitsendeohnePause.setBounds(10, 139, 282, 16);
-		contentPane.add(lblArbeitsendeohnePause);
+		lblArbeitsendeohnePause.setBounds(12, 42, 244, 16);
+		panel.add(lblArbeitsendeohnePause);
+		
+		JLabel lblArbeitsende = new JLabel("Arbeitsende (min. 1/2 Stunde Pause):");
+		lblArbeitsende.setBounds(12, 13, 260, 16);
+		panel.add(lblArbeitsende);
+		
+		lbl_arbeitsende = new JLabel("00:00");
+		lbl_arbeitsende.setBounds(294, 13, 122, 16);
+		panel.add(lbl_arbeitsende);
 		
 		lbl_arbeitsende_ohnePause = new JLabel((String) null);
-		lbl_arbeitsende_ohnePause.setBounds(304, 139, 191, 16);
-		contentPane.add(lbl_arbeitsende_ohnePause);
+		lbl_arbeitsende_ohnePause.setBounds(294, 42, 122, 16);
+		panel.add(lbl_arbeitsende_ohnePause);
 		
 		updateView();
 		setVisible(true);
