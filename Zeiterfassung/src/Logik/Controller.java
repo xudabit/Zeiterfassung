@@ -323,12 +323,19 @@ public class Controller {
 		long stunden, minuten;
 		boolean neg = (ms < 0);
 		ms = (neg ? ms * -1 : ms);
-
+		
 		minuten = (ms / 60000) % 60;
 		stunden = ((ms / 60000) - minuten) / 60;
 
 		return ((neg ? "-" : "") + (stunden < 10 ? "0" : "") + stunden + ":"
 				+ (minuten < 10 ? "0" : "") + minuten);
+	}
+	
+	public String getTimeForLabel(Calendar cal) {
+		int stunden = cal.get(Calendar.HOUR_OF_DAY);
+		int minuten = cal.get(Calendar.MINUTE);
+
+		return (stunden < 10 ? "0" : "") + stunden + ":" + (minuten < 10 ? "0" : "") + minuten;
 	}
 
 	// Anzahl der Pausen für ein Datum zurückgeben
@@ -501,5 +508,23 @@ public class Controller {
 		keys.addAll(dateMap.keySet());
 		java.util.Collections.sort(keys);
 		return keys;
+	}
+	
+	public Calendar getEndTime() {
+		if(getToday() == null || getToday().getTagAnfang() == null) {
+			return null;
+		}
+		
+		long worktime = 28800000;
+		worktime -= getToday().berechneArbeitszeitInMillis();
+		long pausen = getToday().berechnePausen();
+		if(pausen < 1800000) {
+			worktime -= pausen%1800000;
+		}
+		
+		Calendar endWork = Calendar.getInstance();
+		endWork.add(Calendar.MILLISECOND, (int)worktime);
+	
+		return endWork;
 	}
 }

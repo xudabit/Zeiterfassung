@@ -139,4 +139,16 @@ public class Tag implements Serializable {
 	public void delTagEnde() {
 		tagEnde = null;
 	}
+	
+	public long berechnePausen() {
+		long pausen = 0;
+		for(Pause p : pausenListe) {
+			pausen += p.berechnePauseInMillis();
+		}
+		
+		if(temp_pausenAnfang != null) {
+			pausen += temp_pausenAnfang.berechnePauseInMillis();
+		}
+		return pausen;
+	}
 }

@@ -40,8 +40,13 @@ public class Pause implements Serializable{
 	}
 	
 	public long berechnePauseInMillis(){
-		if(pauseStart == null || pauseEnde == null)
+		if(pauseStart == null)
 			return -1;
+		
+		if(pauseEnde == null) {
+			return Calendar.getInstance().getTimeInMillis() - pauseStart.getTimeInMillis();
+		}
+		
 		return pauseEnde.getTimeInMillis() - pauseStart.getTimeInMillis();
 	}	
 	
