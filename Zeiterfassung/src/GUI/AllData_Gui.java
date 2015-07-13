@@ -21,6 +21,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class AllData_Gui extends JFrame {
 
@@ -100,12 +101,9 @@ public class AllData_Gui extends JFrame {
 		cB_Datum.removeAllItems();
 		ta_data.setText("");
 		
-		ArrayList<String> keys = new ArrayList<String>();
-		keys.addAll(Controller.getController().getDateMap().keySet());
-		java.util.Collections.sort(keys);
-		
-		for(String s : keys) {
-			cB_Datum.addItem(s);
+		ArrayList<String> keyList = Controller.getController().getSortedKeys();
+		for(int x = keyList.size()-1; x >= 0; x--) {
+			cB_Datum.addItem(keyList.get(x));
 		}
 	}
 }
