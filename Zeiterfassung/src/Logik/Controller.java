@@ -495,4 +495,11 @@ public class Controller {
 		java.util.Collections.sort(keys);
 		return keys;
 	}
+	
+	public ArrayList<String> getSortedKeys() {
+		ArrayList<String> keys = new ArrayList<String>();
+		keys.addAll(dateMap.keySet());
+		java.util.Collections.sort(keys);
+		return keys;
+	}
 }
