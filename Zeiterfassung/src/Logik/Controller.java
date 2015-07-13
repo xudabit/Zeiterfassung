@@ -519,8 +519,22 @@ public class Controller {
 		worktime -= getToday().berechneArbeitszeitInMillis();
 		long pausen = getToday().berechnePausen();
 		if(pausen < 1800000) {
-			worktime -= pausen%1800000;
+			worktime += 1800000-pausen;
 		}
+		
+		Calendar endWork = Calendar.getInstance();
+		endWork.add(Calendar.MILLISECOND, (int)worktime);
+	
+		return endWork;
+	}
+	
+	public Calendar getEndTimeOhnePause() {
+		if(getToday() == null || getToday().getTagAnfang() == null) {
+			return null;
+		}
+		
+		long worktime = 28800000;
+		worktime -= getToday().berechneArbeitszeitInMillis();
 		
 		Calendar endWork = Calendar.getInstance();
 		endWork.add(Calendar.MILLISECOND, (int)worktime);

@@ -29,6 +29,8 @@ public class Statistik_Gui extends JFrame {
 	private JLabel lbl_ueberstunden_woche;
 
 	private JLabel lbl_arbeitsende;
+
+	private JLabel lbl_arbeitsende_ohnePause;
 	
 	public Statistik_Gui(Rectangle bounds){
 		InitStatistik_GUI();
@@ -113,13 +115,21 @@ public class Statistik_Gui extends JFrame {
 		lbl_ueberstunden_woche.setBounds(304, 71, 191, 16);
 		contentPane.add(lbl_ueberstunden_woche);
 		
-		JLabel lblArbeitsende = new JLabel("Arbeitsende:");
-		lblArbeitsende.setBounds(10, 126, 282, 16);
+		JLabel lblArbeitsende = new JLabel("Arbeitsende (min. 1/2 Stunde Pause):");
+		lblArbeitsende.setBounds(10, 110, 282, 16);
 		contentPane.add(lblArbeitsende);
 		
 		lbl_arbeitsende = new JLabel("00:00");
-		lbl_arbeitsende.setBounds(304, 126, 191, 16);
+		lbl_arbeitsende.setBounds(304, 110, 191, 16);
 		contentPane.add(lbl_arbeitsende);
+		
+		JLabel lblArbeitsendeohnePause = new JLabel("Arbeitsende (ohne Pause):");
+		lblArbeitsendeohnePause.setBounds(10, 139, 282, 16);
+		contentPane.add(lblArbeitsendeohnePause);
+		
+		lbl_arbeitsende_ohnePause = new JLabel((String) null);
+		lbl_arbeitsende_ohnePause.setBounds(304, 139, 191, 16);
+		contentPane.add(lbl_arbeitsende_ohnePause);
 		
 		updateView();
 		setVisible(true);
@@ -147,5 +157,6 @@ public class Statistik_Gui extends JFrame {
 		lbl_ueberstunden_monat.setText(Controller.getController().getTimeForLabel(Controller.getController().getUeberstundenMonat()));
 		lbl_ueberstunden_woche.setText(Controller.getController().getTimeForLabel(Controller.getController().getUeberstundenWoche()));
 		lbl_arbeitsende.setText(Controller.getController().getTimeForLabel(Controller.getController().getEndTime()));
+		lbl_arbeitsende_ohnePause.setText(Controller.getController().getTimeForLabel(Controller.getController().getEndTimeOhnePause()));
 	}
 }
