@@ -1,10 +1,13 @@
 package Logik;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -16,6 +19,8 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
+import jdk.internal.jfr.events.FileWriteEvent;
+
 public class Controller {
 	private static Controller singleton = null;
 
@@ -26,8 +31,6 @@ public class Controller {
 	}
 
 	private final String PREFIXE = "TE#TA#PA#PE";
-
-	// private LinkedHashMap<String, Tag> dateMap;
 	
 	private Config conf;
 	
@@ -124,6 +127,38 @@ public class Controller {
 			System.err.println(ex.getMessage());
 		}
 		return true;
+	}
+	
+	public void exportData() {
+		File file = new File(Config.getConfig().getValue(Config.stringConfigValues.IMPORTPFAD));
+		try {
+			BufferedWriter writer = new BufferedWriter(
+					new FileWriter(file));
+			for(String k : dateMap.keySet()) {
+				Tag t = dateMap.get(k);
+				
+				writer.write("DA_" + k.replaceAll("[.]", "_") + "\n");
+				writer.write("TA;" + t.getTagAnfang().get(Calendar.HOUR_OF_DAY) + ";" + t.getTagAnfang().get(Calendar.MINUTE) + "\n");
+				
+				for(Pause p : t.getPausenListe()) {
+					writer.write("PA;" + p.getPauseStart().get(Calendar.HOUR_OF_DAY) + ";" + p.getPauseStart().get(Calendar.MINUTE) + "\n");
+					writer.write("PE;" + p.getPauseEnde().get(Calendar.HOUR_OF_DAY) + ";" + p.getPauseEnde().get(Calendar.MINUTE) + "\n");
+				}
+				
+				if(t.getTemp() != null) {
+					writer.write("PA;" + t.getTemp().getPauseStart().get(Calendar.HOUR_OF_DAY) + ";" + t.getTemp().getPauseStart().get(Calendar.MINUTE) + "\n");
+				}
+				if(t.getTagEnde() != null) {
+					writer.write("TE;" + t.getTagEnde().get(Calendar.HOUR_OF_DAY) + ";" + t.getTagEnde().get(Calendar.MINUTE) + "\n");
+				}
+			}
+			writer.flush();
+			writer.close();
+		} catch (FileNotFoundException ex) {
+			System.err.println(ex.getMessage());
+		} catch (IOException ex) {
+			System.err.println(ex.getMessage());
+		}
 	}
 	
 	public boolean importData() {

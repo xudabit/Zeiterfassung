@@ -161,32 +161,44 @@ public class Main_Gui extends JFrame {
 			}
 		});
 		
-		JMenu mnImport = new JMenu("Import");
+		JMenu mnImport = new JMenu("Import/Export");
 		mn_Datei.add(mnImport);
 				
-				JMenuItem mntmInformationenZumImport = new JMenuItem("Informationen zum Import");
-				mntmInformationenZumImport.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						JOptionPane.showMessageDialog(null, "Aufbau der Import-Datei:\n"
-								+ "DA_25_06_2015\n"
-								+ "TA;08;40\n"
-								+ "PA;10;45\n"
-								+ "PE;11;15\n"
-								+ "TE;17;00\n"
-								, "Information",
-								JOptionPane.INFORMATION_MESSAGE);
-					}
-				});
-				mnImport.add(mntmInformationenZumImport);
+		JMenuItem mntmInformationenZumImport = new JMenuItem("Informationen zum Import");
+		mntmInformationenZumImport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JOptionPane.showMessageDialog(null, "Aufbau der Import-Datei:\n"
+						+ "DA_25_06_2015\n"
+						+ "TA;08;40\n"
+						+ "PA;10;45\n"
+						+ "PE;11;15\n"
+						+ "TE;17;00\n"
+						, "Information",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		mnImport.add(mntmInformationenZumImport);
+
+		JMenuItem mn_Import = new JMenuItem("Daten importieren");
+		mnImport.add(mn_Import);
 		
-				JMenuItem mn_Import = new JMenuItem("Daten importieren");
-				mnImport.add(mn_Import);
-				mn_Import.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						Controller.getController().importData();
-						updateView();
-					}
-				});
+		mn_Import.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Controller.getController().importData();
+				updateView();
+			}
+		});
+		
+		JMenuItem mn_Export = new JMenuItem("Daten exportieren");
+		mn_Export.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Controller.getController().exportData();
+				
+				//Popup zur Bestätigung
+				
+			}
+		});
+		mnImport.add(mn_Export);
 		mn_Datei.add(mn_AlleDatenAnzeigen);
 		mn_Datei.addSeparator();
 
