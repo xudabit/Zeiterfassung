@@ -263,7 +263,6 @@ public class EingabenAendern_Gui extends JFrame {
 		tf_pa_h = new JTextField();
 		tf_pa_h.addFocusListener(focListener);
 		tf_pa_h.addKeyListener(keyListener);
-		tf_pa_h.setEditable(false);
 		tf_pa_h.setBounds(137, 48, 35, 22);
 		pl_Pausen.add(tf_pa_h);
 		tf_pa_h.setColumns(10);
@@ -271,7 +270,6 @@ public class EingabenAendern_Gui extends JFrame {
 		tf_pa_m = new JTextField();
 		tf_pa_m.addFocusListener(focListener);
 		tf_pa_m.addKeyListener(keyListener);
-		tf_pa_m.setEditable(false);
 		tf_pa_m.setColumns(10);
 		tf_pa_m.setBounds(184, 48, 35, 22);
 		pl_Pausen.add(tf_pa_m);
@@ -283,7 +281,6 @@ public class EingabenAendern_Gui extends JFrame {
 		tf_pe_h = new JTextField();
 		tf_pe_h.addFocusListener(focListener);
 		tf_pe_h.addKeyListener(keyListener);
-		tf_pe_h.setEditable(false);
 		tf_pe_h.setColumns(10);
 		tf_pe_h.setBounds(137, 87, 35, 22);
 		pl_Pausen.add(tf_pe_h);
@@ -295,7 +292,6 @@ public class EingabenAendern_Gui extends JFrame {
 		tf_pe_m = new JTextField();
 		tf_pe_m.addFocusListener(focListener);
 		tf_pe_m.addKeyListener(keyListener);
-		tf_pe_m.setEditable(false);
 		tf_pe_m.setColumns(10);
 		tf_pe_m.setBounds(184, 87, 35, 22);
 		pl_Pausen.add(tf_pe_m);
@@ -393,9 +389,10 @@ public class EingabenAendern_Gui extends JFrame {
 
 		if (day != null) {
 			if (!tf_ta_h.getText().isEmpty() && !tf_ta_m.getText().isEmpty()) {
-				c_ta = Controller.getController().setCalFromZeit(
-						tf_ta_h.getText() + ":" + tf_ta_m.getText(),
-						(Calendar) day.getTagAnfang().clone());
+				c_ta = day.getTagAnfang();
+				
+				c_ta.set(Calendar.HOUR_OF_DAY, Integer.parseInt(tf_ta_h.getText()));
+				c_ta.set(Calendar.MINUTE, Integer.parseInt(tf_ta_m.getText()));
 
 				if (c_ta == null
 						|| !Controller.getController().isTAFirst(c_ta, day)) {
@@ -405,13 +402,11 @@ public class EingabenAendern_Gui extends JFrame {
 				}
 			}
 
-			if (c_ta == null)
-				return false;
-
 			if (!tf_te_h.getText().isEmpty() && !tf_te_m.getText().isEmpty()) {
-				c_te = Controller.getController().setCalFromZeit(
-						tf_te_h.getText() + ":" + tf_te_m.getText(),
-						(Calendar) day.getTagEnde().clone());
+				c_te = (day.getTagEnde() == null ? (Calendar)day.getTagAnfang().clone() : day.getTagEnde());
+				
+				c_te.set(Calendar.HOUR_OF_DAY, Integer.parseInt(tf_te_h.getText()));
+				c_te.set(Calendar.MINUTE, Integer.parseInt(tf_te_m.getText()));
 
 				if (c_te == null
 						|| !Controller.getController().isTELast(c_te, day)) {
@@ -433,14 +428,12 @@ public class EingabenAendern_Gui extends JFrame {
 			c_pe = (Calendar) selP.getPauseEnde().clone();
 
 			if (!tf_pa_h.getText().isEmpty() && !tf_pa_m.getText().isEmpty()) {
-				c_pa.set(Calendar.HOUR_OF_DAY,
-						Integer.parseInt(tf_pa_h.getText()));
+				c_pa.set(Calendar.HOUR_OF_DAY, Integer.parseInt(tf_pa_h.getText()));
 				c_pa.set(Calendar.MINUTE, Integer.parseInt(tf_pa_m.getText()));
 			}
 
 			if (!tf_pe_h.getText().isEmpty() && !tf_pe_m.getText().isEmpty()) {
-				c_pe.set(Calendar.HOUR_OF_DAY,
-						Integer.parseInt(tf_pe_h.getText()));
+				c_pe.set(Calendar.HOUR_OF_DAY, Integer.parseInt(tf_pe_h.getText()));
 				c_pe.set(Calendar.MINUTE, Integer.parseInt(tf_pe_m.getText()));
 			}
 
@@ -512,11 +505,6 @@ public class EingabenAendern_Gui extends JFrame {
 		tf_te_h.setText("");
 		tf_te_m.setText("");
 		
-		tf_ta_h.setEditable(false);
-		tf_ta_m.setEditable(false);
-		tf_te_h.setEditable(false);
-		tf_te_m.setEditable(false);
-		
 		if (day == null)
 			return;
 
@@ -524,25 +512,21 @@ public class EingabenAendern_Gui extends JFrame {
 			tf_ta_h.setText(addZero(day.getTagAnfang()
 					.get(Calendar.HOUR_OF_DAY)));
 			tf_ta_m.setText(addZero(day.getTagAnfang().get(Calendar.MINUTE)));
-			tf_ta_h.setEditable(true);
-			tf_ta_m.setEditable(true);
 		}
 		if (day.getTagEnde() != null) {
 			tf_te_h.setText(addZero(day.getTagEnde().get(Calendar.HOUR_OF_DAY)));
 			tf_te_m.setText(addZero(day.getTagEnde().get(Calendar.MINUTE)));
-			tf_te_h.setEditable(true);
-			tf_te_m.setEditable(true);
 		} else {
 		}
 	}
 
 	private void setPauseFields(Pause p) {
+		tf_pa_h.setEditable(p != null);
+		tf_pa_m.setEditable(p != null);
+		tf_pe_h.setEditable(p != null);
+		tf_pe_m.setEditable(p != null);
+		
 		if (p != null) {
-			tf_pa_h.setEditable(true);
-			tf_pa_m.setEditable(true);
-			tf_pe_h.setEditable(true);
-			tf_pe_m.setEditable(true);
-
 			tf_pa_h.setText(addZero(p.getPauseStart().get(Calendar.HOUR_OF_DAY)));
 			tf_pa_m.setText(addZero(p.getPauseStart().get(Calendar.MINUTE)));
 			tf_pe_h.setText(addZero(p.getPauseEnde().get(Calendar.HOUR_OF_DAY)));
@@ -551,9 +535,7 @@ public class EingabenAendern_Gui extends JFrame {
 	}
 
 	private String addZero(int num) {
-
 		return ((num < 10 ? "0" : "") + num);
-
 	}
 
 	private Pause getSelectedPause() {
