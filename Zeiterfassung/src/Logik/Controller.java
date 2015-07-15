@@ -17,8 +17,10 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Set;
 
+import javax.management.modelmbean.XMLParseException;
 import javax.swing.JOptionPane;
 
+import XMLParser.XMLparser;
 import jdk.internal.jfr.events.FileWriteEvent;
 
 public class Controller {
@@ -129,8 +131,8 @@ public class Controller {
 		return true;
 	}
 	
-	public void exportData() {
-		File file = new File(Config.getConfig().getValue(Config.stringConfigValues.IMPORTPFAD));
+	public void exportData(String filepath) {
+		File file = new File(filepath);
 		try {
 			BufferedWriter writer = new BufferedWriter(
 					new FileWriter(file));
@@ -161,8 +163,32 @@ public class Controller {
 		}
 	}
 	
-	public boolean importData() {
-		File file = new File(Config.getConfig().getValue(Config.stringConfigValues.IMPORTPFAD));
+	public void importDataFromActricity(String filepath) {
+		int n_top = 1;
+		int n = 0;
+		for(Tag t : (new XMLparser()).getTagListFromActricity(filepath)) {
+			String datum = getDatestringFromCalendar(t.getTagAnfang());
+			if(n_top != 0 && dateMap.containsKey(datum)) {
+				String[] options = new String[] {"Ja", "Nein", "Ja (merken)"};
+				n = JOptionPane.showOptionDialog(null,
+						"Sollen die Daten vom " + datum.replaceAll("_", "[.]") + " ueberschrieben werden?",
+						"Alte Daten l\u00F6schen?", JOptionPane.YES_NO_CANCEL_OPTION,
+						JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+				
+				if(n == 2) {
+					n_top = 0;
+				}
+			}
+			
+			if(n_top == 0 || n == 0) {
+				dateMap.put(datum,t);
+			}
+		}
+		schreibeInDatei();
+	}
+	
+	public boolean importData(String filepath) {
+		File file = new File(filepath);
 		int tag = 0, monat = 0, jahr = 0;
 		String[] zeit = new String[0], datum = new String[0];
 		String zeile;
