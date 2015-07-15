@@ -187,24 +187,6 @@ public class Main_Gui extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser chooser = new JFileChooser();
 				chooser.setMultiSelectionEnabled(false);
-
-				chooser.setFileFilter(new FileFilter() {
-					
-					@Override
-					public String getDescription() {
-						// TODO Auto-generated method stub
-						return null;
-					}
-					
-					@Override
-					public boolean accept(File arg0) {
-						if(arg0.getName().endsWith(".imp") || arg0.isDirectory()) {
-							return true;
-						}
-						
-						return false;
-					}
-				});
 				
 				int ret = -1;
 				if(arg0.getActionCommand().equals("export")) {
