@@ -105,6 +105,8 @@ public class AllData_Gui extends JFrame {
 		btn_AktuelleWocheAnzeigen = new JButton("Aktuelle Woche anzeigen");
 		btn_AktuelleWocheAnzeigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
+				cB_Datum.setSelectedItem(null);
 
 				ta_data.setText("");
 
