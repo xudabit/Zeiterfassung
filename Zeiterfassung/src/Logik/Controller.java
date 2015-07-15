@@ -546,20 +546,13 @@ public class Controller {
 	}
 	
 	public Calendar getEndTime() {
-		if(getToday() == null || getToday().getTagAnfang() == null) {
+		Calendar endWork = (Calendar) getEndTimeOhnePause().clone();
+		
+		if(endWork == null)
 			return null;
-		}
 		
-		long worktime = 28800000;
-		worktime -= getToday().berechneArbeitszeitInMillis();
-		long pausen = getToday().berechnePausen();
-		if(pausen < 1800000) {
-			worktime += 1800000-pausen;
-		}
+		endWork.add(Calendar.MINUTE, 30);
 		
-		Calendar endWork = Calendar.getInstance();
-		endWork.add(Calendar.MILLISECOND, (int)worktime);
-	
 		return endWork;
 	}
 	
@@ -568,12 +561,9 @@ public class Controller {
 			return null;
 		}
 		
-		long worktime = 28800000;
-		worktime -= getToday().berechneArbeitszeitInMillis();
-		
-		Calendar endWork = Calendar.getInstance();
-		endWork.add(Calendar.MILLISECOND, (int)worktime);
-	
+		Calendar endWork = (Calendar) getToday().getTagAnfang().clone();
+		endWork.add(Calendar.HOUR, 8);
+			
 		return endWork;
 	}
 }
