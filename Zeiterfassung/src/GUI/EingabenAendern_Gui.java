@@ -339,7 +339,7 @@ public class EingabenAendern_Gui extends JFrame {
 		tf_ta_m = new JTextField();
 		tf_ta_m.addFocusListener(focListener);
 		tf_ta_m.addKeyListener(keyListener);
-		tf_ta_m.setEditable(false);
+		tf_ta_m.setEditable(true);
 		tf_ta_m.setColumns(10);
 		tf_ta_m.setBounds(204, 13, 35, 22);
 		contentPane.add(tf_ta_m);
@@ -352,7 +352,7 @@ public class EingabenAendern_Gui extends JFrame {
 		tf_ta_h.addFocusListener(focListener);
 		tf_ta_h.addFocusListener(focListener);
 		tf_ta_h.addKeyListener(keyListener);
-		tf_ta_h.setEditable(false);
+		tf_ta_h.setEditable(true);
 		tf_ta_h.setColumns(10);
 		tf_ta_h.setBounds(157, 13, 35, 22);
 		contentPane.add(tf_ta_h);
@@ -360,7 +360,7 @@ public class EingabenAendern_Gui extends JFrame {
 		tf_te_m = new JTextField();
 		tf_te_m.addFocusListener(focListener);
 		tf_te_m.addKeyListener(keyListener);
-		tf_te_m.setEditable(false);
+		tf_te_m.setEditable(true);
 		tf_te_m.setColumns(10);
 		tf_te_m.setBounds(204, 45, 35, 22);
 		contentPane.add(tf_te_m);
@@ -372,7 +372,7 @@ public class EingabenAendern_Gui extends JFrame {
 		tf_te_h = new JTextField();
 		tf_te_h.addFocusListener(focListener);
 		tf_te_h.addKeyListener(keyListener);
-		tf_te_h.setEditable(false);
+		tf_te_h.setEditable(true);
 		tf_te_h.setColumns(10);
 		tf_te_h.setBounds(157, 45, 35, 22);
 		contentPane.add(tf_te_h);
@@ -516,7 +516,6 @@ public class EingabenAendern_Gui extends JFrame {
 		if (day.getTagEnde() != null) {
 			tf_te_h.setText(addZero(day.getTagEnde().get(Calendar.HOUR_OF_DAY)));
 			tf_te_m.setText(addZero(day.getTagEnde().get(Calendar.MINUTE)));
-		} else {
 		}
 	}
 
