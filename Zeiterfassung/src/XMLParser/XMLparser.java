@@ -29,6 +29,7 @@ public class XMLparser {
 				// --- Datum
 				Calendar date = Calendar.getInstance();
 
+				// Sorry!
 				String dateString = getTextFromSubElementByName(arNode, "Datum").replaceAll("[.]", "_");
 
 				if (dateString == null) {
