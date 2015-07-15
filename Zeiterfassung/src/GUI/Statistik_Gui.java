@@ -37,8 +37,6 @@ public class Statistik_Gui extends JFrame {
 	
 	public Statistik_Gui(Rectangle bounds){
 		InitStatistik_GUI(bounds);
-		
-		System.out.println(Controller.getController().getTimeForLabel(Controller.getController().getEndTime()));
 	}
 
 	/**
@@ -59,7 +57,6 @@ public class Statistik_Gui extends JFrame {
 			}
 		});
 
-		setBounds(100, 100, 450, 175);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -129,7 +126,6 @@ public class Statistik_Gui extends JFrame {
 	private void updateView() {
 		double avgPausendauer = Controller.getController().getDAPausen();
 		avgPausendauer = (double) Math.round(avgPausendauer * 100) / 100;
-		int maxAnzahlPausen = Controller.getController().getMaxAnzahlPausen();
 		lbl_GesamtAZAusgabe.setText(Controller.getController().getTimeForLabel(Controller.getController().getGesamtMonatAZ()));
 		lbl_ueberstunden_monat.setText(Controller.getController().getTimeForLabel(Controller.getController().getUeberstundenMonat()));
 		lbl_ueberstunden_woche.setText(Controller.getController().getTimeForLabel(Controller.getController().getUeberstundenWoche()));
