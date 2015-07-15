@@ -39,7 +39,7 @@ public class Config implements Serializable{
 	}
 	
 	public enum stringConfigValues {
-		IMPORTPFAD, ICONPFAD, AUSGABEPFAD, PAUSEIMAGE
+		ICONPFAD, AUSGABEPFAD, PAUSEIMAGE
 	}
 	
 	public enum intConfigValues {
@@ -56,7 +56,6 @@ public class Config implements Serializable{
 		bool_conf.put(boolConfigValues.MINIMIZETOTRAY, true);
 		bool_conf.put(boolConfigValues.WARNINGOLDDATA, true);
 		
-		string_conf.put(stringConfigValues.IMPORTPFAD, "data/Zeiterfassung.imp");
 		string_conf.put(stringConfigValues.AUSGABEPFAD, "data/timedata.ze");
 		string_conf.put(stringConfigValues.ICONPFAD, "icon/uhr.jpg");
 		string_conf.put(stringConfigValues.PAUSEIMAGE, "icon/pause.jpg");
