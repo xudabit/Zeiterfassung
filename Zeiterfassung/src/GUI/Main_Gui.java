@@ -6,13 +6,16 @@ import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
+import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.plaf.basic.BasicProgressBarUI;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -78,13 +81,11 @@ public class Main_Gui extends JFrame {
 	 */
 	private Main_Gui() {
 		setBounds(100, 100, 510, 300);
-		
+
 		setResizable(false);
 		setTitle("Zeiterfassung");
-		
-		Object[] options = { "Ja", "Nein" };
 
-		
+		Object[] options = { "Ja", "Nein" };
 
 		ActionListener btn_mi_al = new ActionListener() {
 			@Override
@@ -160,44 +161,86 @@ public class Main_Gui extends JFrame {
 				setVisible(false);
 			}
 		});
-		
+
 		JMenu mnImport = new JMenu("Import/Export");
 		mn_Datei.add(mnImport);
-				
-		JMenuItem mntmInformationenZumImport = new JMenuItem("Informationen zum Import");
+
+		JMenuItem mntmInformationenZumImport = new JMenuItem(
+				"Informationen zum Import");
 		mntmInformationenZumImport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JOptionPane.showMessageDialog(null, "Aufbau der Import-Datei:\n"
-						+ "DA_25_06_2015\n"
-						+ "TA;08;40\n"
-						+ "PA;10;45\n"
-						+ "PE;11;15\n"
-						+ "TE;17;00\n"
-						, "Information",
+				JOptionPane.showMessageDialog(null,
+						"Aufbau der Import-Datei:\n" + "DA_25_06_2015\n"
+								+ "TA;08;40\n" + "PA;10;45\n" + "PE;11;15\n"
+								+ "TE;17;00\n", "Information",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		mnImport.add(mntmInformationenZumImport);
 
-		JMenuItem mn_Import = new JMenuItem("Daten importieren");
+		JMenuItem mn_Import = new JMenuItem("Daten importieren (.imp)");
 		mnImport.add(mn_Import);
-		
-		mn_Import.addActionListener(new ActionListener() {
+
+		ActionListener chooserListener = new ActionListener() {
+			
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Controller.getController().importData();
+				JFileChooser chooser = new JFileChooser();
+				chooser.setMultiSelectionEnabled(false);
+
+				chooser.setFileFilter(new FileFilter() {
+					
+					@Override
+					public String getDescription() {
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public boolean accept(File arg0) {
+						if(arg0.getName().endsWith(".imp") || arg0.isDirectory()) {
+							return true;
+						}
+						
+						return false;
+					}
+				});
+				
+				int ret = -1;
+				if(arg0.getActionCommand().equals("export")) {
+					ret = chooser.showSaveDialog(Main_Gui.getMainGui());
+				} else {
+					ret = chooser.showOpenDialog(Main_Gui.getMainGui());
+				}
+				
+				if (ret == JFileChooser.APPROVE_OPTION) {
+					if(arg0.getActionCommand().equals("import")) {
+						Controller.getController().importData(chooser.getSelectedFile().getAbsolutePath());
+					} else if(arg0.getActionCommand().equals("actricity")) {
+						Controller.getController().importDataFromActricity(chooser.getSelectedFile().getAbsolutePath());
+					} else if(arg0.getActionCommand().equals("export")) {
+						Controller.getController().exportData(chooser.getSelectedFile().getAbsolutePath());
+					}
+					
+					updateView();
+				}
 				updateView();
 			}
-		});
+		};
 		
+		mn_Import.setActionCommand("import");
+		mn_Import.addActionListener(chooserListener);
+
 		JMenuItem mn_Export = new JMenuItem("Daten exportieren");
-		mn_Export.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				Controller.getController().exportData();
-				
-				//Popup zur Bestätigung
-				
-			}
-		});
+		mn_Export.setActionCommand("export");
+		mn_Export.addActionListener(chooserListener);
+
+		JMenuItem mntmDatenImportierenactricity = new JMenuItem(
+				"Daten importieren (Actricity XML)");
+		mntmDatenImportierenactricity.setActionCommand("actricity");
+		mntmDatenImportierenactricity.addActionListener(chooserListener);
+		
+		mnImport.add(mntmDatenImportierenactricity);
 		mnImport.add(mn_Export);
 		mn_Datei.add(mn_AlleDatenAnzeigen);
 		mn_Datei.addSeparator();
@@ -410,7 +453,7 @@ public class Main_Gui extends JFrame {
 		progressBarUeberstunden = new JProgressBar();
 		progressBarUeberstunden.setBounds(440, 215, 55, 14);
 		contentPane.add(progressBarUeberstunden);
-		
+
 		JButton btn_exit = new JButton("Exit");
 		btn_exit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -419,9 +462,9 @@ public class Main_Gui extends JFrame {
 		});
 		btn_exit.setBounds(12, 204, 146, 25);
 		contentPane.add(btn_exit);
-		
+
 		updateView();
-		
+
 		new Thread() {
 			@Override
 			public void run() {
@@ -429,8 +472,9 @@ public class Main_Gui extends JFrame {
 				try {
 					while (true) {
 						updateView();
-						//sleep(60 * 1000);
-						sleep(Config.getConfig().getValue(Config.intConfigValues.REFRESHTIME) * 1000);
+						// sleep(60 * 1000);
+						sleep(Config.getConfig().getValue(
+								Config.intConfigValues.REFRESHTIME) * 1000);
 					}
 				} catch (InterruptedException ex) {
 					System.err.println(ex.getMessage());
@@ -483,24 +527,24 @@ public class Main_Gui extends JFrame {
 			SysTray.getSysTray(this).setEnabled("PE", true);
 		}
 	}
-	
+
 	public void showWindow(int x, int y) {
 		SysTray.getSysTray(this);
 		updateView();
 		setVisible(true);
-		setBounds(x, y, (int)getBounds().getWidth(), (int)getBounds().getHeight());
+		setBounds(x, y, (int) getBounds().getWidth(), (int) getBounds()
+				.getHeight());
 	}
 
 	public void updateProgressBar() {
 
 		if (Controller.getController().getToday() != null) {
-			
-			double stunden = ((double)Controller.getController().getToday().berechneArbeitszeitInMillis()/ 3600000);
-			
+
+			double stunden = ((double) Controller.getController().getToday()
+					.berechneArbeitszeitInMillis() / 3600000);
+
 			int prozent = (int) (stunden / 8 * 100);
-			
-			
-			
+
 			if (stunden <= 6.5) {
 				progressBar.setForeground(Color.orange);
 				progressBarUeberstunden.setForeground(Color.orange);
@@ -517,23 +561,28 @@ public class Main_Gui extends JFrame {
 
 			progressBar.setValue(prozent);
 			progressBar.setStringPainted(true);
-			
-			progressBar.setString(Controller.getController().getTimeForLabel(Controller.getController().getArbeitszeit()));
-			
+
+			progressBar.setString(Controller.getController().getTimeForLabel(
+					Controller.getController().getArbeitszeit()));
+
 			progressBar.setUI(new BasicProgressBarUI() {
-			      protected Color getSelectionBackground() { return Color.black; }
-			      protected Color getSelectionForeground() { return Color.black; }
-			    });
+				protected Color getSelectionBackground() {
+					return Color.black;
+				}
+
+				protected Color getSelectionForeground() {
+					return Color.black;
+				}
+			});
 
 			progressBarUeberstunden.setValue((prozent - 100) * 4);
 		} else {
 			progressBar.setValue(progressBar.getMinimum());
 		}
 	}
-	
+
 	private void exit() {
-		if (Config.getConfig().getValue(
-				Config.boolConfigValues.MINIMIZETOTRAY)) {
+		if (Config.getConfig().getValue(Config.boolConfigValues.MINIMIZETOTRAY)) {
 			setVisible(false);
 		} else {
 			System.exit(0);
