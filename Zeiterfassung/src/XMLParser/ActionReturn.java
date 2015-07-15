@@ -2,8 +2,6 @@ package XMLParser;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Vector;
-
 
 public class ActionReturn {
 	private Calendar datum;

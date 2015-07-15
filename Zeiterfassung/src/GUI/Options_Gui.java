@@ -7,10 +7,10 @@ import javax.swing.JComboBox;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import javax.swing.border.LineBorder;
 import javax.swing.JSpinner;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.border.TitledBorder;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -18,11 +18,9 @@ import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
 import java.awt.Rectangle;
-import java.awt.Color;
+
 import Logik.Config;
-import javax.swing.border.TitledBorder;
 
 public class Options_Gui extends JFrame {
 

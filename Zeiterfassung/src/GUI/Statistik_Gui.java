@@ -1,21 +1,19 @@
 package GUI;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.UIManager;
+import javax.swing.border.TitledBorder;
 
 import Logik.Controller;
 
 import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.LineBorder;
-import java.awt.Color;
-import javax.swing.border.TitledBorder;
 import java.awt.GridLayout;
-import javax.swing.UIManager;
 
 public class Statistik_Gui extends JFrame {
 

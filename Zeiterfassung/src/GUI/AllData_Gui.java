@@ -107,8 +107,6 @@ public class AllData_Gui extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 
 				ta_data.setText("");
-				//cB_Datum.setSelectedItem(arg0);
-				
 
 				for (String s : Controller.getController()
 						.getSortedKeysForActualWeek()) {

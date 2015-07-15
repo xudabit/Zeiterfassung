@@ -15,13 +15,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Set;
 
-import javax.management.modelmbean.XMLParseException;
 import javax.swing.JOptionPane;
 
 import XMLParser.XMLparser;
-import jdk.internal.jfr.events.FileWriteEvent;
 
 public class Controller {
 	private static Controller singleton = null;

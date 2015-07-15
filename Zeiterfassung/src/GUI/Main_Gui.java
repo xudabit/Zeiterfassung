@@ -2,17 +2,14 @@ package GUI;
 
 import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
-import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.plaf.basic.BasicProgressBarUI;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -23,13 +20,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JProgressBar;
 
 import java.util.Calendar;
 
 import Logik.Config;
 import Logik.Controller;
-
-import javax.swing.JProgressBar;
 
 public class Main_Gui extends JFrame {
 
