@@ -613,4 +613,11 @@ public class Controller {
 
 		return endWork;
 	}
+	
+	public void deleteDate(String key) {
+		if(dateMap.containsKey(key)) {
+			dateMap.remove(key);
+		}
+		schreibeInDatei();
+	}
 }

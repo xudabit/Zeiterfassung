@@ -14,6 +14,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicProgressBarUI;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -284,6 +285,16 @@ public class Main_Gui extends JFrame {
 				updateView();
 			}
 		});
+		
+		JMenuItem mntmBenutzderdefiniert = new JMenuItem("Benutzderdefiniert");
+		mntmBenutzderdefiniert.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new DeleteSelectionGui(getBounds()).setVisible(true);
+				setVisible(false);
+			}
+		});
+		mn_DatenLoeschen.add(mntmBenutzderdefiniert);
+		mn_DatenLoeschen.add(new JSeparator());
 		mn_DatenLoeschen.add(mn_Heute);
 		mn_DatenLoeschen.add(mn_1Monat);
 
