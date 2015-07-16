@@ -45,6 +45,9 @@ public class Options_Gui extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	/*
+	 * Zurücksetzen-Button
+	 */
 	public Options_Gui(Rectangle bounds) {
 		setBounds((int)bounds.getX(), (int)bounds.getY(), 450, 350);
 		SysTray.getSysTray(this);
@@ -156,6 +159,11 @@ public class Options_Gui extends JFrame {
 	}
 	
 	private void readConfig() {
+		
+		/*
+		 * Alle Daten aus CB löschen
+		 */
+		
 		for(Config.boolConfigValues b : Config.boolConfigValues.values()) {
 			cb_bool.addItem(b);
 		}
