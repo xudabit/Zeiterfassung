@@ -47,7 +47,8 @@ public class Options_Gui extends JFrame {
 	 * Create the frame.
 	 */
 	/*
-	 * Zurücksetzen-Button
+	 * Zurücksetzen-Button wurde hinzugefügt
+	 * 
 	 */
 	public Options_Gui(Rectangle bounds) {
 		setBounds((int)bounds.getX(), (int)bounds.getY(), 450, 350);
@@ -137,8 +138,9 @@ public class Options_Gui extends JFrame {
 		btn_Zuercksetzten.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				
-				
+				Config.getConfig().setDefConfig();
+				readConfig();
+				Config.getConfig().saveThisConfig();
 				
 				
 				
@@ -157,6 +159,9 @@ public class Options_Gui extends JFrame {
 		cb_bool.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent arg0) {
 				Config.boolConfigValues b = (Config.boolConfigValues)cb_bool.getSelectedItem();
+			
+				// Hier oder in getValue auf null prüfen
+				//	if()
 				chkbx_bool.setSelected(Config.getConfig().getValue(b));
 			}
 		});
@@ -182,6 +187,9 @@ public class Options_Gui extends JFrame {
 		/*
 		 * Alle Daten aus CB löschen
 		 */
+		cb_bool.removeAllItems();
+		cb_string.removeAllItems();
+		cb_int.removeAllItems();
 		
 		for(Config.boolConfigValues b : Config.boolConfigValues.values()) {
 			cb_bool.addItem(b);

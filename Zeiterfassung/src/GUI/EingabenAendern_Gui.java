@@ -48,6 +48,9 @@ public class EingabenAendern_Gui extends JFrame {
 	/**
 	 * EingabenAendern_GUI
 	 */
+	/*
+	 * ComboBox Neue Pause entfernen und als Button hinzufuegen
+	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JLabel lbl_TagBegonnenUm;
