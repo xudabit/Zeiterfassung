@@ -168,7 +168,7 @@ public class Controller {
 			if(n_top != 0 && dateMap.containsKey(datum)) {
 				String[] options = new String[] {"Ja", "Nein", "Ja (merken)"};
 				n = JOptionPane.showOptionDialog(null,
-						"Sollen die Daten vom " + datum.replaceAll("_", "[.]") + " ueberschrieben werden?",
+						"Sollen die Daten vom " + datum + " ueberschrieben werden?",
 						"Alte Daten l\u00F6schen?", JOptionPane.YES_NO_CANCEL_OPTION,
 						JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
 				

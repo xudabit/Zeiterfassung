@@ -30,7 +30,7 @@ public class XMLparser {
 				Calendar date = Calendar.getInstance();
 
 				// Sorry!
-				String dateString = getTextFromSubElementByName(arNode, "Datum").replaceAll("[.]", "_");
+				String dateString = getTextFromSubElementByName(arNode, "Datum");
 
 				if (dateString == null) {
 					throw new NullPointerException(
