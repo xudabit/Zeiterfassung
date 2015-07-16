@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
+import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -21,6 +22,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JProgressBar;
+
+import sun.applet.Main;
 
 import java.util.Calendar;
 
@@ -181,7 +184,7 @@ public class Main_Gui extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser chooser = new JFileChooser();
+				JFileChooser chooser = new JFileChooser(new File("."));
 				chooser.setMultiSelectionEnabled(false);
 				
 				int ret = -1;
@@ -246,8 +249,7 @@ public class Main_Gui extends JFrame {
 		mn_ZeitenAendern.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				EingabenAendern_Gui eA = new EingabenAendern_Gui(getBounds());
-				eA.setVisible(true);
+				new EingabenAendern_Gui(getBounds()).setVisible(true);
 				setVisible(false);
 			}
 		});
@@ -456,7 +458,7 @@ public class Main_Gui extends JFrame {
 								Config.intConfigValues.REFRESHTIME) * 1000);
 					}
 				} catch (InterruptedException ex) {
-					System.err.println(ex.getMessage());
+					showException(ex);
 				}
 			}
 		}.start();
