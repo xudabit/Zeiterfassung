@@ -135,46 +135,38 @@ public class Controller {
 		return true;
 	}
 
-	public void exportData(String filepath) {
+	public void exportData(String filepath) throws FileNotFoundException, IOException {
 		File file = new File(filepath);
-		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-			for (String k : dateMap.keySet()) {
-				Tag t = dateMap.get(k);
+		BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+		for (String k : dateMap.keySet()) {
+			Tag t = dateMap.get(k);
 
-				writer.write("DA_" + k.replaceAll("[.]", "_") + "\n");
-				writer.write("TA;" + t.getTagAnfang().get(Calendar.HOUR_OF_DAY)
-						+ ";" + t.getTagAnfang().get(Calendar.MINUTE) + "\n");
+			writer.write("DA_" + k.replaceAll("[.]", "_") + "\n");
+			writer.write("TA;" + t.getTagAnfang().get(Calendar.HOUR_OF_DAY)
+					+ ";" + t.getTagAnfang().get(Calendar.MINUTE) + "\n");
 
-				for (Pause p : t.getPausenListe()) {
-					writer.write("PA;"
-							+ p.getPauseStart().get(Calendar.HOUR_OF_DAY) + ";"
-							+ p.getPauseStart().get(Calendar.MINUTE) + "\n");
-					writer.write("PE;"
-							+ p.getPauseEnde().get(Calendar.HOUR_OF_DAY) + ";"
-							+ p.getPauseEnde().get(Calendar.MINUTE) + "\n");
-				}
-
-				if (t.getTemp() != null) {
-					writer.write("PA;"
-							+ t.getTemp().getPauseStart()
-									.get(Calendar.HOUR_OF_DAY) + ";"
-							+ t.getTemp().getPauseStart().get(Calendar.MINUTE)
-							+ "\n");
-				}
-				if (t.getTagEnde() != null) {
-					writer.write("TE;"
-							+ t.getTagEnde().get(Calendar.HOUR_OF_DAY) + ";"
-							+ t.getTagEnde().get(Calendar.MINUTE) + "\n");
-				}
+			for (Pause p : t.getPausenListe()) {
+				writer.write("PA;"
+						+ p.getPauseStart().get(Calendar.HOUR_OF_DAY) + ";"
+						+ p.getPauseStart().get(Calendar.MINUTE) + "\n");
+				writer.write("PE;" + p.getPauseEnde().get(Calendar.HOUR_OF_DAY)
+						+ ";" + p.getPauseEnde().get(Calendar.MINUTE) + "\n");
 			}
-			writer.flush();
-			writer.close();
-		} catch (FileNotFoundException ex) {
-			System.err.println(ex.getMessage());
-		} catch (IOException ex) {
-			System.err.println(ex.getMessage());
+
+			if (t.getTemp() != null) {
+				writer.write("PA;"
+						+ t.getTemp().getPauseStart().get(Calendar.HOUR_OF_DAY)
+						+ ";"
+						+ t.getTemp().getPauseStart().get(Calendar.MINUTE)
+						+ "\n");
+			}
+			if (t.getTagEnde() != null) {
+				writer.write("TE;" + t.getTagEnde().get(Calendar.HOUR_OF_DAY)
+						+ ";" + t.getTagEnde().get(Calendar.MINUTE) + "\n");
+			}
 		}
+		writer.flush();
+		writer.close();
 	}
 
 	public void importDataFromActricity(String filepath) throws Exception {
