@@ -32,6 +32,8 @@ public class AllData_Gui extends JFrame {
 	private JComboBox<String> cB_Datum;
 	private JTextArea ta_data;
 	private JButton btn_AktuelleWocheAnzeigen;
+	private JButton btn_Bearbeiten;
+	private JButton btn_Delete;
 
 	/**
 	 * Create the frame.
@@ -69,15 +71,18 @@ public class AllData_Gui extends JFrame {
 			public void itemStateChanged(ItemEvent arg0) {
 				Tag selItem = Controller.getController().getDateMap()
 						.get((String) cB_Datum.getSelectedItem());
-				if (selItem != null)
+				if (selItem != null){
 					ta_data.setText(Controller.getController().getAllData(
 							selItem));
+					btn_Bearbeiten.setEnabled(true);
+					btn_Delete.setEnabled(true);
+				}
 			}
 		});
 		cB_Datum.setBounds(12, 13, 216, 22);
 		contentPane.add(cB_Datum);
 
-		JButton btn_Delete = new JButton("Delete");
+		btn_Delete = new JButton("Delete");
 		btn_Delete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Controller.getController().getDateMap()
@@ -89,7 +94,7 @@ public class AllData_Gui extends JFrame {
 		btn_Delete.setBounds(354, 12, 129, 25);
 		contentPane.add(btn_Delete);
 
-		JButton btn_Bearbeiten = new JButton("Bearbeiten");
+		btn_Bearbeiten = new JButton("Bearbeiten");
 		btn_Bearbeiten.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				(new EingabenAendern_Gui(getBounds(), Controller
@@ -107,23 +112,19 @@ public class AllData_Gui extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				cB_Datum.setSelectedItem(null);
+				btn_Bearbeiten.setEnabled(false);
+				btn_Delete.setEnabled(false);
 
 				ta_data.setText("");
 
 				for (String s : Controller.getController()
 						.getSortedKeysForActualWeek()) {
-
 					ta_data.append("####### " + s + " #######\n");
-					
 					ta_data.append(Controller.getController().getAllData(
 							Controller.getController().getDateMap().get(s)));
-					
 					ta_data.append("\n\n");
-
 				}
-				
-				ta_data.setCaretPosition(0);
-				
+				ta_data.setCaretPosition(0);				
 			}
 		});
 		btn_AktuelleWocheAnzeigen.setBounds(12, 60, 216, 25);
