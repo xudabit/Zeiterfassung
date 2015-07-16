@@ -160,7 +160,7 @@ public class Controller {
 		}
 	}
 	
-	public void importDataFromActricity(String filepath) {
+	public void importDataFromActricity(String filepath) throws Exception {
 		int n_top = 1;
 		int n = 0;
 		for(Tag t : (new XMLparser()).getTagListFromActricity(filepath)) {

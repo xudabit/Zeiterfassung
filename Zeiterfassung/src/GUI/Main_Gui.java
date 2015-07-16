@@ -165,7 +165,7 @@ public class Main_Gui extends JFrame {
 				"Informationen zum Import");
 		mntmInformationenZumImport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JOptionPane.showMessageDialog(null,
+				JOptionPane.showMessageDialog(Main_Gui.getMainGui(),
 						"Aufbau der Import-Datei:\n" + "DA_25_06_2015\n"
 								+ "TA;08;40\n" + "PA;10;45\n" + "PE;11;15\n"
 								+ "TE;17;00\n", "Information",
@@ -190,17 +190,18 @@ public class Main_Gui extends JFrame {
 				} else {
 					ret = chooser.showOpenDialog(Main_Gui.getMainGui());
 				}
-				
-				if (ret == JFileChooser.APPROVE_OPTION) {
-					if(arg0.getActionCommand().equals("import")) {
-						Controller.getController().importData(chooser.getSelectedFile().getAbsolutePath());
-					} else if(arg0.getActionCommand().equals("actricity")) {
-						Controller.getController().importDataFromActricity(chooser.getSelectedFile().getAbsolutePath());
-					} else if(arg0.getActionCommand().equals("export")) {
-						Controller.getController().exportData(chooser.getSelectedFile().getAbsolutePath());
+				try {
+					if (ret == JFileChooser.APPROVE_OPTION) {
+						if(arg0.getActionCommand().equals("import")) {
+							Controller.getController().importData(chooser.getSelectedFile().getAbsolutePath());
+						} else if(arg0.getActionCommand().equals("actricity")) {
+							Controller.getController().importDataFromActricity(chooser.getSelectedFile().getAbsolutePath());
+						} else if(arg0.getActionCommand().equals("export")) {
+							Controller.getController().exportData(chooser.getSelectedFile().getAbsolutePath());
+						}
 					}
-					
-					updateView();
+				} catch (Exception ex) {
+					showException(ex);
 				}
 				updateView();
 			}
@@ -565,5 +566,11 @@ public class Main_Gui extends JFrame {
 		} else {
 			System.exit(0);
 		}
+	}
+	
+	public void showException(Exception ex) {
+		JOptionPane.showMessageDialog(Main_Gui.getMainGui(),
+				ex.getMessage(), "Information",
+				JOptionPane.WARNING_MESSAGE);
 	}
 }
