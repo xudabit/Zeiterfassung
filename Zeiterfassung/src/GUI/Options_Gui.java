@@ -35,12 +35,13 @@ public class Options_Gui extends JFrame {
 	private JComboBox<Config.boolConfigValues> cb_bool;
 	private JComboBox<Config.stringConfigValues> cb_string;
 	private JCheckBox chkbx_bool;
-	private JButton btnSet;
+	private JButton btn_Set;
 	private JPanel pl_bool;
 
 	private JComboBox<Config.intConfigValues> cb_int;
 
 	private JSpinner sp_int;
+	private JButton btn_Zuercksetzten;
 
 	/**
 	 * Create the frame.
@@ -62,18 +63,18 @@ public class Options_Gui extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton btnSpeichern = new JButton("Speichern");
-		btnSpeichern.addActionListener(new ActionListener() {
+		JButton btn_Speichern = new JButton("Speichern");
+		btn_Speichern.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Config.getConfig().saveThisConfig();
 			}
 		});
 		
-		btnSpeichern.setBounds(323, 268, 97, 25);
-		contentPane.add(btnSpeichern);
+		btn_Speichern.setBounds(300, 268, 120, 25);
+		contentPane.add(btn_Speichern);
 		
 		JPanel pl_string = new JPanel();
-		pl_string.setBorder(new TitledBorder(null, "String", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		pl_string.setBorder(new TitledBorder(null, "Pfade", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		pl_string.setBounds(12, 87, 408, 94);
 		contentPane.add(pl_string);
 		pl_string.setLayout(null);
@@ -83,13 +84,14 @@ public class Options_Gui extends JFrame {
 		pl_string.add(cb_string);
 		
 		tf_string = new JTextField();
+		tf_string.setEditable(false);
 		tf_string.setBounds(12, 56, 275, 22);
 		pl_string.add(tf_string);
 		tf_string.setColumns(10);
 		
-		btnSet = new JButton("Set");
-		btnSet.setBounds(299, 56, 97, 25);
-		pl_string.add(btnSet);
+		btn_Set = new JButton("Set");
+		btn_Set.setBounds(299, 56, 97, 25);
+		pl_string.add(btn_Set);
 		
 		pl_bool = new JPanel();
 		pl_bool.setBorder(new TitledBorder(null, "Boolean", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -127,6 +129,23 @@ public class Options_Gui extends JFrame {
 		pl_int.add(cb_int);
 		sp_int.setBounds(336, 26, 60, 22);
 		pl_int.add(sp_int);
+		
+		btn_Zuercksetzten = new JButton("Zur\u00FCcksetzten");
+		btn_Zuercksetzten.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				
+				
+				
+				
+				
+				
+				
+				
+			}
+		});
+		btn_Zuercksetzten.setBounds(22, 268, 120, 25);
+		contentPane.add(btn_Zuercksetzten);
 		chkbx_bool.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Config.getConfig().setValue((Config.boolConfigValues)cb_bool.getSelectedItem(), chkbx_bool.isSelected());
@@ -138,7 +157,7 @@ public class Options_Gui extends JFrame {
 				chkbx_bool.setSelected(Config.getConfig().getValue(b));
 			}
 		});
-		btnSet.addActionListener(new ActionListener() {
+		btn_Set.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Config.getConfig().setValue((Config.stringConfigValues)cb_string.getSelectedItem(), tf_string.getText());
 			}
