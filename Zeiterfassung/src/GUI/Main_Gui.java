@@ -46,6 +46,8 @@ public class Main_Gui extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private final double version = 1.0;
 
+	private File saveActualDir = null;
+	
 	private JPanel contentPane;
 	private JTextArea ta_data;
 
@@ -184,7 +186,13 @@ public class Main_Gui extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser chooser = new JFileChooser(new File("."));
+				JFileChooser chooser;
+				if(saveActualDir == null) {
+					chooser = new JFileChooser(new File("."));
+				} else {
+					chooser = new JFileChooser(saveActualDir);
+				}
+				
 				chooser.setMultiSelectionEnabled(false);
 				
 				int ret = -1;
@@ -194,6 +202,7 @@ public class Main_Gui extends JFrame {
 					ret = chooser.showOpenDialog(Main_Gui.getMainGui());
 				}
 				try {
+					saveActualDir = chooser.getCurrentDirectory();
 					if (ret == JFileChooser.APPROVE_OPTION) {
 						if(arg0.getActionCommand().equals("import")) {
 							Controller.getController().importData(chooser.getSelectedFile().getAbsolutePath());
