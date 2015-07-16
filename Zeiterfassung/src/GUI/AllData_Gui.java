@@ -52,14 +52,15 @@ public class AllData_Gui extends JFrame {
 			}
 		});
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(bounds);
+		setBounds((int)bounds.getX(), (int)bounds.getY(), 500, 480);
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 98, 471, 144);
+		scrollPane.setBounds(12, 98, 471, 337);
 		contentPane.add(scrollPane);
 
 		ta_data = new JTextArea();
