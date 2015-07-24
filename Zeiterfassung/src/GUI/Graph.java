@@ -126,7 +126,7 @@ public class Graph extends JFrame {
 	public static DefaultCategoryDataset getDatesetBalkenDiagramm() {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-		int woy = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
+		int woy = Controller.getActualTime().get(Calendar.WEEK_OF_YEAR);
 		int maxWeeks = (Config.getConfig().getValue(Config.intConfigValues.KWDIAGWOCHEN))%53;
 		
 		for(int x = woy-maxWeeks; x < woy; x++) {

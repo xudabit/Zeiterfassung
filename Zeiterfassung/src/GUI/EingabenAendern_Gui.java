@@ -545,8 +545,8 @@ public class EingabenAendern_Gui extends JFrame {
 		if (cb_string.equals("Neue Pause")) {
 			if (day != null) {
 				if (temp == null)
-					temp = new Pause(Calendar.getInstance(),
-							Calendar.getInstance(), day.getAndIncID());
+					temp = new Pause(Controller.getActualTime(),
+							Controller.getActualTime(), day.getAndIncID());
 				return temp;
 			} else {
 				return null;

@@ -28,7 +28,7 @@ public class Pause implements Serializable{
 	}
 
 	public void setPauseStartNow() {
-		this.pauseStart = Calendar.getInstance();
+		this.pauseStart = Controller.getActualTime();
 	}
 
 	public Calendar getPauseEnde() {
@@ -36,7 +36,7 @@ public class Pause implements Serializable{
 	}
 
 	public void setPauseEndeNow() {
-		this.pauseEnde = Calendar.getInstance();
+		this.pauseEnde = Controller.getActualTime();
 	}
 	
 	public long berechnePauseInMillis(){
@@ -44,7 +44,7 @@ public class Pause implements Serializable{
 			return -1;
 		
 		if(pauseEnde == null) {
-			return Calendar.getInstance().getTimeInMillis() - pauseStart.getTimeInMillis();
+			return Controller.getActualTime().getTimeInMillis() - pauseStart.getTimeInMillis();
 		}
 		
 		return pauseEnde.getTimeInMillis() - pauseStart.getTimeInMillis();

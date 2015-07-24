@@ -82,7 +82,7 @@ public class Tag implements Serializable {
 		
 		if(tagEnde == null) {
 			if(temp_pausenAnfang == null) {
-				end = Calendar.getInstance();
+				end = Controller.getActualTime();
 			} else {
 				end = temp_pausenAnfang.getPauseStart();
 			}

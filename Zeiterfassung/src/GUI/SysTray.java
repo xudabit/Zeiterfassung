@@ -44,20 +44,20 @@ public class SysTray {
 			public void actionPerformed(ActionEvent arg0) {
 				if (arg0.getActionCommand().equals("TA")) {
 					Controller.getController().setTagAnfang(
-							Calendar.getInstance());
+							Controller.getActualTime());
 				}
 				if (arg0.getActionCommand().equals("PA")) {
 					Controller.getController().addPauseAnfang(
-							Calendar.getInstance());
+							Controller.getActualTime());
 				}
 				if (arg0.getActionCommand().equals("PE")) {
 					Controller.getController().addPauseEnde(
-							Calendar.getInstance());
+							Controller.getActualTime());
 
 				}
 				if (arg0.getActionCommand().equals("TE")) {
 					Controller.getController().setTagEnde(
-							Calendar.getInstance());
+							Controller.getActualTime());
 				}
 				if (arg0.getActionCommand().equals("EXIT")) {
 					System.exit(0);

@@ -29,7 +29,13 @@ public class Controller {
 			singleton = new Controller();
 		return singleton;
 	}
-
+	
+	public static Calendar getActualTime() {
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.SECOND, 0);
+		return cal;
+	}
+	
 	private final String PREFIXE = "TE#TA#PA#PE";
 
 	private Config conf;
@@ -59,9 +65,8 @@ public class Controller {
 	}
 
 	public void setTagAnfang(Calendar ta) {
-		if (!dateMap.containsKey(getDatestringFromCalendar(Calendar
-				.getInstance()))) {
-			dateMap.put(getDatestringFromCalendar(Calendar.getInstance()),
+		if (!dateMap.containsKey(getDatestringFromCalendar(Controller.getActualTime()))) {
+			dateMap.put(getDatestringFromCalendar(Controller.getActualTime()),
 					new Tag());
 		}
 		getToday().setTagAnfang(ta);
@@ -69,7 +74,7 @@ public class Controller {
 	}
 
 	public Tag getToday() {
-		return dateMap.get(getDatestringFromCalendar(Calendar.getInstance()));
+		return dateMap.get(getDatestringFromCalendar(Controller.getActualTime()));
 	}
 
 	public Calendar getTagAnfang() {
@@ -251,7 +256,7 @@ public class Controller {
 				if (zeit.length != 3)
 					break;
 
-				Calendar dat = Calendar.getInstance();
+				Calendar dat = Controller.getActualTime();
 				dat.set(Calendar.YEAR, jahr);
 				dat.set(Calendar.MONTH, monat - 1);
 				dat.set(Calendar.DAY_OF_MONTH, tag);
@@ -461,7 +466,7 @@ public class Controller {
 	}
 
 	public boolean deleteOlder(int month) {
-		Calendar cal = Calendar.getInstance();
+		Calendar cal = Controller.getActualTime();
 		cal.add(Calendar.MONTH, -month);
 		String key;
 		while ((key = getNextKeyOlder(month)) != null) {
@@ -472,7 +477,7 @@ public class Controller {
 	}
 
 	private String getNextKeyOlder(int month) {
-		Calendar cal = Calendar.getInstance();
+		Calendar cal = Controller.getActualTime();
 		cal.add(Calendar.MONTH, -month);
 
 		for (String s : dateMap.keySet()) {
@@ -488,7 +493,7 @@ public class Controller {
 	}
 
 	public void deleteToday() {
-		dateMap.remove(getDatestringFromCalendar(Calendar.getInstance()));
+		dateMap.remove(getDatestringFromCalendar(Controller.getActualTime()));
 	}
 
 	public String getAllData(Tag t) {
@@ -561,8 +566,7 @@ public class Controller {
 		ArrayList<String> keys = new ArrayList<String>();
 
 		for (String s : dateMap.keySet()) {
-			if (dateMap.get(s).getTagAnfang().get(Calendar.WEEK_OF_YEAR) == Calendar
-					.getInstance().get(Calendar.WEEK_OF_YEAR)) {
+			if (dateMap.get(s).getTagAnfang().get(Calendar.WEEK_OF_YEAR) == Controller.getActualTime().get(Calendar.WEEK_OF_YEAR)) {
 				if (dateMap.get(s).getTagEnde() != null)
 					keys.add(s);
 			}
@@ -575,8 +579,7 @@ public class Controller {
 		ArrayList<String> keys = new ArrayList<String>();
 
 		for (String s : dateMap.keySet()) {
-			if (dateMap.get(s).getTagAnfang().get(Calendar.MONTH) == Calendar
-					.getInstance().get(Calendar.MONTH)) {
+			if (dateMap.get(s).getTagAnfang().get(Calendar.MONTH) == Controller.getActualTime().get(Calendar.MONTH)) {
 				if (dateMap.get(s).getTagEnde() != null)
 					keys.add(s);
 			}

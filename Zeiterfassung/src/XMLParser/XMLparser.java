@@ -12,6 +12,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import Logik.Controller;
 import Logik.Tag;
 
 public class XMLparser {
@@ -25,7 +26,7 @@ public class XMLparser {
 
 		for (Element arNode : getAllChildren(document.getDocumentElement())) {
 			// --- Datum
-			Calendar date = Calendar.getInstance();
+			Calendar date = Controller.getActualTime();
 
 			// Sorry!
 			String dateString = getTextFromSubElementByName(arNode, "Datum");
@@ -99,7 +100,7 @@ public class XMLparser {
 		if (zeitArr.length != 2) {
 			throw new IndexOutOfBoundsException("Zeit falsch angegeben");
 		}
-		Calendar cal = Calendar.getInstance();
+		Calendar cal = Controller.getActualTime();
 
 		cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(zeitArr[0]));
 		cal.set(Calendar.MINUTE, Integer.parseInt(zeitArr[1]));

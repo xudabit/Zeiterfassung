@@ -94,20 +94,20 @@ public class Main_Gui extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if (arg0.getActionCommand().equals("TA")) {
 					Controller.getController().setTagAnfang(
-							Calendar.getInstance());
+							Controller.getActualTime());
 				}
 				if (arg0.getActionCommand().equals("PA")) {
 					Controller.getController().addPauseAnfang(
-							Calendar.getInstance());
+							Controller.getActualTime());
 				}
 				if (arg0.getActionCommand().equals("PE")) {
 					Controller.getController().addPauseEnde(
-							Calendar.getInstance());
+							Controller.getActualTime());
 
 				}
 				if (arg0.getActionCommand().equals("TE")) {
 					Controller.getController().setTagEnde(
-							Calendar.getInstance());
+							Controller.getActualTime());
 				}
 				updateView();
 			}
@@ -434,7 +434,7 @@ public class Main_Gui extends JFrame {
 		lbl_AktuellesDatumRechtsbuendig
 				.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_AktuellesDatumRechtsbuendig.setText(Controller.getController()
-				.getDatestringFromCalendar(Calendar.getInstance()));
+				.getDatestringFromCalendar(Controller.getActualTime()));
 		contentPane.add(lbl_AktuellesDatumRechtsbuendig);
 
 		// Text
